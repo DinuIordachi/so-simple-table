@@ -81,3 +81,71 @@ describe('TableStore — update methods', () => {
 		expect(store.search$.get()).toBe('alpha');
 	});
 });
+
+describe('TableStore — getData and fetchData', () => {
+	it('fetchData() flips loading to true, calls repository.getList, then to false', async () => {
+		const { store, repository } = createStore();
+		repository.getListMock.mockResolvedValue({ result: [{ id: '1', name: 'a' }], totalCount: 1, isSuccess: true });
+		const loadings: boolean[] = [];
+		store.loading$.subscribe((v) => loadings.push(v), { emitOnSubscribe: false });
+		store.getData(store.pagination$.get());
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).toHaveBeenCalledTimes(1);
+		expect(store.data$.get()).toStrictEqual([{ id: '1', name: 'a' }]);
+		expect(store.total$.get()).toBe(1);
+		expect(loadings).toStrictEqual([true, false]);
+	});
+
+	it('getData() builds query params using mapTableParams and the configured queryKeys', async () => {
+		const { store, repository } = createStore({
+			queryKeys: { page: 'pageNumber', pageSize: 'limit' },
+		});
+		repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+		store.getData({ page: 4, pageSize: 50 }, undefined, [{ key: 'status', value: 'active' }], 'alpha');
+		await Promise.resolve();
+		expect(repository.getListMock).toHaveBeenCalledWith({
+			pageNumber: 4,
+			limit: 50,
+			status: ['active'],
+			name: 'alpha',
+		});
+	});
+
+	it('decrements page when an empty result is returned and we are past page 1', async () => {
+		const { store, repository } = createStore();
+		store.updatePagination({ page: 5, pageSize: 10 });
+		repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+		store.getData({ page: 5, pageSize: 10 });
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(store.pagination$.get()).toStrictEqual({ page: 4, pageSize: 10 });
+	});
+
+	it('does not decrement page when at page 1 even on empty result', async () => {
+		const { store, repository } = createStore();
+		repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+		store.getData({ page: 1, pageSize: 10 });
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(store.pagination$.get()).toStrictEqual({ page: 1, pageSize: 10 });
+	});
+
+	it('auto-refreshes when pagination/sort/filters/search change and coalesces sync updates', async () => {
+		const { store, repository } = createStore();
+		repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+		store.updatePagination({ page: 2, pageSize: 10 });
+		store.updateSearch('hello');
+		store.updateFilter([{ key: 'status', value: 'active' }]);
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).toHaveBeenCalledTimes(1);
+	});
+
+	it('does not fetch on construction (subscriptions skip the initial value)', async () => {
+		const { repository } = createStore();
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).not.toHaveBeenCalled();
+	});
+});

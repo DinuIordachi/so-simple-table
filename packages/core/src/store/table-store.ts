@@ -1,8 +1,10 @@
-import { Observable, type IReadonlyObservable } from '../state/observable';
+import { Observable, type IReadonlyObservable, type Unsubscribe } from '../state/observable';
+import { watch } from '../state/watch';
+import { mapTableParams } from './map-table-params';
 import type { IFilterParams } from '../types/filter';
 import type { IPaginationParams } from '../types/pagination';
 import type { ISortParams } from '../types/sort';
-import type { IResponse } from '../types/response';
+import type { IResponse, IResponseList } from '../types/response';
 import type { ITableStore } from '../types/table-store';
 import type { ListRepository } from '../repositories/list.repository';
 import type { IRepositoryQueryKeys, IParamFormattingStrategy } from '../types/repository-config';
@@ -41,6 +43,7 @@ export class TableStore<T> implements ITableStore<T> {
 	protected readonly filterMap: Readonly<Record<string, string>> | undefined;
 	protected readonly queryKeys: IRepositoryQueryKeys;
 	protected readonly paramFormatting: IParamFormattingStrategy | undefined;
+	private querySubscription: Unsubscribe = () => {};
 
 	public constructor(options: ITableStoreOptions<T>) {
 		this.repository = options.repository;
@@ -50,6 +53,7 @@ export class TableStore<T> implements ITableStore<T> {
 		this.paramFormatting = options.paramFormatting;
 		this._pagination = new Observable<IPaginationParams>(options.initialPagination ?? DEFAULT_INITIAL_PAGINATION);
 		this.pagination$ = this._pagination.asReadonly();
+		this.subscribeToTableQueryChanges();
 	}
 
 	public updateData(data: readonly T[]): void { this._data.set(data); }
@@ -60,10 +64,70 @@ export class TableStore<T> implements ITableStore<T> {
 	public updateFilter(filters: readonly IFilterParams[]): void { this._filters.set(filters); }
 	public updateSearch(search: string): void { this._search.set(search); }
 
-	// Methods filled in by Task 15 / 16.
-	public getData(): void { throw new Error('Not yet implemented'); }
+	public getData(
+		pagination: IPaginationParams,
+		sort?: ISortParams,
+		filters?: readonly IFilterParams[],
+		search?: string,
+	): void {
+		const params = mapTableParams({
+			pagination,
+			...(sort !== undefined ? { sort } : {}),
+			...(filters !== undefined ? { filters } : {}),
+			...(search !== undefined ? { search } : {}),
+			sortMap: this.sortMap,
+			...(this.filterMap !== undefined ? { filterMap: this.filterMap } : {}),
+			queryKeys: this.queryKeys,
+			...(this.paramFormatting !== undefined ? { paramFormatting: this.paramFormatting } : {}),
+		});
+		this.fetchData(this.repository.getList(params));
+	}
+
+	protected fetchData(promise: Promise<IResponseList<T[]>>): void {
+		if (!promise) {
+			return;
+		}
+		const paginationSnapshot = this._pagination.get();
+		this.updateLoading(true);
+		promise
+			.then((response) => {
+				this.updateData(response.result);
+				this.updateTotal(response.totalCount);
+				this.checkIfNeedToGoPrevious(response.result.length, paginationSnapshot);
+			})
+			.finally(() => this.updateLoading(false));
+	}
+
 	public bulkDelete(): Promise<IResponse<string>> { throw new Error('Not yet implemented'); }
-	public refresh(): void { throw new Error('Not yet implemented'); }
+
+	public refresh(): void {
+		this.getData(this._pagination.get(), this._sort.get(), this._filters.get(), this._search.get());
+	}
+
 	public reset(): void { throw new Error('Not yet implemented'); }
-	public destroy(): void { /* filled in Task 16 */ }
+
+	public destroy(): void {
+		this.querySubscription();
+	}
+
+	private subscribeToTableQueryChanges(): void {
+		this.querySubscription = watch(
+			[this.pagination$, this.sort$, this.filters$, this.search$],
+			() => this.refresh(),
+		);
+	}
+
+	private checkIfNeedToGoPrevious(dataLength: number, pagination: IPaginationParams): void {
+		if (dataLength === 0 && pagination.page > 1) {
+			// Detach subscription so this internal pagination adjustment does not trigger
+			// a new auto-refresh cycle; reattach immediately after.
+			const prev = this.querySubscription;
+			prev(); // unsubscribe
+			this._pagination.set({ ...pagination, page: pagination.page - 1 });
+			this.querySubscription = watch(
+				[this.pagination$, this.sort$, this.filters$, this.search$],
+				() => this.refresh(),
+			);
+		}
+	}
 }
