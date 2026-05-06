@@ -3,15 +3,20 @@
   "private": true,
   "version": "0.0.0",
   "description": "So Simple Table — framework-agnostic table library with pluggable framework variants.",
-  "workspaces": ["packages/*"],
-  "engines": { "node": ">=20" },
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "nx run-many -t build",
     "test": "nx run-many -t test",
     "lint": "nx run-many -t lint",
     "typecheck": "nx run-many -t typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,vue,html,scss,md,json}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,vue,html,scss,md,json}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,vue,html,scss,md,json}\"",
+    "registry": "verdaccio --config .verdaccio/config.yaml"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
@@ -21,6 +26,7 @@
     "nx": "^19.8.0",
     "prettier": "^3.3.0",
     "rimraf": "^6.0.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "verdaccio": "^6.5.2"
   }
 }

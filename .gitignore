@@ -10,3 +10,6 @@ coverage
 .env.local
 out-tsc
 .idea
+.npmrc
+.verdaccio/storage
+.verdaccio/htpasswd
