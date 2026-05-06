@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "useDefineForClassFields": false,
+    "noUncheckedIndexedAccess": false
+  },
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.lib.json" },
+    { "path": "./tsconfig.spec.json" }
+  ]
+}

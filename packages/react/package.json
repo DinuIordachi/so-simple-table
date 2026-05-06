@@ -1,0 +1,46 @@
+{
+  "name": "@sst/react",
+  "version": "0.1.0",
+  "description": "So Simple Table — React adapter on top of @sst/core.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "sideEffects": ["**/*.css"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src --ext .ts,.tsx",
+    "clean": "rimraf dist coverage"
+  },
+  "peerDependencies": {
+    "@sst/core": "*",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "happy-dom": "^15.0.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "tsup": "^8.2.0",
+    "vitest": "^2.0.0"
+  },
+  "publishConfig": { "access": "public" }
+}

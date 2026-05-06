@@ -1,0 +1,32 @@
+{
+  "name": "@sst/core",
+  "version": "0.1.0",
+  "description": "So Simple Table — framework-agnostic core: reactive table state and configurable repositories.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf dist coverage"
+  },
+  "devDependencies": {
+    "tsup": "^8.2.0",
+    "vitest": "^2.0.0"
+  },
+  "publishConfig": { "access": "public" }
+}
