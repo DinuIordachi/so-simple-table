@@ -84,9 +84,8 @@ export class TableStore<T> implements ITableStore<T> {
 	}
 
 	protected fetchData(promise: Promise<IResponseList<T[]>>): void {
-		if (!promise) {
-			return;
-		}
+		// Capture pagination at request time so cascading post-fetch checks see the
+		// page that was requested rather than a value mutated by an earlier resolution.
 		const paginationSnapshot = this._pagination.get();
 		this.updateLoading(true);
 		promise
@@ -132,15 +131,12 @@ export class TableStore<T> implements ITableStore<T> {
 
 	private checkIfNeedToGoPrevious(dataLength: number, pagination: IPaginationParams): void {
 		if (dataLength === 0 && pagination.page > 1) {
-			// Detach subscription so this internal pagination adjustment does not trigger
-			// a new auto-refresh cycle; reattach immediately after.
-			const prev = this.querySubscription;
-			prev(); // unsubscribe
+			// Detach the auto-refresh subscription so this internal decrement does not
+			// cascade through watch → refresh → fetchData (which would skip ahead by
+			// more than one page on the next microtask flush). Re-attach immediately.
+			this.querySubscription();
 			this._pagination.set({ ...pagination, page: pagination.page - 1 });
-			this.querySubscription = watch(
-				[this.pagination$, this.sort$, this.filters$, this.search$],
-				() => this.refresh(),
-			);
+			this.subscribeToTableQueryChanges();
 		}
 	}
 }

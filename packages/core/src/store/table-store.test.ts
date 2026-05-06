@@ -19,6 +19,8 @@ class StubListRepository implements ListRepository<IItem> {
 
 function createStore(overrides: Partial<ConstructorParameters<typeof TableStore<IItem>>[0]> = {}) {
 	const repository = new StubListRepository();
+	repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+	repository.bulkDeleteMock.mockResolvedValue({ result: '', isSuccess: true });
 	const store = new TableStore<IItem>({
 		repository,
 		sortMap: { createdAt: 'ByCreationDate' },
