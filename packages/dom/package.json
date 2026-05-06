@@ -1,0 +1,38 @@
+{
+  "name": "@sst/dom",
+  "version": "0.1.0",
+  "description": "So Simple Table — vanilla DOM variant. Renders an @sst/core TableStore as an HTML table.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md"],
+  "sideEffects": ["./dist/style.css"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf dist coverage"
+  },
+  "peerDependencies": {
+    "@sst/core": "^0.2.0"
+  },
+  "devDependencies": {
+    "@sst/core": "^0.2.0",
+    "happy-dom": "^15.7.0",
+    "tsup": "^8.2.0",
+    "vitest": "^2.0.0"
+  },
+  "publishConfig": { "access": "public" }
+}

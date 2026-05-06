@@ -22,6 +22,7 @@
     "baseUrl": ".",
     "paths": {
       "@sst/core": ["packages/core/src/index.ts"],
+      "@sst/dom": ["packages/dom/src/index.ts"],
       "@sst/ng": ["packages/ng/src/public-api.ts"],
       "@sst/vue": ["packages/vue/src/index.ts"],
       "@sst/react": ["packages/react/src/index.ts"]
