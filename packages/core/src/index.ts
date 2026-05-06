@@ -6,3 +6,5 @@ export * from './utils/array-to-map';
 export * from './http/fetch-http-client';
 export * from './repositories/list.repository';
 export * from './repositories/http-list.repository';
+export * from './repositories/select.repository';
+export * from './repositories/http-select.repository';
