@@ -10,3 +10,5 @@ export * from './repositories/select.repository';
 export * from './repositories/http-select.repository';
 export * from './repositories/repository';
 export * from './repositories/http-repository';
+export * from './store/map-table-params';
+export * from './store/table-store';
