@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>@sst/dom — browser smoke test</title>
+		<link rel="stylesheet" href="./src/style.css" />
+	</head>
+	<body>
+		<main>
+			<header>
+				<h1>@sst/dom — browser smoke test</h1>
+				<p id="lib-version">loading library…</p>
+			</header>
+
+			<section id="exports">
+				<h2>1. Imported exports (@sst/core)</h2>
+				<ul id="exports-list"></ul>
+			</section>
+
+			<section id="store">
+				<h2>2. mountTable(@sst/dom) over <a href="https://dogapi.dog/api/v2/breeds" target="_blank" rel="noopener">dogapi.dog</a></h2>
+				<div class="controls">
+					<button id="refresh-btn">manual refresh()</button>
+					<button id="reset-btn">reset()</button>
+				</div>
+
+				<div id="my-table"></div>
+
+				<details>
+					<summary>HTTP call log</summary>
+					<pre id="call-log"></pre>
+				</details>
+			</section>
+		</main>
+
+		<script type="module" src="./src/main.ts"></script>
+	</body>
+</html>

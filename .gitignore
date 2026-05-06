@@ -13,3 +13,4 @@ out-tsc
 /.npmrc
 .verdaccio/storage
 .verdaccio/htpasswd
+*.tsbuildinfo

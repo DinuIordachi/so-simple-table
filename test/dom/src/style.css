@@ -173,3 +173,16 @@ pre {
 	line-height: 1.5;
 	max-height: 240px;
 }
+
+.badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.badge--active   { background: color-mix(in oklab, #10b981 25%, transparent); color: #047857; }
+.badge--paused   { background: color-mix(in oklab, #f59e0b 30%, transparent); color: #92400e; }
+.badge--archived { background: color-mix(in oklab, #6b7280 25%, transparent); color: #374151; }
