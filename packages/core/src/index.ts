@@ -5,3 +5,4 @@ export * from './utils/deep-equal';
 export * from './utils/array-to-map';
 export * from './http/fetch-http-client';
 export * from './repositories/list.repository';
+export * from './repositories/http-list.repository';
