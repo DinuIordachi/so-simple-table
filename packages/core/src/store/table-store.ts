@@ -98,13 +98,26 @@ export class TableStore<T> implements ITableStore<T> {
 			.finally(() => this.updateLoading(false));
 	}
 
-	public bulkDelete(): Promise<IResponse<string>> { throw new Error('Not yet implemented'); }
+	public async bulkDelete(ids: readonly string[]): Promise<IResponse<string>> {
+		const result = await this.repository.bulkDelete(ids);
+		this.refresh();
+		return result;
+	}
 
 	public refresh(): void {
 		this.getData(this._pagination.get(), this._sort.get(), this._filters.get(), this._search.get());
 	}
 
-	public reset(): void { throw new Error('Not yet implemented'); }
+	public reset(): void {
+		this.querySubscription();
+		this._data.set([]);
+		this._total.set(0);
+		this._filters.set([]);
+		this._search.set('');
+		this._pagination.set(DEFAULT_INITIAL_PAGINATION);
+		this._sort.set(undefined);
+		this.subscribeToTableQueryChanges();
+	}
 
 	public destroy(): void {
 		this.querySubscription();

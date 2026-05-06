@@ -149,3 +149,51 @@ describe('TableStore — getData and fetchData', () => {
 		expect(repository.getListMock).not.toHaveBeenCalled();
 	});
 });
+
+describe('TableStore — bulkDelete', () => {
+	it('delegates to repository.bulkDelete and refreshes after completion', async () => {
+		const { store, repository } = createStore();
+		repository.bulkDeleteMock.mockResolvedValue({ result: 'ok', isSuccess: true });
+		repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+		await store.bulkDelete(['1', '2']);
+		expect(repository.bulkDeleteMock).toHaveBeenCalledWith(['1', '2']);
+		// Refresh fires asynchronously through the auto-refresh path.
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).toHaveBeenCalled();
+	});
+});
+
+describe('TableStore — reset', () => {
+	it('clears all observables to defaults and detaches the existing subscription', () => {
+		const { store, repository } = createStore();
+		store.updateData([{ id: '1', name: 'a' }]);
+		store.updateTotal(99);
+		store.updateFilter([{ key: 'status', value: 'active' }]);
+		store.updateSearch('alpha');
+		store.updatePagination({ page: 7, pageSize: 25 });
+		store.updateSort({ id: 'name-ASC', field: 'name', order: 'ASC' as never });
+		repository.getListMock.mockClear();
+
+		store.reset();
+
+		expect(store.data$.get()).toStrictEqual([]);
+		expect(store.total$.get()).toBe(0);
+		expect(store.filters$.get()).toStrictEqual([]);
+		expect(store.search$.get()).toBe('');
+		expect(store.pagination$.get()).toStrictEqual({ page: 1, pageSize: 10 });
+		expect(store.sort$.get()).toBeUndefined();
+	});
+});
+
+describe('TableStore — destroy', () => {
+	it('detaches the subscription so subsequent updates do not refresh', async () => {
+		const { store, repository } = createStore();
+		repository.getListMock.mockResolvedValue({ result: [], totalCount: 0, isSuccess: true });
+		store.destroy();
+		store.updatePagination({ page: 2, pageSize: 10 });
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).not.toHaveBeenCalled();
+	});
+});
