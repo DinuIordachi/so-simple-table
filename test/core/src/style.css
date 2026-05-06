@@ -1,0 +1,175 @@
+* {
+	box-sizing: border-box;
+}
+
+:root {
+	color-scheme: light dark;
+	font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+body {
+	margin: 0;
+	background: #fafafa;
+	color: #111;
+}
+
+@media (prefers-color-scheme: dark) {
+	body { background: #18181b; color: #f4f4f5; }
+}
+
+main {
+	max-width: 880px;
+	margin: 0 auto;
+	padding: 32px 24px 64px;
+}
+
+header {
+	border-bottom: 1px solid color-mix(in oklab, currentColor 15%, transparent);
+	padding-bottom: 16px;
+	margin-bottom: 24px;
+}
+
+h1 {
+	margin: 0 0 4px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+h2 {
+	margin: 32px 0 12px;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: color-mix(in oklab, currentColor 65%, transparent);
+}
+
+p, ul {
+	margin: 8px 0;
+}
+
+.muted {
+	color: color-mix(in oklab, currentColor 55%, transparent);
+	font-size: 12px;
+}
+
+#exports-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	gap: 4px 12px;
+	padding: 0;
+	list-style: none;
+	font-family: ui-monospace, "SF Mono", Consolas, monospace;
+	font-size: 12px;
+}
+
+#exports-list li::before {
+	content: "▸ ";
+	color: color-mix(in oklab, currentColor 35%, transparent);
+}
+
+button, input, select {
+	font: inherit;
+	color: inherit;
+	background: color-mix(in oklab, currentColor 5%, transparent);
+	border: 1px solid color-mix(in oklab, currentColor 20%, transparent);
+	border-radius: 6px;
+	padding: 6px 10px;
+	cursor: pointer;
+}
+
+input, select { cursor: text; }
+select { cursor: pointer; }
+
+button:hover {
+	background: color-mix(in oklab, currentColor 10%, transparent);
+}
+
+.controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 16px;
+	align-items: center;
+	margin: 12px 0;
+}
+
+.controls label {
+	display: inline-flex;
+	gap: 6px;
+	align-items: center;
+	font-size: 13px;
+}
+
+.badge {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: color-mix(in oklab, currentColor 8%, transparent);
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	margin-right: 8px;
+}
+
+.badge[data-state="loading"] {
+	background: color-mix(in oklab, #f59e0b 35%, transparent);
+	color: #92400e;
+}
+
+.badge[data-state="idle"] {
+	background: color-mix(in oklab, #10b981 25%, transparent);
+	color: #047857;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 8px;
+	font-size: 13px;
+}
+
+th, td {
+	text-align: left;
+	padding: 8px 10px;
+	border-bottom: 1px solid color-mix(in oklab, currentColor 12%, transparent);
+}
+
+th {
+	font-weight: 600;
+	font-size: 12px;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	color: color-mix(in oklab, currentColor 65%, transparent);
+}
+
+tbody tr:hover {
+	background: color-mix(in oklab, currentColor 4%, transparent);
+}
+
+.pagination {
+	display: flex;
+	gap: 8px;
+	margin-top: 12px;
+}
+
+details {
+	margin-top: 16px;
+	font-size: 12px;
+}
+
+summary {
+	cursor: pointer;
+	color: color-mix(in oklab, currentColor 65%, transparent);
+}
+
+pre {
+	background: color-mix(in oklab, currentColor 5%, transparent);
+	padding: 12px;
+	border-radius: 6px;
+	overflow: auto;
+	font-size: 11px;
+	line-height: 1.5;
+	max-height: 240px;
+}
