@@ -1,4 +1,4 @@
-import type { IHttpClient, IHttpRequestOptions, HttpQueryParams } from '../types/http-client';
+import type {HttpQueryParams, IHttpClient, IHttpRequestOptions} from '../types';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -7,7 +7,8 @@ export interface IFetchHttpClientOptions {
 }
 
 export class FetchHttpClient implements IHttpClient {
-	public constructor(private readonly options: IFetchHttpClientOptions = {}) {}
+	public constructor(private readonly options: IFetchHttpClientOptions = {}) {
+	}
 
 	public get<T>(url: string, options?: IHttpRequestOptions): Promise<T> {
 		return this.request<T>('GET', url, options);
@@ -27,8 +28,8 @@ export class FetchHttpClient implements IHttpClient {
 
 	private async request<T>(method: Method, url: string, options: IHttpRequestOptions = {}): Promise<T> {
 		const fullUrl = this.appendQueryString(url, options.params);
-		const headers: Record<string, string> = { ...(this.options.baseHeaders ?? {}), ...(options.headers ?? {}) };
-		const init: RequestInit = { method, headers, ...(options.signal !== undefined ? { signal: options.signal } : {}) };
+		const headers: Record<string, string> = {...(this.options.baseHeaders ?? {}), ...(options.headers ?? {})};
+		const init: RequestInit = {method, headers, ...(options.signal !== undefined ? {signal: options.signal} : {})};
 		if (options.body !== undefined) {
 			init.body = JSON.stringify(options.body);
 			if (!('content-type' in headers) && !('Content-Type' in headers)) {

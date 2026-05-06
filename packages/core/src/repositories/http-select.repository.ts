@@ -1,8 +1,6 @@
-import { HttpListRepository } from './http-list.repository';
-import { SelectRepository } from './select.repository';
-import type { HttpQueryParams } from '../types/http-client';
-import type { IPaginationParams } from '../types/pagination';
-import type { IResponse, IResponseList } from '../types/response';
+import {HttpListRepository} from './http-list.repository';
+import {SelectRepository} from './select.repository';
+import type {HttpQueryParams, IPaginationParams, IResponse, IResponseList} from '../types';
 
 export class HttpSelectRepository<T> extends HttpListRepository<T> implements SelectRepository<T> {
 	public get(id: string): Promise<IResponse<T>> {
@@ -15,7 +13,7 @@ export class HttpSelectRepository<T> extends HttpListRepository<T> implements Se
 		ids: readonly string[],
 		pagination?: IPaginationParams,
 	): Promise<IResponseList<T[]>> {
-		const params: HttpQueryParams = { ids: [...ids] };
+		const params: HttpQueryParams = {ids: [...ids]};
 		if (pagination) {
 			params.page = pagination.page;
 			params.pageSize = pagination.pageSize;

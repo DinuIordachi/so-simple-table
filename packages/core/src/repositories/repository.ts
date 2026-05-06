@@ -1,5 +1,5 @@
 import { SelectRepository } from './select.repository';
-import type { IResponse } from '../types/response';
+import type { IResponse } from '../types';
 
 export abstract class Repository<T> extends SelectRepository<T> {
 	public abstract create(dto: object): Promise<IResponse<unknown>>;

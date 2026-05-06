@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import type { IHttpClient } from '../types/http-client';
+import type { IHttpClient } from '../types';
 import { HttpSelectRepository } from './http-select.repository';
 
 interface IItem {

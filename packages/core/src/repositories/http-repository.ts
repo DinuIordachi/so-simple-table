@@ -1,6 +1,6 @@
 import { HttpSelectRepository } from './http-select.repository';
 import { Repository } from './repository';
-import type { IResponse } from '../types/response';
+import type { IResponse } from '../types';
 
 export class HttpRepository<T> extends HttpSelectRepository<T> implements Repository<T> {
 	public create(dto: object): Promise<IResponse<unknown>> {

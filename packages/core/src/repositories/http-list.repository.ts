@@ -1,8 +1,13 @@
-import { FetchHttpClient } from '../http/fetch-http-client';
-import { ListRepository } from './list.repository';
-import type { HttpQueryParams, IHttpClient } from '../types/http-client';
-import type { IRepositoryConfig, ResponseListMapper } from '../types/repository-config';
-import type { IResponse, IResponseList } from '../types/response';
+import {FetchHttpClient} from '../http/fetch-http-client';
+import {ListRepository} from './list.repository';
+import type {
+	HttpQueryParams,
+	IHttpClient,
+	IRepositoryConfig,
+	IResponse,
+	IResponseList,
+	ResponseListMapper
+} from '../types';
 
 export class HttpListRepository<T> extends ListRepository<T> {
 	protected readonly baseUrl: string;
@@ -20,11 +25,11 @@ export class HttpListRepository<T> extends ListRepository<T> {
 	}
 
 	public override async getList(params?: HttpQueryParams): Promise<IResponseList<T[]>> {
-		const raw = await this.httpClient.get<unknown>(this.baseUrl, params ? { params } : undefined);
+		const raw = await this.httpClient.get<unknown>(this.baseUrl, params ? {params} : undefined);
 		return this.responseListMapper(raw);
 	}
 
 	public override bulkDelete(ids: readonly string[]): Promise<IResponse<string>> {
-		return this.httpClient.delete<IResponse<string>>(`${this.baseUrl}/bulk_delete`, { body: [...ids] });
+		return this.httpClient.delete<IResponse<string>>(`${this.baseUrl}/bulk_delete`, {body: [...ids]});
 	}
 }
