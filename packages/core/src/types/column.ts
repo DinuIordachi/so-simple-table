@@ -7,7 +7,6 @@ export interface IColumn {
 	readonly name: string;
 	readonly key: string;
 	readonly width?: number;
-	readonly render?: boolean;
 	readonly sortable?: boolean;
 	readonly columnTooltip?: string;
 	readonly showCellTooltip?: boolean;
