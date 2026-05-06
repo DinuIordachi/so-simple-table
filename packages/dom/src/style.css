@@ -1,1 +1,110 @@
-/* @sst/dom — populated by Task 9. */
+.sst-table {
+	--sst-fg: inherit;
+	--sst-muted: #6b7280;
+	--sst-border: 1px solid color-mix(in oklab, currentColor 12%, transparent);
+	--sst-row-hover: color-mix(in oklab, currentColor 4%, transparent);
+	--sst-radius: 6px;
+	--sst-pad-cell: 8px 10px;
+	--sst-font-size: 13px;
+	color: var(--sst-fg);
+	font-size: var(--sst-font-size);
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.sst-table[data-sst-loading="true"] .sst-table__body {
+	opacity: 0.6;
+}
+
+.sst-table__table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.sst-table__head-cell,
+.sst-table__cell {
+	padding: var(--sst-pad-cell);
+	border-bottom: var(--sst-border);
+	text-align: left;
+	vertical-align: top;
+}
+
+.sst-table__head-cell {
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: var(--sst-muted);
+	user-select: none;
+}
+
+.sst-table__head-cell--sortable {
+	cursor: pointer;
+}
+
+.sst-table__head-cell--sortable:hover {
+	color: var(--sst-fg);
+}
+
+.sst-table__head-indicator {
+	display: inline-block;
+	margin-left: 6px;
+	font-size: 10px;
+	color: color-mix(in oklab, currentColor 40%, transparent);
+}
+
+.sst-table__head-cell[data-sort="asc"] .sst-table__head-indicator::before {
+	content: "↑";
+	color: var(--sst-fg);
+}
+
+.sst-table__head-cell[data-sort="desc"] .sst-table__head-indicator::before {
+	content: "↓";
+	color: var(--sst-fg);
+}
+
+.sst-table__head-cell[data-sort="none"] .sst-table__head-indicator::before {
+	content: "↕";
+}
+
+.sst-table__row:hover {
+	background: var(--sst-row-hover);
+}
+
+.sst-table__state-row td {
+	padding: 24px 12px;
+	text-align: center;
+	color: var(--sst-muted);
+	font-style: italic;
+}
+
+.sst-pagination {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+}
+
+.sst-pagination__btn {
+	font: inherit;
+	color: inherit;
+	background: color-mix(in oklab, currentColor 5%, transparent);
+	border: var(--sst-border);
+	border-radius: var(--sst-radius);
+	padding: 6px 12px;
+	cursor: pointer;
+}
+
+.sst-pagination__btn:hover:not(:disabled) {
+	background: color-mix(in oklab, currentColor 10%, transparent);
+}
+
+.sst-pagination__btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.sst-pagination__info {
+	color: var(--sst-muted);
+	font-size: 12px;
+}
