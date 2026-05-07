@@ -27,6 +27,8 @@ export interface IUseTableStoreReturn<T> {
 	updateSort(sort: ISortParams | undefined): void;
 	updateFilter(filters: readonly IFilterParams[]): void;
 	updateSearch(search: string): void;
+	updateData(data: readonly T[]): void;
+	updateTotal(total: number): void;
 }
 
 export function useTableStore<T>(options: ITableStoreOptions<T>): IUseTableStoreReturn<T> {
@@ -51,5 +53,7 @@ export function useTableStore<T>(options: ITableStoreOptions<T>): IUseTableStore
 		updateSort: store.updateSort.bind(store),
 		updateFilter: store.updateFilter.bind(store),
 		updateSearch: store.updateSearch.bind(store),
+		updateData: store.updateData.bind(store),
+		updateTotal: store.updateTotal.bind(store),
 	};
 }
