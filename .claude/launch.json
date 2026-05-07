@@ -2,9 +2,9 @@
 	"version": "0.0.1",
 	"configurations": [
 		{
-			"name": "test-dom",
+			"name": "test-ng",
 			"runtimeExecutable": "npm",
-			"runtimeArgs": ["run", "dev", "--prefix", "test/dom"],
+			"runtimeArgs": ["start", "--prefix", "test/ng"],
 			"port": 5173
 		}
 	]
