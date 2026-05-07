@@ -3,5 +3,8 @@
   "compilerOptions": {
     "declarationMap": false,
     "paths": {}
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
   }
 }
