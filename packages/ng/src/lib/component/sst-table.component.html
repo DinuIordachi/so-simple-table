@@ -1,0 +1,134 @@
+<div class="sst-table">
+	@if (searchEnabled() || bulk()) {
+		<div class="sst-table__toolbar">
+			@if (searchEnabled()) {
+				<div class="sst-table__search">
+					<input
+						type="text"
+						[attr.data-test-search]="''"
+						[attr.data-test-id]="testIdPrefix() + '-search'"
+						[placeholder]="searchPlaceholder()"
+						[value]="searchInput()"
+						(input)="onSearchInput($any($event.target).value)"
+					/>
+					@if (searchInput().length > 0) {
+						<button type="button" class="sst-table__search-clear" (click)="onClearSearch()" aria-label="Clear search">
+							×
+						</button>
+					}
+				</div>
+			}
+			@if (bulk()) {
+				<div class="sst-table__bulk">
+					@if (bulkActions) {
+						<ng-container *ngTemplateOutlet="bulkActions; context: { $implicit: bulkSelected() }" />
+					} @else {
+						<button
+							type="button"
+							[attr.data-test-id]="testIdPrefix() + '-bulk-delete'"
+							[disabled]="bulkSelected().size === 0 || bulkDeleteLoading()"
+							(click)="onBulkDelete()"
+						>
+							{{ bulkDeleteLabel() }}
+						</button>
+					}
+				</div>
+			}
+		</div>
+	}
+
+	<table class="sst-table__table">
+		<thead>
+			<tr>
+				@if (bulk()) {
+					<th class="sst-table__check-cell">
+						<input
+							type="checkbox"
+							[attr.data-test-bulk-all]="''"
+							[checked]="allChecked()"
+							[indeterminate]="indeterminate()"
+							(change)="onAllChecked($any($event.target).checked)"
+						/>
+					</th>
+				}
+				@for (column of columns(); track column.key) {
+					<th
+						[attr.data-test-th]="column.key"
+						[attr.data-sortable]="column.sortable ? 'true' : 'false'"
+						[class.sst-table__th--sortable]="column.sortable"
+						[style.width.px]="column.width || null"
+						(click)="onSortClick(column)"
+					>
+						<div class="sst-table__th-inner">
+							@if (headerCell) {
+								<ng-container *ngTemplateOutlet="headerCell; context: { $implicit: column }" />
+							} @else {
+								{{ column.name }}
+							}
+							@if (column.sortable) {
+								<span class="sst-table__sort-indicator">{{ sortIndicator(column) }}</span>
+							}
+						</div>
+					</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@if (service().data().length === 0 && !service().loading()) {
+				<tr>
+					<td [attr.colspan]="columns().length + (bulk() ? 1 : 0)" data-test-empty>
+						@if (emptyState) {
+							<ng-container *ngTemplateOutlet="emptyState" />
+						} @else {
+							<div class="sst-table__empty">{{ emptyText() }}</div>
+						}
+					</td>
+				</tr>
+			} @else {
+				@for (row of service().data(); track row.id; let rowIndex = $index) {
+					<tr>
+						@if (bulk()) {
+							<td class="sst-table__check-cell">
+								<input
+									type="checkbox"
+									[attr.data-test-bulk-row]="row.id"
+									[checked]="bulkSelected().has(row.id)"
+									(change)="onRowChecked(row.id, $any($event.target).checked)"
+								/>
+							</td>
+						}
+						@for (column of columns(); track column.key) {
+							<td>
+								@if (bodyCell) {
+									<ng-container *ngTemplateOutlet="bodyCell; context: { $implicit: row, column, index: rowIndex }" />
+								} @else {
+									{{ row[column.key] }}
+								}
+							</td>
+						}
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
+
+	@if (totalPages > 1) {
+		<div class="sst-table__pagination">
+			<button
+				type="button"
+				[disabled]="service().pagination().page <= 1"
+				(click)="onPageChange(service().pagination().page - 1)"
+			>‹</button>
+			<span>Page {{ service().pagination().page }} / {{ totalPages }}</span>
+			<button
+				type="button"
+				[disabled]="service().pagination().page >= totalPages"
+				(click)="onPageChange(service().pagination().page + 1)"
+			>›</button>
+		</div>
+	}
+
+	@if (service().loading()) {
+		<div class="sst-table__loading" aria-live="polite">Loading…</div>
+	}
+</div>
