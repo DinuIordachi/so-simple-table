@@ -8,8 +8,9 @@ export default defineConfig({
 		vue(),
 		dts({
 			tsconfigPath: './tsconfig.build.json',
-			rollupTypes: true,
+			rollupTypes: false,
 			copyDtsFiles: false,
+			insertTypesEntry: true,
 		}),
 	],
 	build: {

@@ -3,9 +3,9 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
 import type { IUseTableStoreReturn } from '../composables/use-table-store';
 
-interface IProps {
+export interface ISstTableProps<TItem extends { id: string }> {
 	columns: readonly IColumn[];
-	store: IUseTableStoreReturn<T>;
+	store: IUseTableStoreReturn<TItem>;
 	bulk?: boolean;
 	searchEnabled?: boolean;
 	searchPlaceholder?: string;
@@ -14,7 +14,7 @@ interface IProps {
 	bulkDeleteLabel?: string;
 }
 
-const props = withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<ISstTableProps<T>>(), {
 	bulk: false,
 	searchEnabled: false,
 	searchPlaceholder: 'Search',
