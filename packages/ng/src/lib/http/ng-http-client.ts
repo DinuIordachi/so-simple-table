@@ -8,41 +8,59 @@ export class NgHttpClient implements IHttpClient {
 	private readonly httpClient = inject(HttpClient);
 
 	public get<T>(url: string, options?: IHttpRequestOptions): Promise<T> {
+		const built = this.buildOptions(options);
 		return firstValueFrom(
 			this.httpClient.get<T>(url, {
-				params: this.buildParams(options?.params),
-				headers: options?.headers,
+				observe: 'body',
+				responseType: 'json',
+				...built,
 			}),
 		);
 	}
 
 	public post<T>(url: string, options?: IHttpRequestOptions): Promise<T> {
+		const built = this.buildOptions(options);
 		return firstValueFrom(
 			this.httpClient.post<T>(url, options?.body ?? null, {
-				params: this.buildParams(options?.params),
-				headers: options?.headers,
+				observe: 'body',
+				responseType: 'json',
+				...built,
 			}),
 		);
 	}
 
 	public put<T>(url: string, options?: IHttpRequestOptions): Promise<T> {
+		const built = this.buildOptions(options);
 		return firstValueFrom(
 			this.httpClient.put<T>(url, options?.body ?? null, {
-				params: this.buildParams(options?.params),
-				headers: options?.headers,
+				observe: 'body',
+				responseType: 'json',
+				...built,
 			}),
 		);
 	}
 
 	public delete<T>(url: string, options?: IHttpRequestOptions): Promise<T> {
+		const built = this.buildOptions(options);
 		return firstValueFrom(
 			this.httpClient.request<T>('DELETE', url, {
-				body: options?.body,
-				params: this.buildParams(options?.params),
-				headers: options?.headers,
+				observe: 'body',
 				responseType: 'json',
+				body: options?.body,
+				...built,
 			}),
 		);
+	}
+
+	private buildOptions(options: IHttpRequestOptions | undefined): {
+		params?: HttpParams;
+		headers?: Record<string, string>;
+	} {
+		const result: { params?: HttpParams; headers?: Record<string, string> } = {};
+		const params = this.buildParams(options?.params);
+		if (params !== undefined) result.params = params;
+		if (options?.headers !== undefined) result.headers = options.headers;
+		return result;
 	}
 
 	private buildParams(params: HttpQueryParams | undefined): HttpParams | undefined {
