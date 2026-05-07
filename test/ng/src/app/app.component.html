@@ -1,0 +1,17 @@
+<header>
+	<h1>@sst/ng — browser smoke test</h1>
+	<p>Renders <a href="https://dogapi.dog/api/v2/breeds" target="_blank" rel="noopener">dogapi.dog</a> through <code>&lt;sst-table&gt;</code>.</p>
+</header>
+
+<main>
+	<sst-table [columns]="columns" [service]="service">
+		<ng-template #bodyCell let-row let-column="column">
+			@switch (column.key) {
+				@case ('description') { <span class="description">{{ row.description.length > 90 ? row.description.slice(0, 90) + '…' : row.description }}</span> }
+				@case ('hypoallergenic') { <span class="badge" [class.badge--yes]="row.hypoallergenic" [class.badge--no]="!row.hypoallergenic">{{ row.hypoallergenic ? 'YES' : 'no' }}</span> }
+				@case ('life') { <span>{{ row.lifeMin }}–{{ row.lifeMax }} yrs</span> }
+				@default { <span>{{ row[column.key] }}</span> }
+			}
+		</ng-template>
+	</sst-table>
+</main>
