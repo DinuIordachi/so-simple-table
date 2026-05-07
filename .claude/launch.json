@@ -2,9 +2,9 @@
 	"version": "0.0.1",
 	"configurations": [
 		{
-			"name": "test-ng",
+			"name": "test-vue",
 			"runtimeExecutable": "npm",
-			"runtimeArgs": ["start", "--prefix", "test/ng"],
+			"runtimeArgs": ["run", "dev", "--prefix", "test/vue"],
 			"port": 5173
 		}
 	]
