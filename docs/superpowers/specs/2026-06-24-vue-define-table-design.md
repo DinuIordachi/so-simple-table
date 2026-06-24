@@ -37,12 +37,12 @@ New file `packages/vue/src/lib/composables/define-table.ts`, re-exported from `p
 export interface IDefineTableConfig<T extends { id: string }, TRaw = unknown> {
   // repository / HTTP
   baseUrl: string;
-  headers?: Record<string, string>;                 // → FetchHttpClient baseHeaders
-  httpClient?: IHttpClient;                          // escape hatch; overrides headers-based default
-  mapResponse?: (raw: TRaw) => IResponseList<T[]>;   // typed-input responseListMapper
+  headers?: Record<string, string>; // → FetchHttpClient baseHeaders
+  httpClient?: IHttpClient; // escape hatch; overrides headers-based default
+  mapResponse?: (raw: TRaw) => IResponseList<T[]>; // typed-input responseListMapper
   queryKeys?: Partial<IRepositoryQueryKeys>;
   // store
-  sortMap?: Readonly<Record<string, string>>;        // default {} → no server-side sort
+  sortMap?: Readonly<Record<string, string>>; // default {} → no server-side sort
   filterMap?: Readonly<Record<string, string>>;
   initialPagination?: IPaginationParams;
   paramFormatting?: IParamFormattingStrategy;
@@ -63,8 +63,7 @@ export function defineTable<T extends { id: string }, TRaw = unknown>(
 
 ```ts
 return function useTable(): IUseTableStoreReturn<T> {
-  const httpClient =
-    config.httpClient ?? new FetchHttpClient(config.headers ? { baseHeaders: config.headers } : {});
+  const httpClient = config.httpClient ?? new FetchHttpClient(config.headers ? { baseHeaders: config.headers } : {});
 
   const repository = new HttpListRepository<T>({
     baseUrl: config.baseUrl,
@@ -85,6 +84,7 @@ return function useTable(): IUseTableStoreReturn<T> {
 ```
 
 Notes:
+
 - `mapResponse` is wrapped (not cast as a whole function) so the contravariant `(raw: TRaw)` → `(raw: unknown)` mismatch stays contained and the unsafe cast is a single `raw as TRaw`.
 - Conditional-spread idiom matches the codebase convention for `exactOptionalPropertyTypes` (see `table-store.ts`, `sst-ng-list.repository.ts`).
 - `queryKeys` is consumed by the **store** (`mapTableParams`); `HttpListRepository.getList` passes params through. Passing it to the store is sufficient and is the single source of truth.
@@ -96,8 +96,17 @@ Notes:
 // breed-table.ts
 import { defineTable } from '@sst/vue';
 
-export interface IBreed { id: string; name: string; description: string; hypoallergenic: boolean; lifeMin: number; lifeMax: number; }
-interface IDogApiResponse { /* raw dogapi shape */ }
+export interface IBreed {
+  id: string;
+  name: string;
+  description: string;
+  hypoallergenic: boolean;
+  lifeMin: number;
+  lifeMax: number;
+}
+interface IDogApiResponse {
+  /* raw dogapi shape */
+}
 
 export const useBreedTable = defineTable<IBreed, IDogApiResponse>({
   baseUrl: 'https://dogapi.dog/api/v2/breeds',
@@ -106,7 +115,7 @@ export const useBreedTable = defineTable<IBreed, IDogApiResponse>({
   sortMap: {},
   initialPagination: { page: 1, pageSize: 10 },
   mapResponse: (raw) => ({
-    result: raw.data.map((b) => ({ id: b.id, name: b.attributes.name, /* … */ })),
+    result: raw.data.map((b) => ({ id: b.id, name: b.attributes.name /* … */ })),
     totalCount: raw.meta.pagination.records,
     isSuccess: true,
   }),
@@ -160,9 +169,25 @@ const truncate = (t: string, max = 90) => (t.length > max ? `${t.slice(0, max)}�
 ## Out of scope
 
 - Create/update/delete in the factory (list-only for now).
-- Any change to `@sst/core`, `@sst/ng`, `@sst/dom`, or `@sst/react`.
+- Changes to `@sst/ng`, `@sst/dom`, or `@sst/react`.
 - React adapter ergonomics (could mirror this later).
 - Changing `SstTable.vue`'s generic constraint or slot contracts.
+
+## Addendum (discovered during implementation): `@sst/core` `+json` fix
+
+Originally `@sst/core` was out of scope. Implementation surfaced a real bug that
+blocked the clean example: dogapi returns `content-type: application/vnd.api+json`,
+but `FetchHttpClient` only parsed bodies whose content-type `includes('application/json')`
+— which the JSON:API media type does not. It fell through to `response.text()`, so
+`mapResponse` received a string and the table rendered empty. The old hand-written
+`JsonApiHttpClient` had masked this by always calling `response.json()`.
+
+Fix (approved as an in-scope expansion): `FetchHttpClient` now treats
+`application/json` **and any RFC 6839 `+json` structured-syntax suffix**
+(`application/vnd.api+json`, `application/hal+json`, `application/problem+json`, …)
+as JSON. ~3-line change in `packages/core/src/http/fetch-http-client.ts` plus two
+unit tests in `fetch-http-client.test.ts`. Benefits every adapter and keeps the Vue
+example free of a custom HTTP client.
 
 ## Success criteria
 
