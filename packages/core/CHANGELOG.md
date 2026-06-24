@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Declarative backend conventions: `paginationStyle` (`'page'`/`'offset'`),
+  `sortStyle` (`'flag'`/`'direction'`) with `sortDirections`, and `searchEndpoint`
+  routing on `HttpListRepository`/`TableStore` — adapt offset pagination,
+  `asc/desc` sort, and a search sub-endpoint without a custom HTTP client.
+
 ## [0.2.0] - 2026-06-24
 
 ### Added

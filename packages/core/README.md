@@ -50,6 +50,24 @@ new HttpRepository({
 });
 ```
 
+## Backend conventions
+
+Adapt common REST shapes — offset pagination, `asc/desc` sort, a search
+sub-endpoint — through config, with no custom HTTP client:
+
+```ts
+new HttpRepository({
+  baseUrl: 'https://dummyjson.com/products',
+  paginationStyle: 'offset', // skip + limit instead of page + pageSize
+  sortStyle: 'direction', // sortBy + order=asc|desc instead of orderBy + orderByDescending
+  searchEndpoint: '/search', // route search to `${baseUrl}/search`
+  queryKeys: { page: 'skip', pageSize: 'limit', orderBy: 'sortBy', orderByDescending: 'order', search: 'q' },
+});
+```
+
+Defaults are unchanged (`'page'` / `'flag'` / no search routing). Use
+`sortDirections` to override the `asc`/`desc` tokens (e.g. `{ asc: 'ASC', desc: 'DESC' }`).
+
 ## Custom response shape
 
 ```ts

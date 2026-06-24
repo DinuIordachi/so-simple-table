@@ -111,6 +111,23 @@ const useTable = defineTable<IBreed>({
 });
 ```
 
+### Backend conventions
+
+Adapt non-canonical REST APIs without a custom client via `paginationStyle`
+(`'offset'` → `skip`/`limit`), `sortStyle` (`'direction'` → `sortBy` + `order=asc|desc`,
+with optional `sortDirections` tokens), and `searchEndpoint` (route search to a
+sub-path):
+
+```ts
+const useProducts = defineTable<IProduct>({
+  baseUrl: 'https://dummyjson.com/products',
+  paginationStyle: 'offset',
+  sortStyle: 'direction',
+  searchEndpoint: '/search',
+  queryKeys: { page: 'skip', pageSize: 'limit', orderBy: 'sortBy', orderByDescending: 'order', search: 'q' },
+});
+```
+
 ## Lower-level: `useTableStore`
 
 When you already have a `@sst/core` repository (or need to share one), skip `defineTable` and wire the store directly:

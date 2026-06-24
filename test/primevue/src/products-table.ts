@@ -1,5 +1,4 @@
 import { defineTable } from '@sst/vue';
-import { DummyJsonClient } from './dummyjson-client';
 
 export interface IProduct {
 	id: string;
@@ -24,10 +23,17 @@ interface IDummyJsonResponse {
 	total: number;
 }
 
+// DummyJSON's wire format differs from the canonical defaults — but no custom
+// HTTP client is needed: the declarative options below adapt it.
+//   - paginationStyle 'offset' → skip/limit
+//   - sortStyle 'direction'    → sortBy + order=asc|desc
+//   - searchEndpoint '/search' → routes search to /products/search
 export const useProductsTable = defineTable<IProduct, IDummyJsonResponse>({
 	baseUrl: 'https://dummyjson.com/products',
-	httpClient: new DummyJsonClient(),
-	queryKeys: { pageSize: 'limit', orderBy: 'sortBy', orderByDescending: 'order', search: 'q' },
+	paginationStyle: 'offset',
+	sortStyle: 'direction',
+	searchEndpoint: '/search',
+	queryKeys: { page: 'skip', pageSize: 'limit', orderBy: 'sortBy', orderByDescending: 'order', search: 'q' },
 	sortMap: {
 		title: 'title',
 		brand: 'brand',
