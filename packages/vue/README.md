@@ -151,6 +151,38 @@ const table = useTableStore<IBreed>({ repository, sortMap: { name: 'ByName' } })
 
 When omitted, sensible defaults render automatically. `row` is typed as your row type `T`, so concrete field access needs no casts.
 
+## PrimeVue (`@sst/vue/primevue`)
+
+Render your table with PrimeVue v4's `DataTable` (lazy mode) while keeping every native DataTable feature and your app's theme. Requires `primevue` (>= 4) as a peer dependency; `@sst/vue/primevue` ships no CSS.
+
+```vue
+<script setup lang="ts">
+import Column from 'primevue/column';
+import { SstDataTable } from '@sst/vue/primevue';
+import { useBreedsTable } from './breeds-table'; // a defineTable composable
+
+const table = useBreedsTable();
+</script>
+
+<template>
+  <SstDataTable :store="table" paginator :rows="10" :rowsPerPageOptions="[10, 20, 50]">
+    <Column field="name" header="Breed" sortable />
+    <Column field="life" header="Lifespan">
+      <template #body="{ data }">{{ data.lifeMin }}–{{ data.lifeMax }} yrs</template>
+    </Column>
+  </SstDataTable>
+</template>
+```
+
+Prefer full control? Use the headless composable and render `<DataTable>` yourself:
+
+```ts
+import { useSstDataTable } from '@sst/vue/primevue';
+const bindings = useSstDataTable(table); // spread onto <DataTable v-bind="bindings" dataKey="id">
+```
+
+`useSstDataTable(store, options?)` maps PrimeVue's `@page` / `@sort` / `@filter` onto the store (single-column sort; global filter → search; per-column value → filters, overridable via `options.mapFilters`) and exposes `removeSelected(rows)` for bulk delete. Pass `immediate: false` to skip the on-mount fetch.
+
 ## Links
 
 - [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)

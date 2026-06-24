@@ -35,6 +35,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./primevue": {
+      "types": "./dist/primevue/index.d.ts",
+      "import": "./dist/primevue.js",
+      "require": "./dist/primevue.cjs"
+    },
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },
@@ -58,7 +63,13 @@
   },
   "peerDependencies": {
     "@sst/core": "*",
+    "primevue": "^4.0.0",
     "vue": "^3.5.0"
+  },
+  "peerDependenciesMeta": {
+    "primevue": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.0",

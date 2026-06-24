@@ -40,7 +40,9 @@ describe('SstDataTable', () => {
 		const store = makeStore([{ id: '1', name: 'Ada' }]);
 		const wrapper = mount(SstDataTable, {
 			global: { plugins: [PrimeVue], components: { Column } },
-			props: { store },
+			// Cast: @vue/test-utils can't infer the generic component's T from props,
+			// and IUseTableStoreReturn is invariant in T. Runtime value is the real store.
+			props: { store: store as never },
 			slots: { default: '<Column field="name" header="Name" />' },
 		});
 		expect(store.refresh).toHaveBeenCalledTimes(1);

@@ -15,16 +15,24 @@ export default defineConfig({
 	],
 	build: {
 		lib: {
-			entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
-			name: 'SstVue',
+			entry: {
+				index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+				primevue: fileURLToPath(new URL('./src/primevue/index.ts', import.meta.url)),
+			},
 			formats: ['es', 'cjs'],
-			fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
+			fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
 		},
 		rollupOptions: {
-			external: ['vue', '@sst/core'],
+			external: (id) =>
+				id === 'vue' ||
+				id === '@sst/core' ||
+				id === 'primevue' ||
+				id.startsWith('primevue/') ||
+				id.startsWith('@primevue/'),
 			output: {
 				globals: { vue: 'Vue', '@sst/core': 'SstCore' },
-				assetFileNames: (assetInfo) => (assetInfo.name === 'style.css' ? 'style.css' : assetInfo.name ?? 'asset'),
+				assetFileNames: (assetInfo) =>
+					assetInfo.name === 'style.css' ? 'style.css' : (assetInfo.name ?? 'asset'),
 			},
 		},
 		sourcemap: true,

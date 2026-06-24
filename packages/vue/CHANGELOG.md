@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `@sst/vue/primevue` subpath: `useSstDataTable` composable and `<SstDataTable>`
+  wrapper binding a `TableStore` to a PrimeVue v4 `DataTable` (lazy mode), with
+  `primevue` as an optional peer dependency.
+
 ## [0.1.0] - 2026-06-24
 
 ### Added

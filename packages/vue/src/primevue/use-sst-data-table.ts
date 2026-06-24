@@ -171,7 +171,7 @@ export function useSstDataTable<T extends { id: string }>(
 			}, filterDebounceMs);
 		},
 		removeSelected(rows: T | readonly T[]): Promise<IResponse<string>> {
-			const list = Array.isArray(rows) ? (rows as readonly T[]) : [rows];
+			const list: readonly T[] = Array.isArray(rows) ? (rows as readonly T[]) : [rows as T];
 			return store.bulkDelete(list.map((row) => row.id));
 		},
 	});
