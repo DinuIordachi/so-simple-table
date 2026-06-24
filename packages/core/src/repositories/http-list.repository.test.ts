@@ -63,4 +63,36 @@ describe('HttpListRepository', () => {
 		await repo.bulkDelete(['1', '2']);
 		expect(client.delete).toHaveBeenCalledWith('https://api.test/items/bulk_delete', { body: ['1', '2'] });
 	});
+
+	it('routes to the search endpoint when a search param is present', async () => {
+		const client = makeClient({
+			get: vi.fn().mockResolvedValue({ result: [], totalCount: 0, isSuccess: true }),
+		});
+		const repo = new TestRepository({
+			baseUrl: 'https://api.test/products',
+			httpClient: client,
+			searchEndpoint: '/search',
+			queryKeys: { search: 'q' },
+		});
+		await repo.getList({ q: 'phone', limit: 10 });
+		expect(client.get).toHaveBeenCalledWith('https://api.test/products/search', {
+			params: { q: 'phone', limit: 10 },
+		});
+	});
+
+	it('uses the base URL when search is absent or empty', async () => {
+		const client = makeClient({
+			get: vi.fn().mockResolvedValue({ result: [], totalCount: 0, isSuccess: true }),
+		});
+		const repo = new TestRepository({
+			baseUrl: 'https://api.test/products',
+			httpClient: client,
+			searchEndpoint: '/search',
+			queryKeys: { search: 'q' },
+		});
+		await repo.getList({ limit: 10 });
+		expect(client.get).toHaveBeenCalledWith('https://api.test/products', { params: { limit: 10 } });
+		await repo.getList({ q: '', limit: 10 });
+		expect(client.get).toHaveBeenLastCalledWith('https://api.test/products', { params: { q: '', limit: 10 } });
+	});
 });

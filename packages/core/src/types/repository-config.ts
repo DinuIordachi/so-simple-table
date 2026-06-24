@@ -73,6 +73,8 @@ export interface IRepositoryConfig<T = unknown> {
 	readonly paramFormatting?: IParamFormattingStrategy;
 	/** Maps a raw list payload into the canonical {@link IResponseList} shape. */
 	readonly responseListMapper?: ResponseListMapper<T>;
+	/** When search is active, route the request to `` `${baseUrl}${searchEndpoint}` `` (e.g. `'/search'`). */
+	readonly searchEndpoint?: string;
 }
 
 /**
