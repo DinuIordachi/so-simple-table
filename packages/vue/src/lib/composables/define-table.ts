@@ -6,6 +6,9 @@ import {
 	type IParamFormattingStrategy,
 	type IRepositoryQueryKeys,
 	type IResponseList,
+	type ISortDirections,
+	type PaginationStyle,
+	type SortStyle,
 } from '@sst/core';
 import { useTableStore, type IUseTableStoreReturn } from './use-table-store';
 
@@ -28,6 +31,14 @@ export interface IDefineTableConfig<T extends { id: string }, TRaw = unknown> {
 	readonly initialPagination?: IPaginationParams;
 	/** Advanced filter/sort formatting strategy. */
 	readonly paramFormatting?: IParamFormattingStrategy;
+	/** Pagination wire style; `'page'` (default) or `'offset'` (skip + limit). */
+	readonly paginationStyle?: PaginationStyle;
+	/** Sort wire style; `'flag'` (default) or `'direction'` (sortBy + asc/desc). */
+	readonly sortStyle?: SortStyle;
+	/** Tokens for `'direction'` sort style; defaults to `{ asc: 'asc', desc: 'desc' }`. */
+	readonly sortDirections?: ISortDirections;
+	/** When search is active, route to `` `${baseUrl}${searchEndpoint}` `` (e.g. `'/search'`). */
+	readonly searchEndpoint?: string;
 }
 
 /**
@@ -81,6 +92,7 @@ export function defineTable<T extends { id: string }, TRaw = unknown>(
 				? { responseListMapper: (raw: unknown): IResponseList<T[]> => mapResponse(raw as TRaw) }
 				: {}),
 			...(config.queryKeys ? { queryKeys: config.queryKeys } : {}),
+			...(config.searchEndpoint ? { searchEndpoint: config.searchEndpoint } : {}),
 		});
 
 		return useTableStore<T>({
@@ -90,6 +102,9 @@ export function defineTable<T extends { id: string }, TRaw = unknown>(
 			...(config.initialPagination ? { initialPagination: config.initialPagination } : {}),
 			...(config.queryKeys ? { queryKeys: config.queryKeys } : {}),
 			...(config.paramFormatting ? { paramFormatting: config.paramFormatting } : {}),
+			...(config.paginationStyle ? { paginationStyle: config.paginationStyle } : {}),
+			...(config.sortStyle ? { sortStyle: config.sortStyle } : {}),
+			...(config.sortDirections ? { sortDirections: config.sortDirections } : {}),
 		});
 	};
 }

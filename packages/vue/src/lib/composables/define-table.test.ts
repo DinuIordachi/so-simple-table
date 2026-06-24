@@ -133,4 +133,30 @@ describe('defineTable', () => {
 		scope.stop();
 		vi.unstubAllGlobals();
 	});
+
+	it('threads paginationStyle/searchEndpoint into the request', async () => {
+		const { client, get } = stubClient({
+			result: [],
+			totalCount: 0,
+			isSuccess: true,
+		} satisfies IResponseList<IItem[]>);
+		const useTable = defineTable<IItem>({
+			baseUrl: 'https://api.test/items',
+			httpClient: client,
+			paginationStyle: 'offset',
+			searchEndpoint: '/search',
+			queryKeys: { page: 'skip', pageSize: 'limit', search: 'q' },
+		});
+		const scope = effectScope();
+		await scope.run(async () => {
+			const t = useTable();
+			t.updateSearch('x');
+			await flush();
+			const url = get.mock.calls.at(-1)?.[0];
+			const params = (get.mock.calls.at(-1)?.[1] as IHttpRequestOptions | undefined)?.params ?? {};
+			expect(url).toBe('https://api.test/items/search');
+			expect(params).toMatchObject({ skip: 0, limit: 10, q: 'x' });
+		});
+		scope.stop();
+	});
 });
