@@ -93,4 +93,25 @@ describe('FetchHttpClient', () => {
 		const [, init] = mockFetch.mock.calls[0]!;
 		expect((init as RequestInit).signal).toBe(controller.signal);
 	});
+
+	it('parses +json structured-syntax suffix content types (e.g. JSON:API)', async () => {
+		mockFetch.mockResolvedValue(
+			new Response(JSON.stringify({ data: [{ id: '1' }] }), {
+				status: 200,
+				headers: { 'content-type': 'application/vnd.api+json; charset=utf-8' },
+			}),
+		);
+		const client = new FetchHttpClient();
+		const result = await client.get<{ data: Array<{ id: string }> }>('https://api.test/items');
+		expect(result).toEqual({ data: [{ id: '1' }] });
+	});
+
+	it('falls back to text for non-JSON content types', async () => {
+		mockFetch.mockResolvedValue(
+			new Response('plain text', { status: 200, headers: { 'content-type': 'text/plain' } }),
+		);
+		const client = new FetchHttpClient();
+		const result = await client.get<string>('https://api.test/items');
+		expect(result).toBe('plain text');
+	});
 });
