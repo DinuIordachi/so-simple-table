@@ -1,11 +1,17 @@
 {
-	"version": "0.0.1",
-	"configurations": [
-		{
-			"name": "test-vue",
-			"runtimeExecutable": "npm",
-			"runtimeArgs": ["run", "dev", "--prefix", "test/vue"],
-			"port": 5173
-		}
-	]
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "test-vue",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "test/vue"],
+      "port": 5173
+    },
+    {
+      "name": "test-primevue",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "test/primevue"],
+      "port": 5174
+    }
+  ]
 }
