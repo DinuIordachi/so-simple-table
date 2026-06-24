@@ -5,7 +5,11 @@ import { ListRepository } from '@sst/core';
 import { SstTableService } from '../store/sst-table.service';
 import { SstTableComponent } from './sst-table.component';
 
-interface IItem { id: string; name: string; status: 'active' | 'paused'; }
+interface IItem {
+	id: string;
+	name: string;
+	status: 'active' | 'paused';
+}
 
 @Injectable()
 class StubRepository extends ListRepository<IItem> {
@@ -17,12 +21,16 @@ class StubRepository extends ListRepository<IItem> {
 		totalCount: 2,
 		isSuccess: true,
 	} satisfies IResponseList<IItem[]>);
-	public override bulkDelete = jest.fn().mockResolvedValue({ result: 'ok', isSuccess: true } satisfies IResponse<string>);
+	public override bulkDelete = jest
+		.fn()
+		.mockResolvedValue({ result: 'ok', isSuccess: true } satisfies IResponse<string>);
 }
 
 @Injectable()
 class TestTableService extends SstTableService<IItem> {
-	public constructor(repository: StubRepository) { super({ repository, sortMap: { name: 'ByName' } }); }
+	public constructor(repository: StubRepository) {
+		super({ repository, sortMap: { name: 'ByName' } });
+	}
 }
 
 @Component({
@@ -45,7 +53,9 @@ class HostComponent {
 		{ key: 'status', name: 'Status' },
 	];
 	public readonly service: TestTableService;
-	public constructor(service: TestTableService) { this.service = service; }
+	public constructor(service: TestTableService) {
+		this.service = service;
+	}
 }
 
 describe('SstTableComponent', () => {
@@ -101,7 +111,9 @@ describe('SstTableComponent', () => {
 		const headerCheckbox = fixture.nativeElement.querySelector('input[data-test-bulk-all]') as HTMLInputElement;
 		headerCheckbox.click();
 		fixture.detectChanges();
-		const rowCheckboxes = fixture.nativeElement.querySelectorAll('input[data-test-bulk-row]') as NodeListOf<HTMLInputElement>;
+		const rowCheckboxes = fixture.nativeElement.querySelectorAll(
+			'input[data-test-bulk-row]',
+		) as NodeListOf<HTMLInputElement>;
 		expect(Array.from(rowCheckboxes).every((c) => c.checked)).toBe(true);
 	});
 });

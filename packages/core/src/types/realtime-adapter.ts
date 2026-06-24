@@ -7,5 +7,9 @@ import type { Unsubscribe } from '../state/observable';
  * interface only locks in the contract so plugins can be added without churn.
  */
 export interface IRealtimeAdapter<T> {
+	/**
+	 * Wires the live data source to the given store and returns a function that
+	 * disconnects the source and releases its resources.
+	 */
 	connect(store: ITableStore<T>): Unsubscribe;
 }

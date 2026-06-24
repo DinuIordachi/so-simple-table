@@ -8,6 +8,41 @@ import { renderPagination } from './render/render-pagination';
 const DEFAULT_EMPTY_MESSAGE = 'No rows to display';
 const DEFAULT_LOADING_MESSAGE = 'Loading…';
 
+/**
+ * Mounts a reactive HTML table into the page and keeps it synchronized with a
+ * {@link @sst/core#ITableStore}.
+ *
+ * The table is rendered as a `<div class="sst-table">` wrapper containing a
+ * `<table>` (head + body) and a pagination `<nav>`. After the initial render,
+ * the function subscribes to the store's `data$`, `loading$`, `total$`,
+ * `pagination$`, and `sort$` observables and updates the corresponding DOM in
+ * place as they change. Clicking a sortable header cycles its sort through
+ * ascending, descending, and unsorted; the pagination buttons advance or
+ * rewind `store.pagination$` within bounds. The wrapper's `data-sst-loading`
+ * attribute mirrors `store.loading$`. Finally, `store.refresh()` is called to
+ * trigger the initial data load.
+ *
+ * @typeParam T - The shape of a single row in the table data set.
+ * @param options - Mount target, store, columns, and optional state messages.
+ * @returns A handle for refreshing the data or tearing the table down.
+ * @throws Error If `options.target` is a selector that matches no element.
+ *
+ * @example
+ * ```ts
+ * const handle = mountTable({
+ * 	target: '#app',
+ * 	store,
+ * 	columns: [
+ * 		{ name: 'Name', key: 'name', sortable: true },
+ * 		{ name: 'Email', key: 'email' },
+ * 	],
+ * });
+ *
+ * // later…
+ * handle.refresh();
+ * handle.destroy();
+ * ```
+ */
 export function mountTable<T>(options: IMountOptions<T>): ITableHandle {
 	const root = resolveTarget(options.target);
 
@@ -60,10 +95,9 @@ export function mountTable<T>(options: IMountOptions<T>): ITableHandle {
 
 	const unsubs: Unsubscribe[] = [];
 	unsubs.push(
-		options.store.data$.subscribe(
-			(data) => body.update(data, options.store.loading$.get()),
-			{ emitOnSubscribe: false },
-		),
+		options.store.data$.subscribe((data) => body.update(data, options.store.loading$.get()), {
+			emitOnSubscribe: false,
+		}),
 	);
 	unsubs.push(
 		options.store.loading$.subscribe(

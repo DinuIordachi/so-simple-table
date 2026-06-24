@@ -9,7 +9,11 @@ import SstTable from './SstTable.vue';
 // so we cast once here and use the typed alias throughout.
 const SstTableComponent = SstTable as unknown as Component;
 
-interface IItem { id: string; name: string; status: 'active' | 'paused'; }
+interface IItem {
+	id: string;
+	name: string;
+	status: 'active' | 'paused';
+}
 
 class StubRepository extends ListRepository<IItem> {
 	public override getList = vi.fn<(...a: unknown[]) => Promise<IResponseList<IItem[]>>>().mockResolvedValue({
@@ -66,7 +70,9 @@ describe('<SstTable>', () => {
 	it('renders the empty state when no data is present', async () => {
 		const wrapper = mount(makeHost());
 		await flushPromises();
-		(wrapper.vm as { t: { updateData: (d: readonly IItem[]) => void; updateTotal: (n: number) => void } }).t.updateData([]);
+		(
+			wrapper.vm as { t: { updateData: (d: readonly IItem[]) => void; updateTotal: (n: number) => void } }
+		).t.updateData([]);
 		(wrapper.vm as { t: { updateTotal: (n: number) => void } }).t.updateTotal(0);
 		await wrapper.vm.$nextTick();
 		expect(wrapper.find('[data-test-empty]').exists()).toBe(true);

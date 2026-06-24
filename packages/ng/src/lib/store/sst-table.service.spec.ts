@@ -4,7 +4,10 @@ import type { IResponse, IResponseList } from '@sst/core';
 import { ListRepository } from '@sst/core';
 import { SstTableService } from './sst-table.service';
 
-interface IItem { id: string; name: string; }
+interface IItem {
+	id: string;
+	name: string;
+}
 
 @Injectable()
 class StubRepository extends ListRepository<IItem> {
@@ -32,7 +35,14 @@ describe('SstTableService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [StubRepository, { provide: TestTableService, useFactory: (r: StubRepository) => new TestTableService(r), deps: [StubRepository] }],
+			providers: [
+				StubRepository,
+				{
+					provide: TestTableService,
+					useFactory: (r: StubRepository) => new TestTableService(r),
+					deps: [StubRepository],
+				},
+			],
 		});
 		repo = TestBed.inject(StubRepository);
 		service = TestBed.inject(TestTableService);

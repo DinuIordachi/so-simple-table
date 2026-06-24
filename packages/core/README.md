@@ -1,5 +1,7 @@
 # @sst/core
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 Framework-agnostic core for **So Simple Table**. Zero runtime dependencies.
 
 ## Installation
@@ -14,8 +16,8 @@ npm install @sst/core
 import { HttpRepository, TableStore, type IBaseItem } from '@sst/core';
 
 interface IStrategy extends IBaseItem {
-	createdAt: string;
-	status: 'active' | 'paused';
+  createdAt: string;
+  status: 'active' | 'paused';
 }
 
 class StrategyRepository extends HttpRepository<IStrategy> {}
@@ -23,13 +25,13 @@ class StrategyRepository extends HttpRepository<IStrategy> {}
 const repository = new StrategyRepository({ baseUrl: 'https://api.example.com/strategies' });
 
 const store = new TableStore<IStrategy>({
-	repository,
-	sortMap: { createdAt: 'ByCreationDate' },
-	filterMap: { status: 'FilterStatus' },
+  repository,
+  sortMap: { createdAt: 'ByCreationDate' },
+  filterMap: { status: 'FilterStatus' },
 });
 
 store.data$.subscribe((rows) => {
-	console.log('rows', rows);
+  console.log('rows', rows);
 });
 ```
 
@@ -37,14 +39,14 @@ store.data$.subscribe((rows) => {
 
 ```ts
 new HttpRepository({
-	baseUrl: 'https://api.example.com/strategies',
-	queryKeys: {
-		page: 'pageNumber',
-		pageSize: 'limit',
-		orderBy: 'sortBy',
-		orderByDescending: 'sortDesc',
-		search: 'q',
-	},
+  baseUrl: 'https://api.example.com/strategies',
+  queryKeys: {
+    page: 'pageNumber',
+    pageSize: 'limit',
+    orderBy: 'sortBy',
+    orderByDescending: 'sortDesc',
+    search: 'q',
+  },
 });
 ```
 
@@ -52,11 +54,11 @@ new HttpRepository({
 
 ```ts
 new HttpRepository<IStrategy>({
-	baseUrl: 'https://api.example.com/strategies',
-	responseListMapper: (raw) => {
-		const r = raw as { items: IStrategy[]; total: number };
-		return { result: r.items, totalCount: r.total, isSuccess: true };
-	},
+  baseUrl: 'https://api.example.com/strategies',
+  responseListMapper: (raw) => {
+    const r = raw as { items: IStrategy[]; total: number };
+    return { result: r.items, totalCount: r.total, isSuccess: true };
+  },
 });
 ```
 
@@ -77,17 +79,22 @@ new HttpRepository({ baseUrl: '...', httpClient: myClient });
 
 ## Public API
 
-| Export | Purpose |
-| --- | --- |
-| `Observable<T>` | Tiny reactive primitive with `get()`, `set()`, `subscribe()`. |
-| `watch(observables, cb)` | Coalesce multi-observable changes into one microtask callback. |
-| `TableStore<T>` | Reactive table state + auto-refresh on query changes. |
-| `ListRepository<T>` / `SelectRepository<T>` / `Repository<T>` | Abstract bases. |
-| `HttpListRepository<T>` / `HttpSelectRepository<T>` / `HttpRepository<T>` | HTTP variants. |
-| `FetchHttpClient` | Default `IHttpClient` over the `fetch` API. |
-| `mapTableParams(input)` | Pure function that builds query params for the wire. |
-| `IRealtimeAdapter<T>` | Contract for future real-time adapters. |
+| Export                                                                    | Purpose                                                        |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `Observable<T>`                                                           | Tiny reactive primitive with `get()`, `set()`, `subscribe()`.  |
+| `watch(observables, cb)`                                                  | Coalesce multi-observable changes into one microtask callback. |
+| `TableStore<T>`                                                           | Reactive table state + auto-refresh on query changes.          |
+| `ListRepository<T>` / `SelectRepository<T>` / `Repository<T>`             | Abstract bases.                                                |
+| `HttpListRepository<T>` / `HttpSelectRepository<T>` / `HttpRepository<T>` | HTTP variants.                                                 |
+| `FetchHttpClient`                                                         | Default `IHttpClient` over the `fetch` API.                    |
+| `mapTableParams(input)`                                                   | Pure function that builds query params for the wire.           |
+| `IRealtimeAdapter<T>`                                                     | Contract for future real-time adapters.                        |
+
+## Links
+
+- [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)
+- [Changelog](./CHANGELOG.md)
 
 ## License
 
-MIT
+[MIT](./LICENSE) © Dinu Iordachi

@@ -4,7 +4,10 @@ import { TableStore } from './table-store';
 import type { ListRepository } from '../repositories/list.repository';
 import type { IResponse, IResponseList } from '../types/response';
 
-interface IItem { id: string; name: string; }
+interface IItem {
+	id: string;
+	name: string;
+}
 
 class StubListRepository implements ListRepository<IItem> {
 	public readonly getListMock = vi.fn<(...args: unknown[]) => Promise<IResponseList<IItem[]>>>();

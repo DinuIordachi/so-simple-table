@@ -2,6 +2,30 @@
   "name": "@sst/ng",
   "version": "0.1.0",
   "description": "So Simple Table — Angular adapter and default UI component on top of @sst/core.",
+  "keywords": [
+    "table",
+    "data-table",
+    "angular",
+    "angular-table",
+    "angular-component",
+    "signals",
+    "reactive",
+    "pagination",
+    "sorting",
+    "typescript",
+    "so-simple-table"
+  ],
+  "homepage": "https://github.com/DinuIordachi/so-simple-table/tree/master/packages/ng#readme",
+  "bugs": {
+    "url": "https://github.com/DinuIordachi/so-simple-table/issues"
+  },
+  "license": "MIT",
+  "author": "Dinu Iordachi <dimaiordachi3@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DinuIordachi/so-simple-table.git",
+    "directory": "packages/ng"
+  },
   "type": "module",
   "sideEffects": false,
   "scripts": {

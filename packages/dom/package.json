@@ -2,6 +2,29 @@
   "name": "@sst/dom",
   "version": "0.1.0",
   "description": "So Simple Table — vanilla DOM variant. Renders an @sst/core TableStore as an HTML table.",
+  "keywords": [
+    "table",
+    "data-table",
+    "vanilla-js",
+    "dom",
+    "headless",
+    "reactive",
+    "pagination",
+    "sorting",
+    "typescript",
+    "so-simple-table"
+  ],
+  "homepage": "https://github.com/DinuIordachi/so-simple-table/tree/master/packages/dom#readme",
+  "bugs": {
+    "url": "https://github.com/DinuIordachi/so-simple-table/issues"
+  },
+  "license": "MIT",
+  "author": "Dinu Iordachi <dimaiordachi3@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DinuIordachi/so-simple-table.git",
+    "directory": "packages/dom"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -15,8 +38,15 @@
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md"],
-  "sideEffects": ["./dist/style.css"],
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./dist/style.css"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
@@ -34,5 +64,7 @@
     "tsup": "^8.2.0",
     "vitest": "^2.0.0"
   },
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  }
 }

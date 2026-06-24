@@ -14,6 +14,42 @@ import { FormsModule } from '@angular/forms';
 import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
 import { SstTableService } from '../store/sst-table.service';
 
+/**
+ * `<sst-table>` — a standalone, presentational data-table component driven by an
+ * {@link SstTableService}.
+ *
+ * @remarks
+ * The component owns rendering and user interaction (sorting, pagination, search
+ * debouncing, row/all selection, and bulk delete) while delegating all data and state
+ * to the bound {@link SstTableComponent.service | service}. On init it syncs the local
+ * search box from the service and triggers the first `refresh()`.
+ *
+ * Appearance is customized through optional content-projection slots, supplied as named
+ * templates inside the component's tag:
+ *
+ * - `#headerCell` — context `{ $implicit: IColumn }`; renders a column header.
+ * - `#bodyCell` — context `{ $implicit: T; column: IColumn; index: number }`; renders a cell.
+ * - `#emptyState` — no context; replaces the default empty-results message.
+ * - `#bulkActions` — context `{ $implicit: ReadonlySet<string> }`; renders custom actions
+ *   for the current selection.
+ *
+ * @typeParam T - The row entity type; must expose a string `id` used for selection and
+ * bulk operations.
+ *
+ * @example
+ * ```html
+ * <sst-table
+ *   [columns]="columns"
+ *   [service]="usersTable"
+ *   [bulk]="true"
+ *   [searchEnabled]="true"
+ * >
+ *   <ng-template #bodyCell let-row let-column="column">
+ *     {{ row[column.key] }}
+ *   </ng-template>
+ * </sst-table>
+ * ```
+ */
 @Component({
 	selector: 'sst-table',
 	standalone: true,
@@ -25,19 +61,32 @@ import { SstTableService } from '../store/sst-table.service';
 export class SstTableComponent<T extends { id: string }> implements OnInit {
 	private readonly destroyRef = inject(DestroyRef);
 
+	/** Required. Column definitions describing each table column (key, label, sortable, …). */
 	public readonly columns = input.required<readonly IColumn[]>();
+	/** Required. The reactive store that supplies rows and table state and receives user actions. */
 	public readonly service = input.required<SstTableService<T>>();
+	/** When `true`, enables row selection checkboxes and the bulk-delete action. Defaults to `false`. */
 	public readonly bulk = input<boolean>(false);
+	/** When `true`, renders the search input. Defaults to `false`. */
 	public readonly searchEnabled = input<boolean>(false);
+	/** Placeholder text for the search input. Defaults to `'Search'`. */
 	public readonly searchPlaceholder = input<string>('Search');
+	/** Debounce delay, in milliseconds, before a search term is pushed to the service. Defaults to `500`. */
 	public readonly searchDebounceMs = input<number>(500);
+	/** Message shown when there are no rows (unless overridden by the `#emptyState` slot). Defaults to `'No results'`. */
 	public readonly emptyText = input<string>('No results');
+	/** Label for the bulk-delete button. Defaults to `'Delete selected'`. */
 	public readonly bulkDeleteLabel = input<string>('Delete selected');
+	/** Prefix applied to generated `data-testid` attributes, for end-to-end testing. Defaults to `'sst'`. */
 	public readonly testIdPrefix = input<string>('sst');
 
+	/** Optional projected template for rendering a column header. Context: `{ $implicit: IColumn }`. */
 	@ContentChild('headerCell') public readonly headerCell?: TemplateRef<{ $implicit: IColumn }>;
+	/** Optional projected template for rendering a body cell. Context: `{ $implicit: T; column: IColumn; index: number }`. */
 	@ContentChild('bodyCell') public readonly bodyCell?: TemplateRef<{ $implicit: T; column: IColumn; index: number }>;
+	/** Optional projected template shown in place of the default empty-state message. No context. */
 	@ContentChild('emptyState') public readonly emptyState?: TemplateRef<unknown>;
+	/** Optional projected template for custom bulk actions. Context: `{ $implicit: ReadonlySet<string> }` (the selected ids). */
 	@ContentChild('bulkActions') public readonly bulkActions?: TemplateRef<{ $implicit: ReadonlySet<string> }>;
 
 	protected readonly searchInput = signal<string>('');
@@ -58,6 +107,11 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 		return someSelected && !this.allChecked();
 	});
 
+	/**
+	 * Angular lifecycle hook. Seeds the local search box from the service's current
+	 * search term, triggers the initial data load via `refresh()`, and registers cleanup
+	 * for the pending search debounce timer.
+	 */
 	public ngOnInit(): void {
 		// Sync local search state from the service in case it was preset.
 		this.searchInput.set(this.service().search());
@@ -101,7 +155,8 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 
 	protected onRowChecked(id: string, checked: boolean): void {
 		const next = new Set(this.bulkSelected());
-		if (checked) next.add(id); else next.delete(id);
+		if (checked) next.add(id);
+		else next.delete(id);
 		this.bulkSelected.set(next);
 	}
 
@@ -110,7 +165,11 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 			this.bulkSelected.set(new Set<string>());
 			return;
 		}
-		const all = new Set(this.service().data().map((r) => r.id));
+		const all = new Set(
+			this.service()
+				.data()
+				.map((r) => r.id),
+		);
 		this.bulkSelected.set(all);
 	}
 
@@ -131,6 +190,10 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 		this.service().updatePagination({ ...current, page });
 	}
 
+	/**
+	 * Total number of pages, derived from the service's total row count and current
+	 * page size. Always at least `1`.
+	 */
 	protected get totalPages(): number {
 		const total = this.service().total();
 		const size = this.service().pagination().pageSize;

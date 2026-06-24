@@ -4,7 +4,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { SstNgListRepository } from './sst-ng-list.repository';
 
-interface IItem { id: string; name: string; }
+interface IItem {
+	id: string;
+	name: string;
+}
 
 @Injectable({ providedIn: 'root' })
 class StrategyRepository extends SstNgListRepository<IItem> {
@@ -30,10 +33,14 @@ describe('SstNgListRepository', () => {
 	it('throws when subclass returns empty baseUrl', () => {
 		@Injectable({ providedIn: 'root' })
 		class BrokenRepository extends SstNgListRepository<IItem> {
-			protected override get baseUrl(): string { return ''; }
+			protected override get baseUrl(): string {
+				return '';
+			}
 		}
 		TestBed.resetTestingModule();
-		TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), BrokenRepository] });
+		TestBed.configureTestingModule({
+			providers: [provideHttpClient(), provideHttpClientTesting(), BrokenRepository],
+		});
 		expect(() => TestBed.inject(BrokenRepository).getList()).toThrow(/baseUrl/);
 	});
 
@@ -62,7 +69,9 @@ describe('SstNgListRepository', () => {
 	it('respects a queryKeys override on the subclass', async () => {
 		@Injectable({ providedIn: 'root' })
 		class CustomKeysRepository extends SstNgListRepository<IItem> {
-			protected override get baseUrl(): string { return 'https://api.test/items'; }
+			protected override get baseUrl(): string {
+				return 'https://api.test/items';
+			}
 			protected override get queryKeys() {
 				return { page: 'pageNumber', pageSize: 'limit' };
 			}

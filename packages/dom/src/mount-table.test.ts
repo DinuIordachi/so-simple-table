@@ -3,7 +3,11 @@ import { ESortOrder, type IResponse, type IResponseList, TableStore } from '@sst
 import type { IDomColumn } from './types';
 import { mountTable } from './mount-table';
 
-interface IItem { id: string; title: string; status: 'a' | 'b'; }
+interface IItem {
+	id: string;
+	title: string;
+	status: 'a' | 'b';
+}
 
 class StubRepo {
 	public readonly getList = vi.fn<(params?: unknown) => Promise<IResponseList<IItem[]>>>();
@@ -96,7 +100,11 @@ describe('mountTable', () => {
 	});
 
 	it('next/prev buttons update store.pagination$ and stop at boundaries', async () => {
-		const seed = Array.from({ length: 25 }, (_, i) => ({ id: String(i + 1), title: `t${i}`, status: 'a' as const }));
+		const seed = Array.from({ length: 25 }, (_, i) => ({
+			id: String(i + 1),
+			title: `t${i}`,
+			status: 'a' as const,
+		}));
 		const { store, repo } = createStore(seed);
 		// Override mock to honor the page param so next/prev produces non-empty results
 		repo.getList.mockImplementation(async (params: unknown) => {

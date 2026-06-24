@@ -4,17 +4,53 @@ import type { IPaginationParams } from '../types/pagination';
 import type { HttpQueryParams } from '../types/http-client';
 import type { IParamFormattingStrategy, IRepositoryQueryKeys } from '../types/repository-config';
 
+/**
+ * Inputs for {@link mapTableParams}: the current table state plus the mappings
+ * and key names used to translate it into query parameters.
+ */
 export interface IMapTableParamsInput {
+	/** Current pagination; always emitted. */
 	readonly pagination: IPaginationParams;
+	/** Active sort, if any. */
 	readonly sort?: ISortParams;
+	/** Active filters, if any. */
 	readonly filters?: readonly IFilterParams[];
+	/** Free-text search term, if any. */
 	readonly search?: string;
+	/** Maps a sort field name to the value sent to the backend. */
 	readonly sortMap: Readonly<Record<string, string>>;
+	/** Maps a filter key to the query-param name; identity when absent. */
 	readonly filterMap?: Readonly<Record<string, string>>;
+	/** Names of the page/sort/search query keys. */
 	readonly queryKeys: IRepositoryQueryKeys;
+	/** Optional hooks for customizing filter and sort formatting. */
 	readonly paramFormatting?: IParamFormattingStrategy;
 }
 
+/**
+ * Translates the current table state into the query-parameter object sent to a
+ * repository.
+ *
+ * @remarks
+ * Filters sharing a mapped key are grouped into an array. Sort is emitted only
+ * when `sort.field` resolves through `sortMap`, setting the `orderBy` key (after
+ * any `formatSortField`) and the `orderByDescending` boolean. Pagination is
+ * always included; the search key is added only for a non-empty term.
+ *
+ * @returns The assembled query parameters.
+ *
+ * @example
+ * ```ts
+ * const params = mapTableParams({
+ * 	pagination: { page: 1, pageSize: 20 },
+ * 	sort: { id: 'name', field: 'name', order: ESortOrder.DESC },
+ * 	filters: [{ key: 'status', value: 'active' }],
+ * 	sortMap: { name: 'fullName' },
+ * 	queryKeys: DEFAULT_QUERY_KEYS,
+ * });
+ * // → { status: ['active'], orderBy: 'fullName', orderByDescending: true, page: 1, pageSize: 20 }
+ * ```
+ */
 export function mapTableParams(input: IMapTableParamsInput): HttpQueryParams {
 	const { pagination, sort, filters, search, sortMap, filterMap, queryKeys, paramFormatting } = input;
 	const formatSortField = paramFormatting?.formatSortField ?? ((field: string) => field);

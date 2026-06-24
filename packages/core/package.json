@@ -2,6 +2,32 @@
   "name": "@sst/core",
   "version": "0.2.0",
   "description": "So Simple Table — framework-agnostic core: reactive table state and configurable repositories.",
+  "keywords": [
+    "table",
+    "data-table",
+    "datatable",
+    "headless",
+    "framework-agnostic",
+    "reactive",
+    "pagination",
+    "sorting",
+    "filtering",
+    "repository",
+    "observable",
+    "typescript",
+    "so-simple-table"
+  ],
+  "homepage": "https://github.com/DinuIordachi/so-simple-table/tree/master/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/DinuIordachi/so-simple-table/issues"
+  },
+  "license": "MIT",
+  "author": "Dinu Iordachi <dimaiordachi3@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DinuIordachi/so-simple-table.git",
+    "directory": "packages/core"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -14,7 +40,12 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
@@ -28,5 +59,7 @@
     "tsup": "^8.2.0",
     "vitest": "^2.0.0"
   },
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  }
 }

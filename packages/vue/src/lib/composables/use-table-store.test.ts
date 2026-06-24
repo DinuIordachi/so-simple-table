@@ -3,7 +3,10 @@ import { effectScope, nextTick } from 'vue';
 import { ListRepository, type IResponse, type IResponseList } from '@sst/core';
 import { useTableStore } from './use-table-store';
 
-interface IItem { id: string; name: string; }
+interface IItem {
+	id: string;
+	name: string;
+}
 
 class StubRepository extends ListRepository<IItem> {
 	public readonly getListMock = vi.fn<(...a: unknown[]) => Promise<IResponseList<IItem[]>>>().mockResolvedValue({
@@ -15,8 +18,12 @@ class StubRepository extends ListRepository<IItem> {
 		result: 'ok',
 		isSuccess: true,
 	});
-	public override getList(p: unknown): Promise<IResponseList<IItem[]>> { return this.getListMock(p); }
-	public override bulkDelete(ids: readonly string[]): Promise<IResponse<string>> { return this.bulkDeleteMock(ids); }
+	public override getList(p: unknown): Promise<IResponseList<IItem[]>> {
+		return this.getListMock(p);
+	}
+	public override bulkDelete(ids: readonly string[]): Promise<IResponse<string>> {
+		return this.bulkDeleteMock(ids);
+	}
 }
 
 describe('useTableStore', () => {

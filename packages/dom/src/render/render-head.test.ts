@@ -3,7 +3,11 @@ import { ESortOrder } from '@sst/core';
 import type { IDomColumn } from '../types';
 import { renderHead } from './render-head';
 
-interface IItem { id: string; name: string; createdAt: string; }
+interface IItem {
+	id: string;
+	name: string;
+	createdAt: string;
+}
 
 const COLUMNS: ReadonlyArray<IDomColumn<IItem>> = [
 	{ key: 'id', name: 'ID' },

@@ -2,6 +2,29 @@
   "name": "@sst/vue",
   "version": "0.1.0",
   "description": "So Simple Table — Vue 3 adapter on top of @sst/core.",
+  "keywords": [
+    "table",
+    "data-table",
+    "vue",
+    "vue3",
+    "composable",
+    "reactive",
+    "pagination",
+    "sorting",
+    "typescript",
+    "so-simple-table"
+  ],
+  "homepage": "https://github.com/DinuIordachi/so-simple-table/tree/master/packages/vue#readme",
+  "bugs": {
+    "url": "https://github.com/DinuIordachi/so-simple-table/issues"
+  },
+  "license": "MIT",
+  "author": "Dinu Iordachi <dimaiordachi3@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DinuIordachi/so-simple-table.git",
+    "directory": "packages/vue"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -15,8 +38,16 @@
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md"],
-  "sideEffects": ["**/*.css", "**/*.vue"],
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.vue"
+  ],
   "scripts": {
     "build": "vite build && vue-tsc --noEmit -p tsconfig.build.json",
     "test": "vitest run",
@@ -39,5 +70,7 @@
     "vue": "^3.5.0",
     "vue-tsc": "^2.1.0"
   },
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  }
 }

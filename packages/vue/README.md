@@ -1,6 +1,8 @@
 # @sst/vue
 
-Vue 3 adapter for **So Simple Table**, built on top of [`@sst/core`](../core/README.md).
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
+Vue 3 adapter for **So Simple Table**, built on top of [`@sst/core`](../core/README.md). Define a data table declaratively in one object, then render it with a fully typed `<SstTable>` component.
 
 ## Installation
 
@@ -8,88 +10,153 @@ Vue 3 adapter for **So Simple Table**, built on top of [`@sst/core`](../core/REA
 npm install @sst/core @sst/vue
 ```
 
-Import the bundled CSS once at app entry:
+`vue` (>= 3.5) and `@sst/core` are peer dependencies. Import the bundled CSS once at your app entry:
 
 ```ts
 import '@sst/vue/style.css';
 ```
 
-## 1. Define a repository
+## Quick start
+
+Define the table once with [`defineTable`](#definetable). It builds the repository (including a default `fetch`-based HTTP client) and the reactive store for you, and returns a `useTable()` composable:
 
 ```ts
-import { HttpRepository } from '@sst/vue';
+// breeds-table.ts
+import { defineTable } from '@sst/vue';
 
-interface IStrategy { id: string; name: string; createdAt: string; }
+export interface IBreed {
+  id: string;
+  name: string;
+  lifeMin: number;
+  lifeMax: number;
+}
 
-export class StrategyRepository extends HttpRepository<IStrategy> {}
+interface IApiResponse {
+  data: Array<{ id: string; attributes: { name: string; life: { min: number; max: number } } }>;
+  meta: { pagination: { records: number } };
+}
 
-export const strategyRepository = new StrategyRepository({
-	baseUrl: 'https://api.example.com/strategies',
+export const useBreedsTable = defineTable<IBreed, IApiResponse>({
+  baseUrl: 'https://api.example.com/breeds',
+  initialPagination: { page: 1, pageSize: 10 },
+  mapResponse: (raw) => ({
+    result: raw.data.map((b) => ({
+      id: b.id,
+      name: b.attributes.name,
+      lifeMin: b.attributes.life.min,
+      lifeMax: b.attributes.life.max,
+    })),
+    totalCount: raw.meta.pagination.records,
+    isSuccess: true,
+  }),
 });
 ```
 
-## 2. Use the composable + component
+Then consume it in a component. The `body-cell` slot receives a typed `row` — no casts needed:
 
 ```vue
 <script setup lang="ts">
-import { SstTable, useTableStore, type IColumn } from '@sst/vue';
-import { strategyRepository } from './strategies.repository';
+import { SstTable, type IColumn } from '@sst/vue';
+import '@sst/vue/style.css';
+import { useBreedsTable } from './breeds-table';
 
-interface IStrategy { id: string; name: string; createdAt: string; }
+const table = useBreedsTable();
 
 const columns: IColumn[] = [
-	{ key: 'name', name: 'Name', sortable: true },
-	{ key: 'createdAt', name: 'Created' },
+  { key: 'name', name: 'Breed' },
+  { key: 'life', name: 'Lifespan' },
 ];
-
-const store = useTableStore<IStrategy>({
-	repository: strategyRepository,
-	sortMap: { createdAt: 'ByCreationDate', name: 'ByName' },
-});
 </script>
 
 <template>
-	<SstTable :columns="columns" :store="store" :bulk="true" :searchEnabled="true">
-		<template #header-cell="{ column }">
-			<strong>{{ column.name }}</strong>
-		</template>
-		<template #body-cell="{ row, column }">
-			{{ row[column.key] }}
-		</template>
-		<template #empty-state>
-			<p>No strategies yet — try creating one.</p>
-		</template>
-	</SstTable>
+  <SstTable :columns="columns" :store="table">
+    <template #body-cell="{ row, column }">
+      <template v-if="column.key === 'life'">{{ row.lifeMin }}–{{ row.lifeMax }} yrs</template>
+      <template v-else>{{ (row as Record<string, unknown>)[column.key] }}</template>
+    </template>
+  </SstTable>
 </template>
 ```
 
-## Customizing the wire format
+`useBreedsTable()` must be called inside `setup`; each call creates its own store, automatically disposed when the component unmounts.
+
+## `defineTable`
 
 ```ts
-new HttpRepository({
-	baseUrl: 'https://api.example.com/strategies',
-	queryKeys: { page: 'pageNumber', pageSize: 'limit' },
-	responseListMapper: (raw) => {
-		const r = raw as { items: IStrategy[]; total: number };
-		return { result: r.items, totalCount: r.total, isSuccess: true };
-	},
+defineTable<T extends { id: string }, TRaw = unknown>(config): () => IUseTableStoreReturn<T>
+```
+
+| Option              | Type                                | Default                     | Description                                                            |
+| ------------------- | ----------------------------------- | --------------------------- | ---------------------------------------------------------------------- |
+| `baseUrl`           | `string`                            | — (required)                | Base URL for all requests.                                             |
+| `headers`           | `Record<string, string>`            | —                           | Default request headers (applied by the built-in `fetch` client).      |
+| `httpClient`        | `IHttpClient`                       | `FetchHttpClient`           | Escape hatch — supply your own client for auth, interceptors, logging. |
+| `mapResponse`       | `(raw: TRaw) => IResponseList<T[]>` | identity                    | Map a non-canonical API payload to the canonical list shape.           |
+| `queryKeys`         | `Partial<IRepositoryQueryKeys>`     | core defaults               | Rename the page / pageSize / sort / search query parameters.           |
+| `sortMap`           | `Record<string, string>`            | `{}`                        | Map a column key to a server sort field. `{}` disables server sort.    |
+| `filterMap`         | `Record<string, string>`            | —                           | Map a filter key to a server parameter name.                           |
+| `initialPagination` | `IPaginationParams`                 | `{ page: 1, pageSize: 10 }` | Initial page and page size.                                            |
+| `paramFormatting`   | `IParamFormattingStrategy`          | —                           | Advanced filter/sort value formatting.                                 |
+
+### Custom HTTP client
+
+Pass `httpClient` for authentication, interceptors, or logging — anything implementing core's `IHttpClient`:
+
+```ts
+import { defineTable, FetchHttpClient } from '@sst/vue';
+
+const useTable = defineTable<IBreed>({
+  baseUrl: 'https://api.example.com/breeds',
+  httpClient: new FetchHttpClient({ baseHeaders: { Authorization: `Bearer ${token}` } }),
 });
 ```
 
-## Scoped slots
+## Lower-level: `useTableStore`
 
-`<SstTable>` exposes five slots for full UI override:
+When you already have a `@sst/core` repository (or need to share one), skip `defineTable` and wire the store directly:
 
-| Slot            | Slot props                                                                | Purpose                                |
-| --------------- | ------------------------------------------------------------------------- | -------------------------------------- |
-| `header-cell`   | `{ column }`                                                              | Override per-column header text        |
-| `body-cell`     | `{ row, column, index }`                                                  | Override per-cell rendering            |
-| `empty-state`   | —                                                                         | Override the empty-state message       |
-| `bulk-actions`  | `{ selected: ReadonlySet<string> }`                                       | Override the bulk-action toolbar       |
-| `pagination`    | `{ page, pageSize, total, totalPages, setPage(p) }`                       | Override the pagination controls       |
+```ts
+import { HttpRepository, useTableStore, type IColumn } from '@sst/vue';
 
-When omitted, sensible defaults render automatically.
+const repository = new HttpRepository<IBreed>({ baseUrl: 'https://api.example.com/breeds' });
+const table = useTableStore<IBreed>({ repository, sortMap: { name: 'ByName' } });
+```
+
+`useTableStore` returns the same `IUseTableStoreReturn<T>` that `defineTable`'s composable does: reactive refs (`data`, `total`, `loading`, `pagination`, `sort`, `filters`, `search`) and bound actions (`refresh`, `updatePagination`, `updateSort`, …).
+
+## `<SstTable>`
+
+### Props
+
+| Prop                | Type                      | Default             | Description                                   |
+| ------------------- | ------------------------- | ------------------- | --------------------------------------------- |
+| `columns`           | `readonly IColumn[]`      | — (required)        | Column definitions.                           |
+| `store`             | `IUseTableStoreReturn<T>` | — (required)        | The store from `defineTable`/`useTableStore`. |
+| `bulk`              | `boolean`                 | `false`             | Show selection checkboxes + bulk toolbar.     |
+| `searchEnabled`     | `boolean`                 | `false`             | Show the search input.                        |
+| `searchPlaceholder` | `string`                  | `'Search'`          | Search input placeholder.                     |
+| `searchDebounceMs`  | `number`                  | `500`               | Debounce before `updateSearch` fires.         |
+| `emptyText`         | `string`                  | `'No results'`      | Empty-state text.                             |
+| `bulkDeleteLabel`   | `string`                  | `'Delete selected'` | Bulk-delete button label.                     |
+
+### Scoped slots
+
+| Slot           | Slot props                                          | Purpose                          |
+| -------------- | --------------------------------------------------- | -------------------------------- |
+| `header-cell`  | `{ column }`                                        | Override per-column header text  |
+| `body-cell`    | `{ row, column, index }`                            | Override per-cell rendering      |
+| `empty-state`  | —                                                   | Override the empty-state message |
+| `bulk-actions` | `{ selected: ReadonlySet<string> }`                 | Override the bulk-action toolbar |
+| `pagination`   | `{ page, pageSize, total, totalPages, setPage(p) }` | Override the pagination controls |
+
+When omitted, sensible defaults render automatically. `row` is typed as your row type `T`, so concrete field access needs no casts.
+
+## Links
+
+- [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)
+- [`@sst/core`](../core/README.md) — the framework-agnostic core
+- [Changelog](./CHANGELOG.md)
 
 ## License
 
-MIT
+[MIT](./LICENSE) © Dinu Iordachi

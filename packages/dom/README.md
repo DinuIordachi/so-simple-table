@@ -1,5 +1,7 @@
 # @sst/dom
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 Vanilla DOM variant of [@sst/core](../core/README.md). One call —
 `mountTable(...)` — produces an HTML table with sortable headers,
 default-or-custom cells, and pagination controls, wired reactively to a
@@ -19,22 +21,22 @@ import { mountTable, type IDomColumn } from '@sst/dom';
 import '@sst/dom/style.css'; // optional but recommended
 
 interface IStrategy extends IBaseItem {
-	createdAt: string;
-	status: 'active' | 'paused';
+  createdAt: string;
+  status: 'active' | 'paused';
 }
 
 class StrategyRepository extends HttpRepository<IStrategy> {}
 
 const store = new TableStore<IStrategy>({
-	repository: new StrategyRepository({ baseUrl: 'https://api.example.com/strategies' }),
-	sortMap: { createdAt: 'ByCreationDate' },
+  repository: new StrategyRepository({ baseUrl: 'https://api.example.com/strategies' }),
+  sortMap: { createdAt: 'ByCreationDate' },
 });
 
 const columns: ReadonlyArray<IDomColumn<IStrategy>> = [
-	{ key: 'id', name: 'ID' },
-	{ key: 'name', name: 'Name', sortable: true },
-	{ key: 'status', name: 'Status', render: (row) => statusBadge(row.status) },
-	{ key: 'createdAt', name: 'Created', sortable: true, render: (row) => formatDate(row.createdAt) },
+  { key: 'id', name: 'ID' },
+  { key: 'name', name: 'Name', sortable: true },
+  { key: 'status', name: 'Status', render: (row) => statusBadge(row.status) },
+  { key: 'createdAt', name: 'Created', sortable: true, render: (row) => formatDate(row.createdAt) },
 ];
 
 const handle = mountTable<IStrategy>({ target: '#my-table', store, columns });
@@ -54,13 +56,13 @@ const handle = mountTable<IStrategy>({ target: '#my-table', store, columns });
 
 ### `mountTable(options)`
 
-| Option           | Type                                  | Required | Default                |
-| ---------------- | ------------------------------------- | -------- | ---------------------- |
-| `target`         | `string \| HTMLElement`               | yes      | —                      |
-| `store`          | `ITableStore<T>`                      | yes      | —                      |
-| `columns`        | `ReadonlyArray<IDomColumn<T>>`        | yes      | —                      |
-| `emptyMessage`   | `string`                              | no       | `'No rows to display'` |
-| `loadingMessage` | `string`                              | no       | `'Loading…'`           |
+| Option           | Type                           | Required | Default                |
+| ---------------- | ------------------------------ | -------- | ---------------------- |
+| `target`         | `string \| HTMLElement`        | yes      | —                      |
+| `store`          | `ITableStore<T>`               | yes      | —                      |
+| `columns`        | `ReadonlyArray<IDomColumn<T>>` | yes      | —                      |
+| `emptyMessage`   | `string`                       | no       | `'No rows to display'` |
+| `loadingMessage` | `string`                       | no       | `'Loading…'`           |
 
 `target` is resolved via `document.querySelector`. Strings like `'#my-table'`
 or `'main .grid'` both work. Throws if nothing matches.
@@ -133,13 +135,13 @@ them in your own stylesheet:
 
 ```css
 .sst-table {
-	--sst-fg: #1f2937;
-	--sst-muted: #6b7280;
-	--sst-border: 1px solid #e5e7eb;
-	--sst-row-hover: #f9fafb;
-	--sst-radius: 8px;
-	--sst-pad-cell: 10px 12px;
-	--sst-font-size: 14px;
+  --sst-fg: #1f2937;
+  --sst-muted: #6b7280;
+  --sst-border: 1px solid #e5e7eb;
+  --sst-row-hover: #f9fafb;
+  --sst-radius: 8px;
+  --sst-pad-cell: 10px 12px;
+  --sst-font-size: 14px;
 }
 ```
 
@@ -152,6 +154,12 @@ contract. Skip the import if you want to start from scratch.
 - **Filter UI.** `column.filters` from core stays for a future variant.
 - **Virtual scrolling, column resize, multi-column sort.** Out of v1.
 
+## Links
+
+- [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)
+- [`@sst/core`](../core/README.md) — the framework-agnostic core
+- [Changelog](./CHANGELOG.md)
+
 ## License
 
-MIT
+[MIT](./LICENSE) © Dinu Iordachi

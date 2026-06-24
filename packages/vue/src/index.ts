@@ -1,3 +1,19 @@
+/**
+ * Vue 3 bindings for `@sst/core` — the so-simple-table data layer.
+ *
+ * This is the public entry point of the `@sst/vue` package. It re-exports the
+ * framework-agnostic `@sst/core` surface (types, the `TableStore`, repositories,
+ * HTTP client, the `Observable` primitive, and helper utilities) for ergonomic
+ * single-import usage, alongside the Vue-specific surface:
+ *
+ * - {@link useObservable} — bridge a core `IReadonlyObservable` to a Vue ref.
+ * - {@link useTableStore} — wrap a core `TableStore` as reactive refs and bound actions.
+ * - {@link defineTable} — declarative factory returning a `useTable()` composable.
+ * - `SstTable` — a ready-made table component.
+ *
+ * @packageDocumentation
+ */
+
 // Re-exports from @sst/core for ergonomic imports
 export type {
 	HttpQueryParams,

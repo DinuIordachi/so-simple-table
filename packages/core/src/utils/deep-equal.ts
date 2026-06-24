@@ -1,3 +1,14 @@
+/**
+ * Recursively compares two values for structural equality.
+ *
+ * @remarks
+ * Primitives are compared with `Object.is`. Arrays must have the same length
+ * with element-wise equal items; plain objects must have the same set of own
+ * enumerable keys with equal values. Does not handle cyclic references, `Map`,
+ * `Set`, `Date`, or other exotic objects specially.
+ *
+ * @returns `true` when `a` and `b` are structurally equal.
+ */
 export function deepEqual(a: unknown, b: unknown): boolean {
 	if (Object.is(a, b)) {
 		return true;
