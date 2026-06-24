@@ -7,7 +7,13 @@ import type { ISortParams } from '../types/sort';
 import type { IResponse, IResponseList } from '../types/response';
 import type { ITableStore } from '../types/table-store';
 import type { ListRepository } from '../repositories/list.repository';
-import type { IRepositoryQueryKeys, IParamFormattingStrategy } from '../types/repository-config';
+import type {
+	IRepositoryQueryKeys,
+	IParamFormattingStrategy,
+	ISortDirections,
+	PaginationStyle,
+	SortStyle,
+} from '../types/repository-config';
 import { DEFAULT_QUERY_KEYS } from '../types/repository-config';
 
 /**
@@ -28,6 +34,12 @@ export interface ITableStoreOptions<T> {
 	readonly queryKeys?: Partial<IRepositoryQueryKeys>;
 	/** Optional hooks for customizing filter and sort formatting. */
 	readonly paramFormatting?: IParamFormattingStrategy;
+	/** Pagination wire style; `'page'` (default) or `'offset'` (skip + limit). */
+	readonly paginationStyle?: PaginationStyle;
+	/** Sort wire style; `'flag'` (default) or `'direction'` (sortBy + asc/desc). */
+	readonly sortStyle?: SortStyle;
+	/** Tokens for `'direction'` sort style; defaults to `{ asc: 'asc', desc: 'desc' }`. */
+	readonly sortDirections?: ISortDirections;
 }
 
 const DEFAULT_INITIAL_PAGINATION: IPaginationParams = { page: 1, pageSize: 10 };
@@ -92,6 +104,9 @@ export class TableStore<T> implements ITableStore<T> {
 	protected readonly filterMap: Readonly<Record<string, string>> | undefined;
 	protected readonly queryKeys: IRepositoryQueryKeys;
 	protected readonly paramFormatting: IParamFormattingStrategy | undefined;
+	protected readonly paginationStyle: PaginationStyle | undefined;
+	protected readonly sortStyle: SortStyle | undefined;
+	protected readonly sortDirections: ISortDirections | undefined;
 	private querySubscription: Unsubscribe = () => {};
 
 	/**
@@ -106,6 +121,9 @@ export class TableStore<T> implements ITableStore<T> {
 		this.filterMap = options.filterMap;
 		this.queryKeys = { ...DEFAULT_QUERY_KEYS, ...(options.queryKeys ?? {}) };
 		this.paramFormatting = options.paramFormatting;
+		this.paginationStyle = options.paginationStyle;
+		this.sortStyle = options.sortStyle;
+		this.sortDirections = options.sortDirections;
 		this._pagination = new Observable<IPaginationParams>(options.initialPagination ?? DEFAULT_INITIAL_PAGINATION);
 		this.pagination$ = this._pagination.asReadonly();
 		this.subscribeToTableQueryChanges();
@@ -160,6 +178,9 @@ export class TableStore<T> implements ITableStore<T> {
 			...(this.filterMap !== undefined ? { filterMap: this.filterMap } : {}),
 			queryKeys: this.queryKeys,
 			...(this.paramFormatting !== undefined ? { paramFormatting: this.paramFormatting } : {}),
+			...(this.paginationStyle !== undefined ? { paginationStyle: this.paginationStyle } : {}),
+			...(this.sortStyle !== undefined ? { sortStyle: this.sortStyle } : {}),
+			...(this.sortDirections !== undefined ? { sortDirections: this.sortDirections } : {}),
 		});
 		this.fetchData(this.repository.getList(params));
 	}

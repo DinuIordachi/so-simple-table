@@ -22,6 +22,18 @@ export interface IRepositoryQueryKeys {
 	readonly search: string;
 }
 
+/** Pagination wire style: `'page'` (page + pageSize) or `'offset'` (skip + limit). */
+export type PaginationStyle = 'page' | 'offset';
+
+/** Sort wire style: `'flag'` (orderBy + boolean) or `'direction'` (sortBy + asc/desc token). */
+export type SortStyle = 'flag' | 'direction';
+
+/** Tokens emitted for ascending/descending order in the `'direction'` {@link SortStyle}. */
+export interface ISortDirections {
+	readonly asc: string;
+	readonly desc: string;
+}
+
 /**
  * Strategy used by the table store to format filters and sort fields
  * into the outgoing query params object.

@@ -116,4 +116,47 @@ describe('mapTableParams', () => {
 			orderByDescending: false,
 		});
 	});
+
+	it('emits skip/limit in offset pagination style', () => {
+		const params = mapTableParams({
+			pagination: { page: 3, pageSize: 20 },
+			sortMap: {},
+			queryKeys: { ...DEFAULT_QUERY_KEYS, page: 'skip', pageSize: 'limit' },
+			paginationStyle: 'offset',
+		});
+		expect(params).toStrictEqual({ skip: 40, limit: 20 }); // (3 - 1) * 20
+	});
+
+	it('emits an asc/desc token in direction sort style', () => {
+		const params = mapTableParams({
+			pagination: { page: 1, pageSize: 10 },
+			sort: { id: 'price-ASC', field: 'price', order: ESortOrder.ASC },
+			sortMap: { price: 'price' },
+			queryKeys: { ...DEFAULT_QUERY_KEYS, orderBy: 'sortBy', orderByDescending: 'order' },
+			sortStyle: 'direction',
+		});
+		expect(params).toMatchObject({ sortBy: 'price', order: 'asc' });
+	});
+
+	it('uses custom sortDirections tokens', () => {
+		const params = mapTableParams({
+			pagination: { page: 1, pageSize: 10 },
+			sort: { id: 'price-DESC', field: 'price', order: ESortOrder.DESC },
+			sortMap: { price: 'price' },
+			queryKeys: DEFAULT_QUERY_KEYS,
+			sortStyle: 'direction',
+			sortDirections: { asc: 'ASC', desc: 'DESC' },
+		});
+		expect(params).toMatchObject({ orderBy: 'price', orderByDescending: 'DESC' });
+	});
+
+	it('keeps the boolean flag in the default (flag) sort style', () => {
+		const params = mapTableParams({
+			pagination: { page: 1, pageSize: 10 },
+			sort: { id: 'price-DESC', field: 'price', order: ESortOrder.DESC },
+			sortMap: { price: 'price' },
+			queryKeys: DEFAULT_QUERY_KEYS,
+		});
+		expect(params).toMatchObject({ orderBy: 'price', orderByDescending: true });
+	});
 });

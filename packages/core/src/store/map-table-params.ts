@@ -2,7 +2,13 @@ import { ESortOrder, type ISortParams } from '../types/sort';
 import type { IFilterParams } from '../types/filter';
 import type { IPaginationParams } from '../types/pagination';
 import type { HttpQueryParams } from '../types/http-client';
-import type { IParamFormattingStrategy, IRepositoryQueryKeys } from '../types/repository-config';
+import type {
+	IParamFormattingStrategy,
+	IRepositoryQueryKeys,
+	ISortDirections,
+	PaginationStyle,
+	SortStyle,
+} from '../types/repository-config';
 
 /**
  * Inputs for {@link mapTableParams}: the current table state plus the mappings
@@ -25,6 +31,12 @@ export interface IMapTableParamsInput {
 	readonly queryKeys: IRepositoryQueryKeys;
 	/** Optional hooks for customizing filter and sort formatting. */
 	readonly paramFormatting?: IParamFormattingStrategy;
+	/** Pagination wire style; `'page'` (default) or `'offset'` (skip + limit). */
+	readonly paginationStyle?: PaginationStyle;
+	/** Sort wire style; `'flag'` (default) or `'direction'` (asc/desc token). */
+	readonly sortStyle?: SortStyle;
+	/** Tokens for `'direction'` sort style; defaults to `{ asc: 'asc', desc: 'desc' }`. */
+	readonly sortDirections?: ISortDirections;
 }
 
 /**
@@ -53,6 +65,9 @@ export interface IMapTableParamsInput {
  */
 export function mapTableParams(input: IMapTableParamsInput): HttpQueryParams {
 	const { pagination, sort, filters, search, sortMap, filterMap, queryKeys, paramFormatting } = input;
+	const paginationStyle = input.paginationStyle ?? 'page';
+	const sortStyle = input.sortStyle ?? 'flag';
+	const sortDirections = input.sortDirections ?? { asc: 'asc', desc: 'desc' };
 	const formatSortField = paramFormatting?.formatSortField ?? ((field: string) => field);
 	const params: Record<string, unknown> = {};
 
@@ -72,11 +87,20 @@ export function mapTableParams(input: IMapTableParamsInput): HttpQueryParams {
 		const mapped = sortMap[sort.field];
 		if (mapped !== undefined) {
 			params[queryKeys.orderBy] = formatSortField(mapped);
-			params[queryKeys.orderByDescending] = sort.order === ESortOrder.DESC;
+			params[queryKeys.orderByDescending] =
+				sortStyle === 'direction'
+					? sort.order === ESortOrder.DESC
+						? sortDirections.desc
+						: sortDirections.asc
+					: sort.order === ESortOrder.DESC;
 		}
 	}
 
-	params[queryKeys.page] = pagination.page;
+	if (paginationStyle === 'offset') {
+		params[queryKeys.page] = (pagination.page - 1) * pagination.pageSize;
+	} else {
+		params[queryKeys.page] = pagination.page;
+	}
 	params[queryKeys.pageSize] = pagination.pageSize;
 
 	if (search && search.length > 0) {

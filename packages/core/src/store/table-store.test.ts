@@ -202,3 +202,33 @@ describe('TableStore — destroy', () => {
 		expect(repository.getListMock).not.toHaveBeenCalled();
 	});
 });
+
+describe('TableStore — backend conventions', () => {
+	it('emits offset pagination params (skip/limit) to the repository in offset style', async () => {
+		const { store, repository } = createStore({
+			initialPagination: { page: 2, pageSize: 10 },
+			queryKeys: { page: 'skip', pageSize: 'limit' },
+			paginationStyle: 'offset',
+		});
+		store.refresh();
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).toHaveBeenCalledWith({ skip: 10, limit: 10 });
+		store.destroy();
+	});
+
+	it('emits an asc/desc token in direction sort style', async () => {
+		const { store, repository } = createStore({
+			sortMap: { createdAt: 'createdAt' },
+			queryKeys: { orderBy: 'sortBy', orderByDescending: 'order' },
+			sortStyle: 'direction',
+		});
+		store.updateSort({ id: 'createdAt-DESC', field: 'createdAt', order: ESortOrder.DESC });
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(repository.getListMock).toHaveBeenLastCalledWith(
+			expect.objectContaining({ sortBy: 'createdAt', order: 'desc' }),
+		);
+		store.destroy();
+	});
+});
