@@ -198,7 +198,24 @@ import { useSstDataTable } from '@sst/vue/primevue';
 const bindings = useSstDataTable(table); // spread onto <DataTable v-bind="bindings" dataKey="id">
 ```
 
-`useSstDataTable(store, options?)` maps PrimeVue's `@page` / `@sort` / `@filter` onto the store (single-column sort; global filter → search; per-column value → filters, overridable via `options.mapFilters`) and exposes `removeSelected(rows)` for bulk delete. Pass `immediate: false` to skip the on-mount fetch.
+`useSstDataTable(store, options?)` maps PrimeVue's `@page` / `@sort` / `@filter` onto the store (single-column sort; global filter → search; per-column value → filters, overridable via `options.mapFilters`) and exposes `removeSelected(rows?)` for bulk delete. Pass `immediate: false` to skip the on-mount fetch.
+
+### Editing, selection, slots, and filter helpers
+
+- **Inline editing:** set `editMode` + editable columns and pass `onSave(edit)`. The edited row is updated optimistically and reverted if `onSave` rejects.
+- **Selection:** set `selectionMode="multiple"`; read the reactive `selection` (and `selection.length`), `clearSelection()`, and `removeSelected()` (defaults to the current selection). On `<SstDataTable>` they're available via a template ref.
+- **Slots:** all DataTable-level named slots (`#header`, `#footer`, `#empty`, `#expansion`, …) typecheck and forward.
+- **Filter helpers:** `searchColumn(field)` (map one column's filter → search) and `withMatchModes()` (carry each filter's `matchMode` as a companion param) are exported as ready-made `mapFilters`.
+
+```vue
+<SstDataTable ref="t" :store="table" :onSave="onSave" selectionMode="multiple" editMode="cell">
+  <template #header>{{ t?.selection.length ?? 0 }} selected</template>
+  <Column selectionMode="multiple" headerStyle="width: 3rem" />
+  <Column field="price" header="Price">
+    <template #editor="{ data }"><InputNumber v-model="data.price" /></template>
+  </Column>
+</SstDataTable>
+```
 
 ## Links
 

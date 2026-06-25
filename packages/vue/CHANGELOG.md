@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `defineTable` backend-convention options (`paginationStyle`, `sortStyle`,
   `sortDirections`, `searchEndpoint`) — adapt offset pagination, `asc/desc` sort,
   and a search sub-endpoint without a custom HTTP client.
+- `@sst/vue/primevue`: inline editing via `onSave` (optimistic + rollback), reactive
+  `selection` with `clearSelection`/`removeSelected`, DataTable-level named-slot
+  typing, and `searchColumn`/`withMatchModes` filter helpers.
 
 ## [0.1.0] - 2026-06-24
 

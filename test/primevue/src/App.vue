@@ -2,22 +2,32 @@
 import { ref } from 'vue';
 import Column from 'primevue/column';
 import InputText from 'primevue/inputtext';
-import type { DataTableFilterMeta } from 'primevue/datatable';
-import { SstDataTable } from '@sst/vue/primevue';
-import { useProductsTable } from './products-table';
+import InputNumber from 'primevue/inputnumber';
+import Button from 'primevue/button';
+import { SstDataTable, searchColumn } from '@sst/vue/primevue';
+import { useProductsTable, type IProduct } from './products-table';
 
 const table = useProductsTable();
+// SstDataTable is a generic component, so InstanceType doesn't apply — type the
+// template ref by the exposed API shape instead.
+const tableRef = ref<{
+	selection: readonly IProduct[];
+	clearSelection: () => void;
+	removeSelected: (rows?: IProduct | readonly IProduct[]) => Promise<unknown>;
+} | null>(null);
 
 // PrimeVue row-filter state for the Title column.
 const filters = ref<{ title: { value: string | null; matchMode: string } }>({
 	title: { value: null, matchMode: 'contains' },
 });
 
-// Map PrimeVue's per-column "title" filter to the store's search (dummyjson /search?q=).
-const mapFilters = (f: DataTableFilterMeta): { search?: string } => {
-	const meta = f['title'] as { value?: unknown } | undefined;
-	const value = meta?.value;
-	return { search: value !== null && value !== undefined && value !== '' ? String(value) : '' };
+// Persist an edited price to dummyjson (echoes the update; does not truly store).
+const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): Promise<void> => {
+	await fetch(`https://dummyjson.com/products/${row.id}`, {
+		method: 'PUT',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ price: newData.price }),
+	});
 };
 </script>
 
@@ -27,18 +37,29 @@ const mapFilters = (f: DataTableFilterMeta): { search?: string } => {
 		<p>
 			PrimeVue DataTable (Aura theme) backed by a So Simple Table store, rendering
 			<a href="https://dummyjson.com/docs/products" target="_blank" rel="noopener">dummyjson.com</a> products with
-			server-side pagination, sorting, and search.
+			server-side pagination, sorting, search, selection, and inline price editing.
 		</p>
 
 		<SstDataTable
+			ref="tableRef"
 			:store="table"
-			:mapFilters="mapFilters"
+			:mapFilters="searchColumn('title')"
+			:onSave="onSave"
 			v-model:filters="filters"
+			selectionMode="multiple"
+			editMode="cell"
 			paginator
 			:rows="10"
 			:rowsPerPageOptions="[10, 20, 50]"
 			filterDisplay="row"
 		>
+			<template #header>
+				<div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end">
+					<span>{{ tableRef?.selection.length ?? 0 }} selected</span>
+					<Button label="Clear" size="small" severity="secondary" @click="tableRef?.clearSelection()" />
+				</div>
+			</template>
+			<Column selectionMode="multiple" headerStyle="width: 3rem" />
 			<Column field="title" header="Title" sortable :showFilterMenu="false">
 				<template #filter="{ filterModel, filterCallback }">
 					<InputText v-model="filterModel.value" placeholder="Search title…" @input="filterCallback()" />
@@ -48,6 +69,9 @@ const mapFilters = (f: DataTableFilterMeta): { search?: string } => {
 			<Column field="category" header="Category" sortable />
 			<Column field="price" header="Price" sortable>
 				<template #body="{ data }">${{ data.price.toFixed(2) }}</template>
+				<template #editor="{ data }">
+					<InputNumber v-model="data.price" mode="currency" currency="USD" fluid />
+				</template>
 			</Column>
 			<Column field="rating" header="Rating" sortable>
 				<template #body="{ data }">{{ data.rating.toFixed(2) }} ★</template>
