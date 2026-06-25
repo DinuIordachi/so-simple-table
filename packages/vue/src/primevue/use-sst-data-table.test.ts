@@ -133,4 +133,39 @@ describe('useSstDataTable', () => {
 		]);
 		expect(store.bulkDelete).toHaveBeenCalledWith(['1', '2']);
 	});
+
+	it('optimistically applies a cell edit and calls onSave', () => {
+		const store = makeStore();
+		(store.data as Ref<readonly IItem[]>).value = [{ id: '1', name: 'a' }];
+		const onSave = vi.fn().mockResolvedValue(undefined);
+		const { bindings } = harness(store, { onSave });
+		bindings.onCellEditComplete({
+			data: { id: '1', name: 'a' },
+			newData: { id: '1', name: 'b' },
+			field: 'name',
+			newValue: 'b',
+		} as never);
+		expect(store.updateData).toHaveBeenCalledWith([{ id: '1', name: 'b' }]);
+		expect(onSave).toHaveBeenCalledWith({
+			row: { id: '1', name: 'a' },
+			newData: { id: '1', name: 'b' },
+			field: 'name',
+			newValue: 'b',
+		});
+	});
+
+	it('reverts the optimistic edit when onSave rejects', async () => {
+		const store = makeStore();
+		const original: readonly IItem[] = [{ id: '1', name: 'a' }];
+		(store.data as Ref<readonly IItem[]>).value = original;
+		const onSave = vi.fn().mockRejectedValue(new Error('nope'));
+		const { bindings } = harness(store, { onSave });
+		bindings.onRowEditSave({ data: { id: '1', name: 'a' }, newData: { id: '1', name: 'b' }, index: 0 } as never);
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(store.updateData).toHaveBeenCalledTimes(2);
+		const calls = (store.updateData as ReturnType<typeof vi.fn>).mock.calls;
+		expect(calls[0]?.[0]).toEqual([{ id: '1', name: 'b' }]); // optimistic apply
+		expect(calls[1]?.[0]).toEqual([{ id: '1', name: 'a' }]); // reverted to previous
+	});
 });

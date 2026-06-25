@@ -16,6 +16,8 @@ const props = withDefaults(
 		filterDebounceMs?: number;
 		/** Override PrimeVue-filters → store mapping. */
 		mapFilters?: IUseSstDataTableOptions<T>['mapFilters'];
+		/** Persist an inline edit (optimistic; reverts on rejection). */
+		onSave?: IUseSstDataTableOptions<T>['onSave'];
 	}>(),
 	{ immediate: true, filterDebounceMs: 300 },
 );
@@ -24,6 +26,7 @@ const bindings = useSstDataTable<T>(props.store, {
 	immediate: props.immediate,
 	filterDebounceMs: props.filterDebounceMs,
 	...(props.mapFilters ? { mapFilters: props.mapFilters } : {}),
+	...(props.onSave ? { onSave: props.onSave } : {}),
 });
 </script>
 

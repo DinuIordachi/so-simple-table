@@ -2,9 +2,11 @@ import { getCurrentInstance, onMounted, reactive } from 'vue';
 import { ESortOrder, type IFilterParams, type IResponse } from '@sst/core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import type {
+	DataTableCellEditCompleteEvent,
 	DataTableFilterEvent,
 	DataTableFilterMeta,
 	DataTablePageEvent,
+	DataTableRowEditSaveEvent,
 	DataTableSortEvent,
 } from 'primevue/datatable';
 
@@ -20,6 +22,20 @@ export interface IUseSstDataTableOptions<T extends { id: string }> {
 	readonly filterDebounceMs?: number;
 	/** Override how PrimeVue's filter object maps to store search/filters (e.g. to encode `matchMode`). */
 	readonly mapFilters?: (filters: DataTableFilterMeta) => { search?: string; filters?: IFilterParams[] };
+	/** Persist an inline edit. The row is updated optimistically and reverted if this rejects. */
+	readonly onSave?: (edit: ISstDataTableEdit<T>) => Promise<void> | void;
+}
+
+/** A persisted edit emitted by PrimeVue's cell/row editing. */
+export interface ISstDataTableEdit<T extends { id: string }> {
+	/** The original row (`event.data`). */
+	readonly row: T;
+	/** The row with the edit applied (`event.newData`). */
+	readonly newData: T;
+	/** The edited field (cell-edit mode only). */
+	readonly field?: string;
+	/** The new value (cell-edit mode only). */
+	readonly newValue?: unknown;
 }
 
 /**
@@ -51,6 +67,10 @@ export interface ISstDataTableBindings<T extends { id: string }> {
 	onSort(event: DataTableSortEvent): void;
 	/** Handle PrimeVue's `@filter`: maps the filter object to store search/filters (debounced). */
 	onFilter(event: DataTableFilterEvent): void;
+	/** Handle PrimeVue's `@cell-edit-complete`: optimistic update + `onSave`. */
+	onCellEditComplete(event: DataTableCellEditCompleteEvent): void;
+	/** Handle PrimeVue's `@row-edit-save`: optimistic update + `onSave`. */
+	onRowEditSave(event: DataTableRowEditSaveEvent): void;
 	/** Delete the given row(s) by id via `store.bulkDelete` (the store refreshes afterward). */
 	removeSelected(rows: T | readonly T[]): Promise<IResponse<string>>;
 }
@@ -113,13 +133,20 @@ export function useSstDataTable<T extends { id: string }>(
 	store: IUseTableStoreReturn<T>,
 	options: IUseSstDataTableOptions<T> = {},
 ): ISstDataTableBindings<T> {
-	const { immediate = true, filterDebounceMs = 300, mapFilters = defaultMapFilters } = options;
+	const { immediate = true, filterDebounceMs = 300, mapFilters = defaultMapFilters, onSave } = options;
 	let filterTimer: ReturnType<typeof setTimeout> | undefined;
 
 	if (getCurrentInstance()) {
 		onMounted(() => {
 			if (immediate) store.refresh();
 		});
+	}
+
+	function applyEdit(edit: ISstDataTableEdit<T>): void {
+		const previous = store.data.value;
+		store.updateData(previous.map((row) => (row.id === edit.row.id ? edit.newData : row)));
+		if (!onSave) return;
+		Promise.resolve(onSave(edit)).catch(() => store.updateData(previous));
 	}
 
 	const bindings = reactive({
@@ -169,6 +196,17 @@ export function useSstDataTable<T extends { id: string }>(
 				store.updateSearch(mapped.search ?? '');
 				store.updateFilter(mapped.filters ?? []);
 			}, filterDebounceMs);
+		},
+		onCellEditComplete(event: DataTableCellEditCompleteEvent) {
+			applyEdit({
+				row: event.data as T,
+				newData: event.newData as T,
+				field: event.field,
+				newValue: event.newValue,
+			});
+		},
+		onRowEditSave(event: DataTableRowEditSaveEvent) {
+			applyEdit({ row: event.data as T, newData: event.newData as T });
 		},
 		removeSelected(rows: T | readonly T[]): Promise<IResponse<string>> {
 			const list: readonly T[] = Array.isArray(rows) ? (rows as readonly T[]) : [rows as T];
