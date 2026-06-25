@@ -28,6 +28,17 @@ const bindings = useSstDataTable<T>(props.store, {
 	...(props.mapFilters ? { mapFilters: props.mapFilters } : {}),
 	...(props.onSave ? { onSave: props.onSave } : {}),
 });
+
+defineExpose({
+	/** Currently selected rows. */
+	get selection() {
+		return bindings.selection;
+	},
+	/** Clear the current selection. */
+	clearSelection: () => bindings.clearSelection(),
+	/** Delete row(s) by id; defaults to the current selection. */
+	removeSelected: (rows?: T | readonly T[]) => bindings.removeSelected(rows),
+});
 </script>
 
 <template>

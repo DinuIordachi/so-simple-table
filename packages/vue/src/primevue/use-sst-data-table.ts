@@ -1,4 +1,4 @@
-import { getCurrentInstance, onMounted, reactive } from 'vue';
+import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
 import { ESortOrder, type IFilterParams, type IResponse } from '@sst/core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import type {
@@ -71,8 +71,14 @@ export interface ISstDataTableBindings<T extends { id: string }> {
 	onCellEditComplete(event: DataTableCellEditCompleteEvent): void;
 	/** Handle PrimeVue's `@row-edit-save`: optimistic update + `onSave`. */
 	onRowEditSave(event: DataTableRowEditSaveEvent): void;
-	/** Delete the given row(s) by id via `store.bulkDelete` (the store refreshes afterward). */
-	removeSelected(rows: T | readonly T[]): Promise<IResponse<string>>;
+	/** Currently selected rows (PrimeVue `v-model:selection`). */
+	readonly selection: readonly T[];
+	/** PrimeVue `@update:selection` handler; normalizes single/array/null to an array. */
+	'onUpdate:selection'(value: T | readonly T[] | null | undefined): void;
+	/** Clear the current selection. */
+	clearSelection(): void;
+	/** Delete row(s) by id via `store.bulkDelete`; defaults to the current selection. */
+	removeSelected(rows?: T | readonly T[]): Promise<IResponse<string>>;
 }
 
 function extractFilterValue(meta: unknown): unknown {
@@ -142,6 +148,8 @@ export function useSstDataTable<T extends { id: string }>(
 		});
 	}
 
+	const selectionRef = ref<readonly T[]>([]);
+
 	function applyEdit(edit: ISstDataTableEdit<T>): void {
 		const previous = store.data.value;
 		store.updateData(previous.map((row) => (row.id === edit.row.id ? edit.newData : row)));
@@ -208,8 +216,18 @@ export function useSstDataTable<T extends { id: string }>(
 		onRowEditSave(event: DataTableRowEditSaveEvent) {
 			applyEdit({ row: event.data as T, newData: event.newData as T });
 		},
-		removeSelected(rows: T | readonly T[]): Promise<IResponse<string>> {
-			const list: readonly T[] = Array.isArray(rows) ? (rows as readonly T[]) : [rows as T];
+		get selection() {
+			return selectionRef.value;
+		},
+		'onUpdate:selection'(value: T | readonly T[] | null | undefined) {
+			selectionRef.value = Array.isArray(value) ? (value as readonly T[]) : value ? [value as T] : [];
+		},
+		clearSelection() {
+			selectionRef.value = [];
+		},
+		removeSelected(rows?: T | readonly T[]): Promise<IResponse<string>> {
+			const source = rows ?? selectionRef.value;
+			const list: readonly T[] = Array.isArray(source) ? (source as readonly T[]) : [source as T];
 			return store.bulkDelete(list.map((row) => row.id));
 		},
 	});

@@ -168,4 +168,24 @@ describe('useSstDataTable', () => {
 		expect(calls[0]?.[0]).toEqual([{ id: '1', name: 'b' }]); // optimistic apply
 		expect(calls[1]?.[0]).toEqual([{ id: '1', name: 'a' }]); // reverted to previous
 	});
+
+	it('tracks selection via onUpdate:selection and clears it', () => {
+		const store = makeStore();
+		const { bindings } = harness(store);
+		bindings['onUpdate:selection']([{ id: '1', name: 'a' }]);
+		expect(bindings.selection).toEqual([{ id: '1', name: 'a' }]);
+		bindings.clearSelection();
+		expect(bindings.selection).toEqual([]);
+	});
+
+	it('removeSelected() with no args deletes the current selection', async () => {
+		const store = makeStore();
+		const { bindings } = harness(store);
+		bindings['onUpdate:selection']([
+			{ id: '1', name: 'a' },
+			{ id: '2', name: 'b' },
+		]);
+		await bindings.removeSelected();
+		expect(store.bulkDelete).toHaveBeenCalledWith(['1', '2']);
+	});
 });
