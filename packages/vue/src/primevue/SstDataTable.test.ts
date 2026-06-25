@@ -49,4 +49,17 @@ describe('SstDataTable', () => {
 		expect(wrapper.find('table').exists()).toBe(true);
 		expect(wrapper.text()).toContain('Ada');
 	});
+
+	it('forwards a DataTable-level #header slot', () => {
+		const store = makeStore([{ id: '1', name: 'Ada' }]);
+		const wrapper = mount(SstDataTable, {
+			global: { plugins: [PrimeVue], components: { Column } },
+			props: { store: store as never },
+			slots: {
+				default: '<Column field="name" header="Name" />',
+				header: '<span class="toolbar">Toolbar</span>',
+			},
+		});
+		expect(wrapper.find('.toolbar').exists()).toBe(true);
+	});
 });

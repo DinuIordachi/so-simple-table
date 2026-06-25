@@ -10,4 +10,5 @@
  * `vue` as peer dependencies.
  */
 export * from './use-sst-data-table';
+export * from './filter-helpers';
 export { default as SstDataTable } from './SstDataTable.vue';

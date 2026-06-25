@@ -4,6 +4,7 @@ import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import { useSstDataTable, type IUseSstDataTableOptions } from './use-sst-data-table';
 
 defineOptions({ inheritAttrs: false });
+defineSlots<Record<string, (props: Record<string, unknown>) => unknown>>();
 
 const props = withDefaults(
 	defineProps<{
