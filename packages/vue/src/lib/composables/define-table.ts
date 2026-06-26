@@ -12,7 +12,7 @@ import {
 } from '@sst/core';
 import { useTableStore, type IUseTableStoreReturn } from './use-table-store';
 
-export interface IDefineTableConfig<T extends { id: string }, TRaw = unknown> {
+export interface IDefineTableConfig<T extends { id: string | number }, TRaw = unknown> {
 	/** Required. Base URL for all requests, e.g. `https://api.example.com/users`. */
 	readonly baseUrl: string;
 	/** Default-client headers (e.g. a JSON:API `Accept`). Ignored when `httpClient` is provided. */
@@ -76,7 +76,7 @@ export interface IDefineTableConfig<T extends { id: string }, TRaw = unknown> {
  * </script>
  * ```
  */
-export function defineTable<T extends { id: string }, TRaw = unknown>(
+export function defineTable<T extends { id: string | number }, TRaw = unknown>(
 	config: IDefineTableConfig<T, TRaw>,
 ): () => IUseTableStoreReturn<T> {
 	const { mapResponse } = config;

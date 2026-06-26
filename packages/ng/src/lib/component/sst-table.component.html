@@ -92,7 +92,7 @@
 								<input
 									type="checkbox"
 									[attr.data-test-bulk-row]="row.id"
-									[checked]="bulkSelected().has(row.id)"
+									[checked]="isRowSelected(row.id)"
 									(change)="onRowChecked(row.id, $any($event.target).checked)"
 								/>
 							</td>

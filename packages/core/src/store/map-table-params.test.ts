@@ -81,6 +81,34 @@ describe('mapTableParams', () => {
 		});
 	});
 
+	it('applies a custom paramFormatting.formatFilter (scalar instead of array)', () => {
+		const params = mapTableParams({
+			pagination: { page: 1, pageSize: 10 },
+			filters: [{ key: 'status', value: 'active' }],
+			sortMap: {},
+			queryKeys: DEFAULT_QUERY_KEYS,
+			paramFormatting: { formatFilter: (filter) => filter.value },
+		});
+		expect(params).toStrictEqual({ page: 1, pageSize: 10, status: 'active' });
+	});
+
+	it('passes the running value to formatFilter so multi-value keys can accumulate', () => {
+		const params = mapTableParams({
+			pagination: { page: 1, pageSize: 10 },
+			filters: [
+				{ key: 'status', value: 'active' },
+				{ key: 'status', value: 'paused' },
+			],
+			sortMap: {},
+			queryKeys: DEFAULT_QUERY_KEYS,
+			paramFormatting: {
+				formatFilter: (filter, existing) =>
+					typeof existing === 'string' ? `${existing},${filter.value}` : filter.value,
+			},
+		});
+		expect(params).toStrictEqual({ page: 1, pageSize: 10, status: 'active,paused' });
+	});
+
 	it('emits the search term under the configured search key when present', () => {
 		const params = mapTableParams({
 			pagination: { page: 1, pageSize: 10 },

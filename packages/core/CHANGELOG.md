@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   routing on `HttpListRepository`/`TableStore` — adapt offset pagination,
   `asc/desc` sort, and a search sub-endpoint without a custom HTTP client.
 
+### Fixed
+
+- `mapTableParams` now applies `paramFormatting.formatFilter` (previously declared
+  but ignored, so filters always array-wrapped). The default still groups values
+  into an array; supply `formatFilter` to serialize them differently — e.g. scalar
+  values for backends that reject `key[]` query arrays.
+
 ## [0.2.0] - 2026-06-24
 
 ### Added

@@ -1,5 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component, Injectable } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import type { IColumn, IResponse, IResponseList } from '@sst/core';
 import { ListRepository } from '@sst/core';
 import { SstTableService } from '../store/sst-table.service';
@@ -115,5 +116,20 @@ describe('SstTableComponent', () => {
 			'input[data-test-bulk-row]',
 		) as NodeListOf<HTMLInputElement>;
 		expect(Array.from(rowCheckboxes).every((c) => c.checked)).toBe(true);
+	});
+
+	it('coerces numeric row ids to strings for selection and bulk delete', async () => {
+		// Reach the inner component to drive its (protected) selection API with a
+		// numeric id — ids are tracked as strings, so a number must still match.
+		const table = fixture.debugElement.query(By.directive(SstTableComponent)).componentInstance as unknown as {
+			onRowChecked(id: number, checked: boolean): void;
+			isRowSelected(id: string | number): boolean;
+			onBulkDelete(): Promise<void>;
+		};
+		table.onRowChecked(7, true);
+		expect(table.isRowSelected(7)).toBe(true); // numeric lookup
+		expect(table.isRowSelected('7')).toBe(true); // string lookup hits the same key
+		await table.onBulkDelete();
+		expect(TestBed.inject(StubRepository).bulkDelete).toHaveBeenCalledWith(['7']);
 	});
 });

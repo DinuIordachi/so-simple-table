@@ -44,7 +44,9 @@ export interface IMapTableParamsInput {
  * repository.
  *
  * @remarks
- * Filters sharing a mapped key are grouped into an array. Sort is emitted only
+ * Filters sharing a mapped key are grouped into an array by default; supply
+ * `paramFormatting.formatFilter` to serialize them differently (e.g. scalar
+ * values for backends that reject `key[]` arrays). Sort is emitted only
  * when `sort.field` resolves through `sortMap`, setting the `orderBy` key (after
  * any `formatSortField`) and the `orderByDescending` boolean. Pagination is
  * always included; the search key is added only for a non-empty term.
@@ -69,17 +71,16 @@ export function mapTableParams(input: IMapTableParamsInput): HttpQueryParams {
 	const sortStyle = input.sortStyle ?? 'flag';
 	const sortDirections = input.sortDirections ?? { asc: 'asc', desc: 'desc' };
 	const formatSortField = paramFormatting?.formatSortField ?? ((field: string) => field);
+	const formatFilter =
+		paramFormatting?.formatFilter ??
+		((filter: { key: string; value: string }, existing: unknown): unknown =>
+			Array.isArray(existing) ? [...existing, filter.value] : [filter.value]);
 	const params: Record<string, unknown> = {};
 
 	if (filters && filters.length > 0) {
 		for (const filter of filters) {
 			const key = filterMap?.[filter.key] ?? filter.key;
-			const existing = params[key];
-			if (Array.isArray(existing)) {
-				existing.push(filter.value);
-			} else {
-				params[key] = [filter.value];
-			}
+			params[key] = formatFilter({ key: filter.key, value: filter.value }, params[key]);
 		}
 	}
 

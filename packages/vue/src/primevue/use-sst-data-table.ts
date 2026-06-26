@@ -15,7 +15,7 @@ const PRIME_ASC = 1;
 const PRIME_DESC = -1;
 
 /** Options for {@link useSstDataTable}. */
-export interface IUseSstDataTableOptions<T extends { id: string }> {
+export interface IUseSstDataTableOptions<T extends { id: string | number }> {
 	/** Call `store.refresh()` on mount (PrimeVue lazy does not auto-fetch). Default `true`. */
 	readonly immediate?: boolean;
 	/** Debounce (ms) before a `@filter` is pushed to the store. Default `300`. */
@@ -27,7 +27,7 @@ export interface IUseSstDataTableOptions<T extends { id: string }> {
 }
 
 /** A persisted edit emitted by PrimeVue's cell/row editing. */
-export interface ISstDataTableEdit<T extends { id: string }> {
+export interface ISstDataTableEdit<T extends { id: string | number }> {
 	/** The original row (`event.data`). */
 	readonly row: T;
 	/** The row with the edit applied (`event.newData`). */
@@ -42,9 +42,10 @@ export interface ISstDataTableEdit<T extends { id: string }> {
  * Reactive, `v-bind`-able bag of PrimeVue `DataTable` lazy props plus the
  * `@page` / `@sort` / `@filter` handlers and a `removeSelected` helper.
  *
- * @typeParam T - Row type; must carry a string `id`.
+ * @typeParam T - Row type; must carry a string or number `id` (coerced to a
+ *   string for `bulkDelete`).
  */
-export interface ISstDataTableBindings<T extends { id: string }> {
+export interface ISstDataTableBindings<T extends { id: string | number }> {
 	/** Always `true` — the adapter drives PrimeVue in lazy (server-side) mode. */
 	readonly lazy: true;
 	/** Current page of rows (from `store.data`). */
@@ -113,7 +114,8 @@ function defaultMapFilters(filters: DataTableFilterMeta): { search?: string; fil
  * Bind a So Simple Table {@link IUseTableStoreReturn | store} to a PrimeVue v4
  * `DataTable` running in lazy mode. Spread the result onto `<DataTable v-bind>`.
  *
- * @typeParam T - Row type; must carry a string `id`.
+ * @typeParam T - Row type; must carry a string or number `id` (coerced to a
+ *   string for `bulkDelete`).
  * @param store - A store from `useTableStore` / `defineTable`.
  * @param options - See {@link IUseSstDataTableOptions}.
  * @returns Reactive bindings ({@link ISstDataTableBindings}).
@@ -135,7 +137,7 @@ function defaultMapFilters(filters: DataTableFilterMeta): { search?: string; fil
  * </template>
  * ```
  */
-export function useSstDataTable<T extends { id: string }>(
+export function useSstDataTable<T extends { id: string | number }>(
 	store: IUseTableStoreReturn<T>,
 	options: IUseSstDataTableOptions<T> = {},
 ): ISstDataTableBindings<T> {
@@ -228,7 +230,7 @@ export function useSstDataTable<T extends { id: string }>(
 		removeSelected(rows?: T | readonly T[]): Promise<IResponse<string>> {
 			const source = rows ?? selectionRef.value;
 			const list: readonly T[] = Array.isArray(source) ? (source as readonly T[]) : [source as T];
-			return store.bulkDelete(list.map((row) => row.id));
+			return store.bulkDelete(list.map((row) => String(row.id)));
 		},
 	});
 

@@ -134,6 +134,27 @@ describe('useSstDataTable', () => {
 		expect(store.bulkDelete).toHaveBeenCalledWith(['1', '2']);
 	});
 
+	it('coerces numeric row ids to strings for store.bulkDelete', async () => {
+		interface INumItem {
+			id: number;
+			name: string;
+		}
+		const store = makeStore() as unknown as IUseTableStoreReturn<INumItem>;
+		let bindings!: ISstDataTableBindings<INumItem>;
+		const Comp = defineComponent({
+			setup() {
+				bindings = useSstDataTable<INumItem>(store);
+				return () => h('div');
+			},
+		});
+		mount(Comp);
+		await bindings.removeSelected([
+			{ id: 1, name: 'a' },
+			{ id: 2, name: 'b' },
+		]);
+		expect(store.bulkDelete).toHaveBeenCalledWith(['1', '2']);
+	});
+
 	it('optimistically applies a cell edit and calls onSave', () => {
 		const store = makeStore();
 		(store.data as Ref<readonly IItem[]>).value = [{ id: '1', name: 'a' }];

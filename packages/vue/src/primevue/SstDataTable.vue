@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends { id: string }">
+<script setup lang="ts" generic="T extends { id: string | number }">
 import DataTable from 'primevue/datatable';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import { useSstDataTable, type IUseSstDataTableOptions } from './use-sst-data-table';

@@ -1,9 +1,9 @@
-<script setup lang="ts" generic="T extends { id: string }">
+<script setup lang="ts" generic="T extends { id: string | number }">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
 import type { IUseTableStoreReturn } from '../composables/use-table-store';
 
-export interface ISstTableProps<TItem extends { id: string }> {
+export interface ISstTableProps<TItem extends { id: string | number }> {
 	columns: readonly IColumn[];
 	store: IUseTableStoreReturn<TItem>;
 	bulk?: boolean;
@@ -54,13 +54,13 @@ onBeforeUnmount(() => {
 const allChecked = computed(() => {
 	const data = props.store.data.value;
 	const selected = bulkSelected.value;
-	return data.length > 0 && data.every((row) => selected.has(row.id));
+	return data.length > 0 && data.every((row) => selected.has(String(row.id)));
 });
 
 const indeterminate = computed(() => {
 	const data = props.store.data.value;
 	const selected = bulkSelected.value;
-	return data.some((row) => selected.has(row.id)) && !allChecked.value;
+	return data.some((row) => selected.has(String(row.id))) && !allChecked.value;
 });
 
 const totalPages = computed(() => {
@@ -107,13 +107,14 @@ function onAllChecked(event: Event): void {
 		bulkSelected.value = new Set();
 		return;
 	}
-	bulkSelected.value = new Set(props.store.data.value.map((r) => r.id));
+	bulkSelected.value = new Set(props.store.data.value.map((r) => String(r.id)));
 }
 
-function onRowChecked(id: string, event: Event): void {
+function onRowChecked(id: string | number, event: Event): void {
 	const checked = (event.target as HTMLInputElement).checked;
+	const key = String(id);
 	const next = new Set(bulkSelected.value);
-	if (checked) next.add(id); else next.delete(id);
+	if (checked) next.add(key); else next.delete(key);
 	bulkSelected.value = next;
 }
 
@@ -209,7 +210,7 @@ function setPage(page: number): void {
 							<input
 								type="checkbox"
 								:data-test-bulk-row="row.id"
-								:checked="bulkSelected.has(row.id)"
+								:checked="bulkSelected.has(String(row.id))"
 								@change="(e) => onRowChecked(row.id, e)"
 							/>
 						</td>

@@ -58,7 +58,7 @@ import { SstTableService } from '../store/sst-table.service';
 	styleUrl: './sst-table.component.scss',
 	host: { class: 'sst-table-host' },
 })
-export class SstTableComponent<T extends { id: string }> implements OnInit {
+export class SstTableComponent<T extends { id: string | number }> implements OnInit {
 	private readonly destroyRef = inject(DestroyRef);
 
 	/** Required. Column definitions describing each table column (key, label, sortable, …). */
@@ -97,15 +97,20 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 	protected readonly allChecked = computed(() => {
 		const data = this.service().data();
 		const selected = this.bulkSelected();
-		return data.length > 0 && data.every((row) => selected.has(row.id));
+		return data.length > 0 && data.every((row) => selected.has(String(row.id)));
 	});
 
 	protected readonly indeterminate = computed(() => {
 		const data = this.service().data();
 		const selected = this.bulkSelected();
-		const someSelected = data.some((row) => selected.has(row.id));
+		const someSelected = data.some((row) => selected.has(String(row.id)));
 		return someSelected && !this.allChecked();
 	});
+
+	/** Whether the row with this id is currently bulk-selected (ids are tracked as strings). */
+	protected isRowSelected(id: string | number): boolean {
+		return this.bulkSelected().has(String(id));
+	}
 
 	/**
 	 * Angular lifecycle hook. Seeds the local search box from the service's current
@@ -153,10 +158,11 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 		return sort.order === ESortOrder.ASC ? '↑' : '↓';
 	}
 
-	protected onRowChecked(id: string, checked: boolean): void {
+	protected onRowChecked(id: string | number, checked: boolean): void {
+		const key = String(id);
 		const next = new Set(this.bulkSelected());
-		if (checked) next.add(id);
-		else next.delete(id);
+		if (checked) next.add(key);
+		else next.delete(key);
 		this.bulkSelected.set(next);
 	}
 
@@ -168,7 +174,7 @@ export class SstTableComponent<T extends { id: string }> implements OnInit {
 		const all = new Set(
 			this.service()
 				.data()
-				.map((r) => r.id),
+				.map((r) => String(r.id)),
 		);
 		this.bulkSelected.set(all);
 	}

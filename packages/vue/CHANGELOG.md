@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `selection` with `clearSelection`/`removeSelected`, DataTable-level named-slot
   typing, and `searchColumn`/`withMatchModes` filter helpers.
 
+### Changed
+
+- Relaxed the row constraint from `{ id: string }` to `{ id: string | number }`
+  across `defineTable`, `useSstDataTable`/`<SstDataTable>`, and `<SstTable>`, so
+  integer-keyed backends (e.g. Laravel) no longer need to stringify ids. Ids are
+  coerced to strings internally for bulk selection and `bulkDelete`. Non-breaking:
+  existing string-id rows still satisfy the wider constraint.
+
 ## [0.1.0] - 2026-06-24
 
 ### Added

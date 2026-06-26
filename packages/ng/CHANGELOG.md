@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Relaxed `SstTableComponent<T>`'s row constraint from `{ id: string }` to
+  `{ id: string | number }`, so integer-keyed backends no longer need to stringify
+  ids. Ids are coerced to strings internally for bulk selection and `bulkDelete`.
+  Non-breaking: existing string-id rows still satisfy the wider constraint.
+
 ## [0.1.0] - 2026-06-24
 
 ### Added
