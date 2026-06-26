@@ -7,7 +7,15 @@ import { resolveLayoutSlot, RESERVED_LAYOUT_SLOTS, type TableBreakpoint } from '
 import { useBreakpoint } from './use-breakpoint';
 
 defineOptions({ inheritAttrs: false });
-defineSlots<Record<string, (props: Record<string, unknown>) => unknown>>();
+// Slot props are typed as `any` so consumers can apply a narrowing annotation on
+// forwarded slots — e.g. `#expansion="{ data }: { data: Row }"` or a layout slot's
+// `#xs="{ rows }: { rows: Row[] }"` — exactly as they could on a raw PrimeVue
+// `<DataTable>` (whose slot data is `any`). `Record<string, unknown>` (or even
+// `Record<string, any>`) would reject such an annotation: an index signature does
+// not satisfy a required named property like `data`, so it isn't assignable to
+// `{ data: Row }`. `any` is, restoring slot ergonomics vs. the unwrapped component.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+defineSlots<Record<string, (props: any) => any>>();
 
 const props = withDefaults(
 	defineProps<{
