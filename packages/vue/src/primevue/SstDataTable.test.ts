@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { ref, type Ref } from 'vue';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { ref, h, nextTick, type Ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import Column from 'primevue/column';
@@ -61,5 +61,89 @@ describe('SstDataTable', () => {
 			},
 		});
 		expect(wrapper.find('.toolbar').exists()).toBe(true);
+	});
+
+	// --- responsive layout slots ---
+
+	function installMatchMedia(width: number): void {
+		interface MQ {
+			media: string;
+			matches: boolean;
+			px: number;
+			addEventListener(type: string, cb: () => void): void;
+			removeEventListener(type: string, cb: () => void): void;
+		}
+		(window as unknown as { matchMedia(q: string): MQ }).matchMedia = (query: string): MQ => {
+			const px = Number(/(\d+)px/.exec(query)?.[1] ?? 0);
+			return {
+				media: query,
+				px,
+				matches: width >= px,
+				addEventListener: () => {},
+				removeEventListener: () => {},
+			};
+		};
+	}
+
+	afterEach(() => {
+		delete (window as unknown as { matchMedia?: unknown }).matchMedia;
+	});
+
+	it('renders a layout slot below tableBreakpoint and passes rows/loading/store', async () => {
+		installMatchMedia(500); // < lg
+		const store = makeStore([{ id: '1', name: 'Ada' }]);
+		let received: { rows: readonly IItem[]; loading: boolean; store: unknown } | undefined;
+		const wrapper = mount(SstDataTable, {
+			global: { plugins: [PrimeVue], components: { Column } },
+			props: { store: store as never },
+			slots: {
+				default: '<Column field="name" header="Name" />',
+				xs: (sp: Record<string, unknown>) => {
+					received = sp as { rows: readonly IItem[]; loading: boolean; store: unknown };
+					const typed = received!;
+					return typed.rows.map((r) => h('div', { class: 'card' }, r.name));
+				},
+			},
+		});
+		await nextTick(); // wait for onMounted compute() → breakpoint ref → DOM update
+		expect(wrapper.find('table').exists()).toBe(false); // no DataTable
+		expect(wrapper.findAll('.card')).toHaveLength(1);
+		expect(wrapper.text()).toContain('Ada');
+		expect(received?.rows).toHaveLength(1);
+		expect(received?.loading).toBe(false);
+		expect(received?.store).toBe(store);
+	});
+
+	it('cascades a smaller layout slot upward (xs shown at md width)', async () => {
+		installMatchMedia(800); // md range, only #xs defined
+		const store = makeStore([{ id: '1', name: 'Ada' }]);
+		const wrapper = mount(SstDataTable, {
+			global: { plugins: [PrimeVue], components: { Column } },
+			props: { store: store as never },
+			slots: {
+				default: '<Column field="name" header="Name" />',
+				xs: () => h('div', { class: 'card' }, 'card'),
+			},
+		});
+		await nextTick(); // wait for onMounted compute() → breakpoint ref → DOM update
+		expect(wrapper.findAll('.card')).toHaveLength(1);
+	});
+
+	it('renders the table at/above tableBreakpoint and does not forward reserved slots', async () => {
+		installMatchMedia(1280); // >= lg
+		const store = makeStore([{ id: '1', name: 'Ada' }]);
+		const wrapper = mount(SstDataTable, {
+			global: { plugins: [PrimeVue], components: { Column } },
+			props: { store: store as never },
+			slots: {
+				default: '<Column field="name" header="Name" />',
+				header: '<span class="toolbar">Toolbar</span>',
+				xs: () => h('div', { class: 'card' }, 'card'),
+			},
+		});
+		await nextTick(); // wait for onMounted compute() → breakpoint ref → DOM update
+		expect(wrapper.find('table').exists()).toBe(true); // DataTable renders
+		expect(wrapper.find('.toolbar').exists()).toBe(true); // non-reserved slot forwarded
+		expect(wrapper.find('.card').exists()).toBe(false); // reserved #xs NOT forwarded/rendered
 	});
 });

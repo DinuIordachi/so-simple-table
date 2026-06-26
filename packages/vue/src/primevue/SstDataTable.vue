@@ -1,7 +1,10 @@
 <script setup lang="ts" generic="T extends { id: string | number }">
+import { computed, useSlots } from 'vue';
 import DataTable from 'primevue/datatable';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import { useSstDataTable, type IUseSstDataTableOptions } from './use-sst-data-table';
+import { resolveLayoutSlot, RESERVED_LAYOUT_SLOTS, type TableBreakpoint } from './responsive';
+import { useBreakpoint } from './use-breakpoint';
 
 defineOptions({ inheritAttrs: false });
 defineSlots<Record<string, (props: Record<string, unknown>) => unknown>>();
@@ -18,8 +21,10 @@ const props = withDefaults(
 		mapFilters?: IUseSstDataTableOptions<T>['mapFilters'];
 		/** Persist an inline edit (optimistic; reverts on rejection). */
 		onSave?: IUseSstDataTableOptions<T>['onSave'];
+		/** Viewport width at/above which the DataTable renders; `'none'` ⇒ never. Default `'lg'`. */
+		tableBreakpoint?: TableBreakpoint;
 	}>(),
-	{ immediate: true, filterDebounceMs: 300 },
+	{ immediate: true, filterDebounceMs: 300, tableBreakpoint: 'lg' },
 );
 
 const bindings = useSstDataTable<T>(props.store, {
@@ -28,6 +33,24 @@ const bindings = useSstDataTable<T>(props.store, {
 	...(props.mapFilters ? { mapFilters: props.mapFilters } : {}),
 	...(props.onSave ? { onSave: props.onSave } : {}),
 });
+
+const slots = useSlots();
+const breakpoint = useBreakpoint();
+
+/** Reserved breakpoint slots the host supplied. */
+const definedLayoutSlots = computed<ReadonlySet<string>>(
+	() => new Set(Object.keys(slots).filter((name) => RESERVED_LAYOUT_SLOTS.has(name))),
+);
+/** The layout slot to render now, or `null` to render the DataTable. */
+const activeSlot = computed(() =>
+	resolveLayoutSlot({
+		definedSlots: definedLayoutSlots.value,
+		current: breakpoint.value,
+		tableBreakpoint: props.tableBreakpoint,
+	}),
+);
+/** Non-reserved slots forwarded to the DataTable (PrimeVue slots + `<Column>` default). */
+const forwardedSlotNames = computed(() => Object.keys(slots).filter((name) => !RESERVED_LAYOUT_SLOTS.has(name)));
 
 defineExpose({
 	/** Currently selected rows. */
@@ -42,8 +65,9 @@ defineExpose({
 </script>
 
 <template>
-	<DataTable v-bind="{ dataKey: 'id', ...$attrs, ...bindings }">
-		<template v-for="(_, name) in $slots" #[name]="slotProps">
+	<slot v-if="activeSlot" :name="activeSlot" :rows="store.data.value" :loading="store.loading.value" :store="store" />
+	<DataTable v-else v-bind="{ dataKey: 'id', ...$attrs, ...bindings }">
+		<template v-for="name in forwardedSlotNames" #[name]="slotProps">
 			<slot :name="name" v-bind="slotProps ?? {}" />
 		</template>
 	</DataTable>

@@ -4,11 +4,14 @@
  *
  * Bind a `TableStore` to a PrimeVue `DataTable` in lazy mode while keeping every
  * native DataTable feature and the host theme. Exposes the headless
- * {@link useSstDataTable} composable and the {@link SstDataTable} wrapper.
+ * {@link useSstDataTable} composable, the {@link SstDataTable} wrapper, and
+ * responsive layout utilities ({@link useBreakpoint}, {@link resolveLayoutSlot}).
  *
  * Import from the `@sst/vue/primevue` subpath. Requires `primevue` (>= 4) and
  * `vue` as peer dependencies.
  */
 export * from './use-sst-data-table';
 export * from './filter-helpers';
+export * from './responsive';
+export * from './use-breakpoint';
 export { default as SstDataTable } from './SstDataTable.vue';
