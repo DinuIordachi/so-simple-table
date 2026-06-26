@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `@sst/vue/primevue`: inline editing via `onSave` (optimistic + rollback), reactive
   `selection` with `clearSelection`/`removeSelected`, DataTable-level named-slot
   typing, and `searchColumn`/`withMatchModes` filter helpers.
+- `@sst/vue/primevue` responsive layouts: per-breakpoint layout slots
+  (`#xs`…`#2xl`, Tailwind widths) on `<SstDataTable>` with a mobile-first cascade
+  and a `tableBreakpoint` prop (default `lg`, or `'none'`). Each slot receives
+  `{ rows, loading, store }`. Exports the `useBreakpoint` composable. SSR-safe;
+  non-breaking.
 
 ### Changed
 

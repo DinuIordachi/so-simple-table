@@ -217,6 +217,24 @@ const bindings = useSstDataTable(table); // spread onto <DataTable v-bind="bindi
 </SstDataTable>
 ```
 
+### Responsive layouts
+
+Below a configurable width, render your own layout per Tailwind breakpoint instead of the table. Define any of `#xs` (<640), `#sm` (≥640), `#md` (≥768), `#lg` (≥1024), `#xl` (≥1280), `#2xl` (≥1536). A slot applies from its width up to the next defined slot (mobile-first cascade); at/above `tableBreakpoint` (default `lg`, or `'none'` to never show the table) the DataTable renders. If no slot covers the current width, the table renders. Each slot receives `{ rows, loading, store }`.
+
+```vue
+<SstDataTable :store="table" table-breakpoint="lg">
+  <Column field="name" header="Name" />
+
+  <!-- < lg: each row becomes a card; cascades up from xs -->
+  <template #xs="{ rows, loading, store }">
+    <article v-for="row in rows" :key="row.id" class="card">{{ row.name }}</article>
+    <button @click="store.updatePagination({ page: store.pagination.value.page + 1 })">More</button>
+  </template>
+</SstDataTable>
+```
+
+The `useBreakpoint()` composable (current Tailwind breakpoint, SSR-safe) is also exported for standalone use.
+
 ## Links
 
 - [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)

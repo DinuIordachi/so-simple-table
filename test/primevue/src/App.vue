@@ -4,6 +4,7 @@ import Column from 'primevue/column';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
+import Card from 'primevue/card';
 import { SstDataTable, searchColumn } from '@sst/vue/primevue';
 import { useProductsTable, type IProduct } from './products-table';
 
@@ -43,6 +44,7 @@ const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): P
 		<SstDataTable
 			ref="tableRef"
 			:store="table"
+			table-breakpoint="lg"
 			:mapFilters="searchColumn('title')"
 			:onSave="onSave"
 			v-model:filters="filters"
@@ -53,6 +55,23 @@ const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): P
 			:rowsPerPageOptions="[10, 20, 50]"
 			filterDisplay="row"
 		>
+			<template #xs="{ rows, loading, store }">
+				<div v-if="loading" style="padding: 16px">Loading…</div>
+				<Card v-for="row in rows" :key="row.id" style="margin-bottom: 8px">
+					<template #title>{{ row.title }}</template>
+					<template #subtitle>{{ row.brand }} · {{ row.category }}</template>
+					<template #content>
+						${{ row.price.toFixed(2) }} · {{ row.rating.toFixed(2) }} ★ · stock {{ row.stock }}
+					</template>
+				</Card>
+				<button
+					style="margin-top: 8px"
+					:disabled="loading"
+					@click="store.updatePagination({ page: store.pagination.value.page + 1 })"
+				>
+					Load next page
+				</button>
+			</template>
 			<template #header>
 				<div style="display: flex; gap: 12px; align-items: center; justify-content: flex-end">
 					<span>{{ tableRef?.selection.length ?? 0 }} selected</span>
