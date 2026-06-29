@@ -97,6 +97,6 @@
     "vue-tsc": "^2.1.0"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }
