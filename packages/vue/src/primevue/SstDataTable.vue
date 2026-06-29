@@ -2,20 +2,27 @@
 import { computed, useSlots } from 'vue';
 import DataTable from 'primevue/datatable';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
-import { useSstDataTable, type IUseSstDataTableOptions } from './use-sst-data-table';
+import { useSstDataTable, type IUseSstDataTableOptions, type ISstLayoutSlotProps } from './use-sst-data-table';
 import { resolveLayoutSlot, RESERVED_LAYOUT_SLOTS, type TableBreakpoint } from './responsive';
 import { useBreakpoint } from './use-breakpoint';
 
 defineOptions({ inheritAttrs: false });
-// Slot props are typed as `any` so consumers can apply a narrowing annotation on
-// forwarded slots — e.g. `#expansion="{ data }: { data: Row }"` or a layout slot's
-// `#xs="{ rows }: { rows: Row[] }"` — exactly as they could on a raw PrimeVue
-// `<DataTable>` (whose slot data is `any`). `Record<string, unknown>` (or even
-// `Record<string, any>`) would reject such an annotation: an index signature does
-// not satisfy a required named property like `data`, so it isn't assignable to
-// `{ data: Row }`. `any` is, restoring slot ergonomics vs. the unwrapped component.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-defineSlots<Record<string, (props: any) => any>>();
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// The responsive layout slots carry the row type, so `#xs="{ rows }"` gives a typed
+// `rows: readonly T[]` (each `row` is `T`) with no annotation. Forwarded slots
+// (PrimeVue's `header`/`empty`/`expansion`/… and the default `<Column>` slot) keep
+// `any` props so consumers can narrow them — e.g. `#expansion="{ data }: { data: Row }"`
+// — exactly as on a raw PrimeVue `<DataTable>` (whose slot data is `any`).
+defineSlots<{
+	[name: string]: (props: any) => any;
+	xs?: (props: ISstLayoutSlotProps<T>) => any;
+	sm?: (props: ISstLayoutSlotProps<T>) => any;
+	md?: (props: ISstLayoutSlotProps<T>) => any;
+	lg?: (props: ISstLayoutSlotProps<T>) => any;
+	xl?: (props: ISstLayoutSlotProps<T>) => any;
+	'2xl'?: (props: ISstLayoutSlotProps<T>) => any;
+}>();
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 const props = withDefaults(
 	defineProps<{

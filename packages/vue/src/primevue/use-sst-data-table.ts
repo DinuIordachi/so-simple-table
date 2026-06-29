@@ -39,6 +39,22 @@ export interface ISstDataTableEdit<T extends { id: string | number }> {
 }
 
 /**
+ * Scoped props passed to a responsive layout slot (`#xs`…`#2xl`) of
+ * `<SstDataTable>`. The row type flows through, so `#xs="{ rows }"` gives a typed
+ * `rows: readonly T[]` (each `row` is `T`) with no annotation needed.
+ *
+ * @typeParam T - Row type; carries a string or number `id`.
+ */
+export interface ISstLayoutSlotProps<T extends { id: string | number }> {
+	/** Current page of rows (from `store.data`). */
+	readonly rows: readonly T[];
+	/** Whether a fetch is in flight (from `store.loading`). */
+	readonly loading: boolean;
+	/** The backing store — escape hatch for pagination/sort/search/refresh. */
+	readonly store: IUseTableStoreReturn<T>;
+}
+
+/**
  * Reactive, `v-bind`-able bag of PrimeVue `DataTable` lazy props plus the
  * `@page` / `@sort` / `@filter` handlers and a `removeSelected` helper.
  *

@@ -228,7 +228,7 @@ Below a configurable width, render your own layout per Tailwind breakpoint inste
   <!-- < lg: each row becomes a card; cascades up from xs -->
   <template #xs="{ rows, loading, store }">
     <article v-for="row in rows" :key="row.id" class="card">{{ row.name }}</article>
-    <button @click="store.updatePagination({ page: store.pagination.value.page + 1 })">More</button>
+    <button @click="store.updatePagination({ ...store.pagination.value, page: store.pagination.value.page + 1 })">More</button>
   </template>
 </SstDataTable>
 ```

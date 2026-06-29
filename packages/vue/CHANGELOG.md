@@ -31,9 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   integer-keyed backends (e.g. Laravel) no longer need to stringify ids. Ids are
   coerced to strings internally for bulk selection and `bulkDelete`. Non-breaking:
   existing string-id rows still satisfy the wider constraint.
-- `<SstDataTable>` slot props are typed `Record<string, any>` (was `unknown`), so
-  consumers can narrow forwarded/layout slots — e.g. `#expansion="{ data }: { data: Row }"`
-  or `#xs="{ rows }: { rows: Row[] }"` — just like on a raw PrimeVue `<DataTable>`.
+- `<SstDataTable>` responsive layout slots (`#xs`…`#2xl`) are typed with the row
+  type via the new `ISstLayoutSlotProps<T>`, so `#xs="{ rows }"` gives `rows: readonly T[]`
+  (each `row` is `T`) with no annotation. Forwarded slots (PrimeVue's `header`/`empty`/
+  `expansion`/… and `<Column>`) keep `any` props so they stay narrowable —
+  e.g. `#expansion="{ data }: { data: Row }"` — just like on a raw `<DataTable>`.
 
 ## [0.1.0] - 2026-06-24
 

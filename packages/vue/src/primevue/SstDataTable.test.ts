@@ -6,6 +6,7 @@ import Column from 'primevue/column';
 import type { IFilterParams, IPaginationParams, ISortParams } from '@sst/core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import SstDataTable from './SstDataTable.vue';
+import type { ISstLayoutSlotProps } from './use-sst-data-table';
 
 interface IItem {
 	id: string;
@@ -92,16 +93,19 @@ describe('SstDataTable', () => {
 	it('renders a layout slot below tableBreakpoint and passes rows/loading/store', async () => {
 		installMatchMedia(500); // < lg
 		const store = makeStore([{ id: '1', name: 'Ada' }]);
+		// The mounted component's generic T erases to the `{ id: string | number }`
+		// constraint here (vue-test-utils can't infer it through `store as never`), so
+		// the slot param is typed to that; the real IItem/IProduct-typed slot is
+		// exercised in the test/primevue consumer. Assertions use the runtime values.
 		let received: { rows: readonly IItem[]; loading: boolean; store: unknown } | undefined;
 		const wrapper = mount(SstDataTable, {
 			global: { plugins: [PrimeVue], components: { Column } },
 			props: { store: store as never },
 			slots: {
 				default: '<Column field="name" header="Name" />',
-				xs: (sp: Record<string, unknown>) => {
-					received = sp as { rows: readonly IItem[]; loading: boolean; store: unknown };
-					const typed = received!;
-					return typed.rows.map((r) => h('div', { class: 'card' }, r.name));
+				xs: (sp: ISstLayoutSlotProps<{ id: string | number }>) => {
+					received = sp as unknown as { rows: readonly IItem[]; loading: boolean; store: unknown };
+					return received.rows.map((r) => h('div', { class: 'card' }, r.name));
 				},
 			},
 		});
