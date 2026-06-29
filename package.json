@@ -1,6 +1,5 @@
 {
   "name": "so-simple-table",
-  "private": true,
   "version": "0.0.0",
   "description": "So Simple Table — framework-agnostic table library with pluggable framework variants.",
   "workspaces": [
