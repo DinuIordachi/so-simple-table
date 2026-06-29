@@ -17,13 +17,44 @@ import type {
 import { DEFAULT_QUERY_KEYS } from '../types/repository-config';
 
 /**
+ * The raw table state handed to a custom {@link ITableStoreOptions.fetchData}
+ * function — the state *before* any query-param mapping, so the consumer can
+ * build their own request however they like.
+ */
+export interface ITableFetchState {
+	/** Current pagination (1-based page + page size). */
+	readonly pagination: IPaginationParams;
+	/** Active sort descriptor, or `undefined` when unsorted. */
+	readonly sort?: ISortParams;
+	/** Active filters. */
+	readonly filters: readonly IFilterParams[];
+	/** Free-text search term (`''` when none). */
+	readonly search: string;
+}
+
+/**
  * Construction options for {@link TableStore}.
+ *
+ * @remarks
+ * Provide either a {@link ITableStoreOptions.repository | repository} (the
+ * built-in HTTP path) or a {@link ITableStoreOptions.fetchData | fetchData}
+ * function (full control of how data is loaded) — at least one is required.
  *
  * @typeParam T - Row type held by the store.
  */
 export interface ITableStoreOptions<T> {
-	/** Data source the store fetches from and deletes through. */
-	readonly repository: ListRepository<T>;
+	/** Data source the store fetches from and deletes through. Optional when {@link ITableStoreOptions.fetchData} is given. */
+	readonly repository?: ListRepository<T>;
+	/**
+	 * Override the default fetch: receives the raw {@link ITableFetchState} and
+	 * returns the page. When provided, the query-param mapping (`sortMap`,
+	 * `queryKeys`, `paramFormatting`, …) and `repository.getList` are bypassed.
+	 */
+	readonly fetchData?: (state: ITableFetchState) => Promise<IResponseList<T[]>>;
+	/** Override bulk deletion (used by `bulkDelete`). Falls back to `repository.bulkDelete`. */
+	readonly deleteRows?: (ids: readonly string[]) => Promise<IResponse<string>>;
+	/** Handle a fetch rejection. When omitted, the store logs the error (and never leaves it unhandled). */
+	readonly catchError?: (error: unknown) => void;
 	/** Maps sort field names to the values understood by the backend. */
 	readonly sortMap: Readonly<Record<string, string>>;
 	/** Optional mapping from filter keys to query-param names. */
@@ -99,7 +130,13 @@ export class TableStore<T> implements ITableStore<T> {
 	/** Current free-text search term. */
 	public readonly search$: IReadonlyObservable<string> = this._search.asReadonly();
 
-	protected readonly repository: ListRepository<T>;
+	protected readonly repository: ListRepository<T> | undefined;
+	/** Custom fetch override (from {@link ITableStoreOptions.fetchData}); bypasses param mapping + `repository.getList`. */
+	private readonly fetcher: ((state: ITableFetchState) => Promise<IResponseList<T[]>>) | undefined;
+	/** Custom delete override (from {@link ITableStoreOptions.deleteRows}); falls back to `repository.bulkDelete`. */
+	private readonly deleteRowsFn: ((ids: readonly string[]) => Promise<IResponse<string>>) | undefined;
+	/** Fetch-error handler (from {@link ITableStoreOptions.catchError}); when absent, errors are logged. */
+	private readonly catchError: ((error: unknown) => void) | undefined;
 	protected readonly sortMap: Readonly<Record<string, string>>;
 	protected readonly filterMap: Readonly<Record<string, string>> | undefined;
 	protected readonly queryKeys: IRepositoryQueryKeys;
@@ -116,7 +153,13 @@ export class TableStore<T> implements ITableStore<T> {
 	 * @param options - Repository, mappings, and optional initial state.
 	 */
 	public constructor(options: ITableStoreOptions<T>) {
+		if (options.repository === undefined && options.fetchData === undefined) {
+			throw new Error('[sst] TableStore requires either a `repository` or a `fetchData` function.');
+		}
 		this.repository = options.repository;
+		this.fetcher = options.fetchData;
+		this.deleteRowsFn = options.deleteRows;
+		this.catchError = options.catchError;
 		this.sortMap = options.sortMap;
 		this.filterMap = options.filterMap;
 		this.queryKeys = { ...DEFAULT_QUERY_KEYS, ...(options.queryKeys ?? {}) };
@@ -169,6 +212,18 @@ export class TableStore<T> implements ITableStore<T> {
 		filters?: readonly IFilterParams[],
 		search?: string,
 	): void {
+		if (this.fetcher !== undefined) {
+			this.fetchData(
+				this.fetcher({
+					pagination,
+					filters: filters ?? [],
+					search: search ?? '',
+					...(sort !== undefined ? { sort } : {}),
+				}),
+			);
+			return;
+		}
+		if (this.repository === undefined) return; // unreachable: validated in the constructor
 		const params = mapTableParams({
 			pagination,
 			...(sort !== undefined ? { sort } : {}),
@@ -191,8 +246,10 @@ export class TableStore<T> implements ITableStore<T> {
 	 * @remarks
 	 * Sets `loading` while `promise` is pending, then writes the result and
 	 * total and runs the empty-page guard against the pagination captured at
-	 * request time. Exposed as `protected` so subclasses can reuse the fetch
-	 * lifecycle.
+	 * request time. A rejection is routed to the configured
+	 * {@link ITableStoreOptions.catchError} handler (or logged), so a failed
+	 * fetch never surfaces as an unhandled rejection. Exposed as `protected` so
+	 * subclasses can reuse the fetch lifecycle.
 	 */
 	protected fetchData(promise: Promise<IResponseList<T[]>>): void {
 		// Capture pagination at request time so cascading post-fetch checks see the
@@ -200,22 +257,37 @@ export class TableStore<T> implements ITableStore<T> {
 		const paginationSnapshot = this._pagination.get();
 		this.updateLoading(true);
 		promise
-			.then((response) => {
-				this.updateData(response.result);
-				this.updateTotal(response.totalCount);
-				this.checkIfNeedToGoPrevious(response.result.length, paginationSnapshot);
-			})
+			.then(
+				(response) => {
+					this.updateData(response.result);
+					this.updateTotal(response.totalCount);
+					this.checkIfNeedToGoPrevious(response.result.length, paginationSnapshot);
+				},
+				(error: unknown) => {
+					if (this.catchError !== undefined) this.catchError(error);
+					else console.error('[sst] table fetch failed', error);
+				},
+			)
 			.finally(() => this.updateLoading(false));
 	}
 
 	/**
-	 * Deletes the given rows through the repository, then refreshes the current
-	 * page.
+	 * Deletes the given rows, then refreshes the current page. Uses the
+	 * {@link ITableStoreOptions.deleteRows} override when configured, otherwise
+	 * `repository.bulkDelete`.
 	 *
-	 * @returns The repository's delete response.
+	 * @returns The delete response.
+	 * @throws If neither a `deleteRows` handler nor a `repository` is configured.
 	 */
 	public async bulkDelete(ids: readonly string[]): Promise<IResponse<string>> {
-		const result = await this.repository.bulkDelete(ids);
+		let result: IResponse<string>;
+		if (this.deleteRowsFn !== undefined) {
+			result = await this.deleteRowsFn(ids);
+		} else if (this.repository !== undefined) {
+			result = await this.repository.bulkDelete(ids);
+		} else {
+			throw new Error('[sst] bulkDelete requires a `repository` or a `deleteRows` handler.');
+		}
 		this.refresh();
 		return result;
 	}

@@ -232,3 +232,102 @@ describe('TableStore — backend conventions', () => {
 		store.destroy();
 	});
 });
+
+const flush = async (): Promise<void> => {
+	for (let i = 0; i < 5; i++) await Promise.resolve();
+};
+
+describe('TableStore — custom fetchData override', () => {
+	it('calls fetchData with the raw state and bypasses repository.getList', async () => {
+		const fetchData = vi.fn(async () => ({ result: [{ id: '1', name: 'a' }], totalCount: 1, isSuccess: true }));
+		const store = new TableStore<IItem>({ fetchData, sortMap: {} });
+		const sort = { id: 'name-ASC', field: 'name', order: ESortOrder.ASC };
+		store.getData({ page: 2, pageSize: 5 }, sort, [{ key: 'status', value: 'active' }], 'ada');
+		expect(fetchData).toHaveBeenCalledWith({
+			pagination: { page: 2, pageSize: 5 },
+			sort,
+			filters: [{ key: 'status', value: 'active' }],
+			search: 'ada',
+		});
+		await flush();
+		expect(store.data$.get()).toStrictEqual([{ id: '1', name: 'a' }]);
+		expect(store.total$.get()).toBe(1);
+		store.destroy();
+	});
+
+	it('defaults missing filters/search to [] and an empty string', async () => {
+		const fetchData = vi.fn(async () => ({ result: [], totalCount: 0, isSuccess: true }));
+		const store = new TableStore<IItem>({ fetchData, sortMap: {} });
+		store.getData({ page: 1, pageSize: 10 });
+		expect(fetchData).toHaveBeenCalledWith({
+			pagination: { page: 1, pageSize: 10 },
+			sort: undefined,
+			filters: [],
+			search: '',
+		});
+		store.destroy();
+	});
+
+	it('auto-refreshes through fetchData when query state changes', async () => {
+		const fetchData = vi.fn(async () => ({ result: [], totalCount: 0, isSuccess: true }));
+		const store = new TableStore<IItem>({ fetchData, sortMap: {} });
+		store.updateSearch('x');
+		await flush();
+		expect(fetchData).toHaveBeenCalledTimes(1);
+		expect(fetchData).toHaveBeenCalledWith(expect.objectContaining({ search: 'x' }));
+		store.destroy();
+	});
+});
+
+describe('TableStore — deleteRows override', () => {
+	it('uses deleteRows instead of repository.bulkDelete', async () => {
+		const deleteRows = vi.fn(async () => ({ result: 'gone', isSuccess: true }));
+		const fetchData = vi.fn(async () => ({ result: [], totalCount: 0, isSuccess: true }));
+		const store = new TableStore<IItem>({ fetchData, deleteRows, sortMap: {} });
+		const res = await store.bulkDelete(['1', '2']);
+		expect(deleteRows).toHaveBeenCalledWith(['1', '2']);
+		expect(res).toStrictEqual({ result: 'gone', isSuccess: true });
+		store.destroy();
+	});
+
+	it('throws from bulkDelete when neither repository nor deleteRows is configured', async () => {
+		const fetchData = vi.fn(async () => ({ result: [], totalCount: 0, isSuccess: true }));
+		const store = new TableStore<IItem>({ fetchData, sortMap: {} });
+		await expect(store.bulkDelete(['1'])).rejects.toThrow(/deleteRows/);
+		store.destroy();
+	});
+});
+
+describe('TableStore — catchError', () => {
+	it('routes a fetch rejection to catchError and clears loading', async () => {
+		const error = new Error('boom');
+		const catchError = vi.fn();
+		const repository = new StubListRepository();
+		repository.getListMock.mockRejectedValue(error);
+		const store = new TableStore<IItem>({ repository, sortMap: {}, catchError });
+		store.refresh();
+		await flush();
+		expect(catchError).toHaveBeenCalledWith(error);
+		expect(store.loading$.get()).toBe(false);
+		store.destroy();
+	});
+
+	it('logs instead of throwing when no catchError handler is provided', async () => {
+		const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+		const repository = new StubListRepository();
+		repository.getListMock.mockRejectedValue(new Error('boom'));
+		const store = new TableStore<IItem>({ repository, sortMap: {} });
+		store.refresh();
+		await flush();
+		expect(spy).toHaveBeenCalled();
+		expect(store.loading$.get()).toBe(false);
+		spy.mockRestore();
+		store.destroy();
+	});
+});
+
+describe('TableStore — construction validation', () => {
+	it('throws when neither repository nor fetchData is provided', () => {
+		expect(() => new TableStore<IItem>({ sortMap: {} })).toThrow(/requires/);
+	});
+});

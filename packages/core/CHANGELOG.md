@@ -7,8 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-29
+
 ### Added
 
+- Custom data source on `TableStore` via `fetchData(state)` — receive the raw
+  table state (`pagination`, `sort`, `filters`, `search`) and return the page,
+  bypassing the query-param mapping and `HttpListRepository`. `repository` is now
+  optional when `fetchData` is supplied; the new `ITableFetchState` type describes
+  the state passed to it.
+- `deleteRows(ids)` override on `TableStore` — back `bulkDelete` with a custom
+  handler (falls back to `repository.bulkDelete`).
+- `catchError(error)` hook on `TableStore` — handle a fetch rejection. A failed
+  fetch is no longer an unhandled rejection; without a handler it is logged.
 - Declarative backend conventions: `paginationStyle` (`'page'`/`'offset'`),
   `sortStyle` (`'flag'`/`'direction'`) with `sortDirections`, and `searchEndpoint`
   routing on `HttpListRepository`/`TableStore` — adapt offset pagination,

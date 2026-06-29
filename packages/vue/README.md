@@ -128,6 +128,28 @@ const useProducts = defineTable<IProduct>({
 });
 ```
 
+### Custom fetch & error handling
+
+When the built-in HTTP path doesn't fit, own the request entirely with
+`fetchData` instead of `baseUrl` — you receive the raw table state and return
+`{ data, total }` (the param-mapping options no longer apply). `deleteRows`
+backs bulk delete, and `catchError` (available on both paths) handles a fetch
+rejection instead of letting it go unhandled:
+
+```ts
+const useActivity = defineTable<ActivityRow>({
+  fetchData: async ({ pagination, sort, filters, search }) => {
+    const res = await api.activityLogs({
+      page: pagination.page, perPage: pagination.pageSize,
+      sortBy: sort?.field, q: search, ...toApiFilters(filters),
+    });
+    return { data: res.items, total: res.total };
+  },
+  deleteRows: (ids) => api.deleteActivity(ids),
+  catchError: (error) => toast.error(getApiErrorMessage(error)),
+});
+```
+
 ## Lower-level: `useTableStore`
 
 When you already have a `@bridgebyte/sst-core` repository (or need to share one), skip `defineTable` and wire the store directly:
@@ -140,6 +162,28 @@ const table = useTableStore<IBreed>({ repository, sortMap: { name: 'ByName' } })
 ```
 
 `useTableStore` returns the same `IUseTableStoreReturn<T>` that `defineTable`'s composable does: reactive refs (`data`, `total`, `loading`, `pagination`, `sort`, `filters`, `search`) and bound actions (`refresh`, `updatePagination`, `setPage`, `setPageSize`, `updateSort`, …). `setPage(n)` / `setPageSize(n)` keep the other half of pagination and refetch.
+
+## Filter state: `useTableFilters`
+
+Manage a set of `{ key, value, defaultValue }` filters with reset helpers. Pass
+the store to sync the active filters into it automatically (debounced, resetting
+to page 1); pass `null` to use it as standalone state and read `toFilterParams()`
+yourself.
+
+```ts
+const filters = useTableFilters(store, [
+  { key: 'status', value: null, defaultValue: null },
+  { key: 'role', value: [], defaultValue: [] }, // arrays expand to one param per value
+]);
+
+filters.setFilterValue('status', 'active'); // → store re-fetches (debounced)
+filters.resetFilters();                      // → back to defaults + re-fetch
+filters.activeFilterCount.value;             // → e.g. a "Filters (2)" badge
+```
+
+`getFilter(key)`, `setFilterValue(key, v)`, `resetFilter(key)`, `resetFilters()`,
+and `toFilterParams()` round out the surface. Empty values (`null`/`''`/`[]`) are
+dropped from the synced params.
 
 ## `<SstTable>`
 
@@ -215,6 +259,35 @@ const bindings = useSstDataTable(table); // spread onto <DataTable v-bind="bindi
     <template #editor="{ data }"><InputNumber v-model="data.price" /></template>
   </Column>
 </SstDataTable>
+```
+
+### Managed filters — `useSstFilters`
+
+Owns PrimeVue's `v-model:filters` model (per-field value + match mode + default) with reset helpers and an `activeFilterCount`. Column-filter edits reach the store through the table's `@filter`; programmatic changes (`setFilterValue`/`reset`) sync to the store and reset to page 1. **Destructure** the result so `filters` is a top-level ref (so the template auto-unwraps it):
+
+```vue
+<script setup lang="ts">
+const table = useProductsTable();
+const { filters, reset, activeFilterCount } = useSstFilters(
+  [
+    { field: 'title', matchMode: 'contains' },
+    { field: 'category', matchMode: 'equals', value: null },
+  ],
+  { store: table },
+);
+</script>
+
+<template>
+  <Button label="Reset" :badge="String(activeFilterCount)" @click="reset()" />
+  <SstDataTable :store="table" v-model:filters="filters" filterDisplay="row">
+    <Column field="title" header="Title" :showFilterMenu="false">
+      <template #filter="{ filterModel, filterCallback }">
+        <InputText v-model="filterModel.value" @input="filterCallback()" />
+      </template>
+    </Column>
+    <!-- … -->
+  </SstDataTable>
+</template>
 ```
 
 ### Responsive layouts

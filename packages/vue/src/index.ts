@@ -33,6 +33,7 @@ export type {
 	IResponseError,
 	IResponseList,
 	ISortParams,
+	ITableFetchState,
 	ITableStore,
 	ITableStoreOptions,
 	Listener,
@@ -61,4 +62,5 @@ export {
 export * from './lib/composables/use-observable';
 export * from './lib/composables/use-table-store';
 export * from './lib/composables/define-table';
+export * from './lib/composables/use-table-filters';
 export { default as SstTable } from './lib/components/SstTable.vue';

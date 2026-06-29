@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-06-29
+
+### Added
+
+- `defineTable` custom-fetch path: pass `fetchData(state) => { data, total }` to
+  own how data is loaded (the raw table state in, rows + total out), bypassing
+  `baseUrl`/the HTTP param mapping. Optional `deleteRows` enables bulk delete on
+  that table. The config is now a discriminated union — `baseUrl` **xor**
+  `fetchData`.
+- `catchError(error)` option on `defineTable` (both paths) — handle a fetch
+  rejection (e.g. show a toast); a failed fetch is no longer unhandled.
+- `useTableFilters(store, initial, options?)` — a filter-state manager with
+  per-filter `defaultValue`, `getFilter`/`setFilterValue`/`resetFilter`/
+  `resetFilters`, an `activeFilterCount`, and `toFilterParams()`. When a store is
+  passed it debounces and syncs the active filters into it (resetting to page 1);
+  pass `null` for standalone state.
+- `@bridgebyte/sst-vue/primevue`: `useSstFilters(defs, options?)` — manages
+  PrimeVue's `v-model:filters` model (`row`/`menu` shape, per-field `matchMode`
+  and default value) with `getFilter`/`setFilterValue`/`resetFilter`/`reset`,
+  an `activeFilterCount`, and `toMappedFilters()`. Programmatic changes sync to
+  the bound store (so `reset()` clears the column menus and re-fetches).
+
+### Changed
+
+- Requires `@bridgebyte/sst-core` `^0.3.0`.
+
 ## [0.2.0] - 2026-06-29
 
 ### Added

@@ -11,6 +11,7 @@
  * `vue` as peer dependencies.
  */
 export * from './use-sst-data-table';
+export * from './use-sst-filters';
 export * from './filter-helpers';
 export * from './responsive';
 export * from './use-breakpoint';

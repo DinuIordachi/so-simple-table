@@ -1,6 +1,6 @@
 {
   "name": "@bridgebyte/sst-core",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "So Simple Table — framework-agnostic core: reactive table state and configurable repositories.",
   "keywords": [
     "table",

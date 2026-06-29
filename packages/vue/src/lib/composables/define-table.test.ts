@@ -160,3 +160,54 @@ describe('defineTable', () => {
 		scope.stop();
 	});
 });
+
+describe('defineTable — custom fetchData path', () => {
+	it('drives the store from fetchData with the raw state and { data, total }', async () => {
+		const fetchData = vi.fn(async () => ({ data: [{ id: '9', name: 'nine' }], total: 1 }));
+		const useTable = defineTable<IItem>({ fetchData, initialPagination: { page: 2, pageSize: 5 } });
+		const scope = effectScope();
+		await scope.run(async () => {
+			const t = useTable();
+			t.updateSearch('ada');
+			await flush();
+			expect(fetchData).toHaveBeenCalledWith(
+				expect.objectContaining({ search: 'ada', pagination: { page: 2, pageSize: 5 } }),
+			);
+			expect(t.data.value).toStrictEqual([{ id: '9', name: 'nine' }]);
+			expect(t.total.value).toBe(1);
+		});
+		scope.stop();
+	});
+
+	it('routes bulkDelete through the deleteRows handler', async () => {
+		const fetchData = vi.fn(async () => ({ data: [], total: 0 }));
+		const deleteRows = vi.fn(async () => undefined);
+		const useTable = defineTable<IItem>({ fetchData, deleteRows });
+		const scope = effectScope();
+		await scope.run(async () => {
+			const t = useTable();
+			await t.bulkDelete(['1', '2']);
+			expect(deleteRows).toHaveBeenCalledWith(['1', '2']);
+		});
+		scope.stop();
+	});
+
+	it('forwards catchError so a failed fetch is handled, not unhandled', async () => {
+		const error = new Error('nope');
+		const fetchData = vi.fn(async () => {
+			throw error;
+		});
+		const catchError = vi.fn();
+		const useTable = defineTable<IItem>({ fetchData, catchError });
+		const scope = effectScope();
+		await scope.run(async () => {
+			const t = useTable();
+			t.refresh();
+			await flush();
+			await flush();
+			expect(catchError).toHaveBeenCalledWith(error);
+			expect(t.loading.value).toBe(false);
+		});
+		scope.stop();
+	});
+});

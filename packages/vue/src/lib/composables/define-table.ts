@@ -7,12 +7,28 @@ import {
 	type IRepositoryQueryKeys,
 	type IResponseList,
 	type ISortDirections,
+	type ITableFetchState,
 	type PaginationStyle,
 	type SortStyle,
 } from '@bridgebyte/sst-core';
 import { useTableStore, type IUseTableStoreReturn } from './use-table-store';
 
-export interface IDefineTableConfig<T extends { id: string | number }, TRaw = unknown> {
+/** Options shared by both the HTTP and custom-fetch table definitions. */
+export interface IDefineTableCommon {
+	/** Initial pagination. Default `{ page: 1, pageSize: 10 }`. */
+	readonly initialPagination?: IPaginationParams;
+	/**
+	 * Handle a fetch rejection (e.g. show a toast). When omitted, the store
+	 * logs the error and never leaves it as an unhandled rejection.
+	 */
+	readonly catchError?: (error: unknown) => void;
+}
+
+/**
+ * HTTP-backed table definition: the store builds requests from `baseUrl` and
+ * the param-mapping options, fetching through a {@link HttpListRepository}.
+ */
+export interface IDefineTableHttpConfig<T extends { id: string | number }, TRaw = unknown> extends IDefineTableCommon {
 	/** Required. Base URL for all requests, e.g. `https://api.example.com/users`. */
 	readonly baseUrl: string;
 	/** Default-client headers (e.g. a JSON:API `Accept`). Ignored when `httpClient` is provided. */
@@ -27,8 +43,6 @@ export interface IDefineTableConfig<T extends { id: string | number }, TRaw = un
 	readonly sortMap?: Readonly<Record<string, string>>;
 	/** Map a filter key to a server param name. */
 	readonly filterMap?: Readonly<Record<string, string>>;
-	/** Initial pagination. Default `{ page: 1, pageSize: 10 }`. */
-	readonly initialPagination?: IPaginationParams;
 	/** Advanced filter/sort formatting strategy. */
 	readonly paramFormatting?: IParamFormattingStrategy;
 	/** Pagination wire style; `'page'` (default) or `'offset'` (skip + limit). */
@@ -39,16 +53,43 @@ export interface IDefineTableConfig<T extends { id: string | number }, TRaw = un
 	readonly sortDirections?: ISortDirections;
 	/** When search is active, route to `` `${baseUrl}${searchEndpoint}` `` (e.g. `'/search'`). */
 	readonly searchEndpoint?: string;
+	/** Not available on the HTTP path — use the custom-fetch definition instead. */
+	readonly fetchData?: never;
+	/** Not available on the HTTP path — use the custom-fetch definition instead. */
+	readonly deleteRows?: never;
 }
 
 /**
+ * Custom-fetch table definition: you own how data is loaded. `fetchData`
+ * receives the raw {@link ITableFetchState} and returns the page; the built-in
+ * HTTP path and its param-mapping options are bypassed entirely.
+ */
+export interface IDefineTableFetchConfig<T extends { id: string | number }> extends IDefineTableCommon {
+	/** Load a page from the raw table state. Returns the rows and the total count. */
+	readonly fetchData: (state: ITableFetchState) => Promise<{ data: T[]; total: number }>;
+	/** Optional bulk-delete handler, enabling `removeSelected`/`bulkDelete` on this table. */
+	readonly deleteRows?: (ids: readonly string[]) => Promise<unknown>;
+	/** Not used on the custom-fetch path. */
+	readonly baseUrl?: never;
+}
+
+/**
+ * Declarative table configuration: either {@link IDefineTableHttpConfig | HTTP}
+ * (provide `baseUrl`) or {@link IDefineTableFetchConfig | custom fetch} (provide
+ * `fetchData`) — the two are mutually exclusive.
+ */
+export type IDefineTableConfig<T extends { id: string | number }, TRaw = unknown> =
+	| IDefineTableHttpConfig<T, TRaw>
+	| IDefineTableFetchConfig<T>;
+
+/**
  * Declarative table definition for Vue. Returns a `useTable()` composable that,
- * when called inside `setup`, builds the repository + store and auto-disposes
+ * when called inside `setup`, builds the data source + store and auto-disposes
  * it on scope teardown.
  *
- * @typeParam T - Row/entity type; must carry a string `id`.
- * @typeParam TRaw - Shape of the raw API payload, when a {@link IDefineTableConfig.mapResponse | mapResponse} mapper is supplied.
- * @param config - Declarative configuration for the table's data source.
+ * @typeParam T - Row/entity type; must carry a string or number `id`.
+ * @typeParam TRaw - Shape of the raw API payload, when a {@link IDefineTableHttpConfig.mapResponse | mapResponse} mapper is supplied.
+ * @param config - Declarative configuration; HTTP (`baseUrl`) or custom (`fetchData`).
  * @returns A `useTable()` composable yielding a {@link IUseTableStoreReturn}.
  *
  * @remarks
@@ -58,7 +99,7 @@ export interface IDefineTableConfig<T extends { id: string | number }, TRaw = un
  *
  * @example
  * ```ts
- * // users-table.ts
+ * // HTTP path — users-table.ts
  * import { defineTable } from '@bridgebyte/sst-vue';
  *
  * export const useUsersTable = defineTable<{ id: string; name: string }>({
@@ -68,20 +109,41 @@ export interface IDefineTableConfig<T extends { id: string | number }, TRaw = un
  * ```
  *
  * @example
- * ```vue
- * <script setup lang="ts">
- * import { useUsersTable } from './users-table';
- *
- * const { data, loading, total, updatePagination } = useUsersTable();
- * </script>
+ * ```ts
+ * // Custom-fetch path — own the request entirely
+ * export const useUsersTable = defineTable<User>({
+ * 	fetchData: async ({ pagination, sort, filters, search }) => {
+ * 		const res = await myApi.users({ page: pagination.page, size: pagination.pageSize, q: search });
+ * 		return { data: res.items, total: res.count };
+ * 	},
+ * 	deleteRows: (ids) => myApi.deleteUsers(ids),
+ * 	catchError: (error) => toast.error(String(error)),
+ * });
  * ```
  */
 export function defineTable<T extends { id: string | number }, TRaw = unknown>(
 	config: IDefineTableConfig<T, TRaw>,
 ): () => IUseTableStoreReturn<T> {
-	const { mapResponse } = config;
-
 	return function useTable(): IUseTableStoreReturn<T> {
+		if (config.fetchData) {
+			const userFetch = config.fetchData;
+			const userDelete = config.deleteRows;
+			return useTableStore<T>({
+				sortMap: {},
+				fetchData: (state): Promise<IResponseList<T[]>> =>
+					userFetch(state).then((r) => ({ result: r.data, totalCount: r.total, isSuccess: true })),
+				...(userDelete
+					? {
+							deleteRows: (ids: readonly string[]) =>
+								userDelete(ids).then(() => ({ result: '', isSuccess: true })),
+						}
+					: {}),
+				...(config.catchError ? { catchError: config.catchError } : {}),
+				...(config.initialPagination ? { initialPagination: config.initialPagination } : {}),
+			});
+		}
+
+		const { mapResponse } = config;
 		const httpClient: IHttpClient =
 			config.httpClient ?? new FetchHttpClient(config.headers ? { baseHeaders: config.headers } : {});
 
@@ -105,6 +167,7 @@ export function defineTable<T extends { id: string | number }, TRaw = unknown>(
 			...(config.paginationStyle ? { paginationStyle: config.paginationStyle } : {}),
 			...(config.sortStyle ? { sortStyle: config.sortStyle } : {}),
 			...(config.sortDirections ? { sortDirections: config.sortDirections } : {}),
+			...(config.catchError ? { catchError: config.catchError } : {}),
 		});
 	};
 }
