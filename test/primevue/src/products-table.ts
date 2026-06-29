@@ -26,7 +26,7 @@ interface IDummyJsonResponse {
 // DummyJSON's wire format differs from the canonical defaults — but no custom
 // HTTP client is needed: the declarative options below adapt it.
 //   - paginationStyle 'offset' → skip/limit
-//   - sortStyle 'direction'    → sortBy + order=asc|desc
+//   - sortStyle 'direction' → sortBy + order=asc|desc
 //   - searchEndpoint '/search' → routes search to /products/search
 export const useProductsTable = defineTable<IProduct, IDummyJsonResponse>({
 	baseUrl: 'https://dummyjson.com/products',

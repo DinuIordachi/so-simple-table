@@ -16,7 +16,9 @@
     "typecheck": "nx run-many -t typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,vue,html,scss,md,json}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,vue,html,scss,md,json}\"",
-    "registry": "verdaccio --config .verdaccio/config.yaml"
+    "registry": "verdaccio --config .verdaccio/config.yaml",
+    "registry:stop": "node -e \"const fs=require('fs');try{process.kill(+fs.readFileSync('.verdaccio/verdaccio.pid','utf8'));fs.unlinkSync('.verdaccio/verdaccio.pid');console.log('registry stopped')}catch(e){console.log('no running registry pidfile')}\"",
+    "publish:local": "node scripts/publish-local.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

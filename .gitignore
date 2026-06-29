@@ -13,4 +13,8 @@ out-tsc
 /.npmrc
 .verdaccio/storage
 .verdaccio/htpasswd
+.verdaccio/verdaccio.pid
+# Test apps consume @sst/* from the local registry; their lockfiles pin
+# localhost tarball hashes that change on every republish (EINTEGRITY churn).
+test/*/package-lock.json
 *.tsbuildinfo
