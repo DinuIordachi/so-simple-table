@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and a `tableBreakpoint` prop (default `lg`, or `'none'`). Each slot receives
   `{ rows, loading, store }`. Exports the `useBreakpoint` composable. SSR-safe;
   non-breaking.
+- `setPage(n)` / `setPageSize(n)` store actions — set one half of pagination,
+  keep the other, and refetch (no more spreading `pagination.value` by hand).
+- `<SstDataTable>` `ssrBreakpoint` prop and `useBreakpoint({ ssrDefault })` to
+  choose the pre-mount/SSR breakpoint (e.g. `'xs'` to server-render the mobile
+  layout and avoid a desktop→mobile hydration swap).
+- Exported `defaultMapFilters` so a custom `mapFilters` can compose it.
 
 ### Changed
 
@@ -57,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   usage type-checks for consumers.
 - `vite build` no longer prints a spurious `TS2538` from the dynamic layout-slot
   binding; `npm run lint` works again under ESLint 9 (flat config).
+- `onSort` falls back to the first `multiSortMeta` entry under `sortMode="multiple"`,
+  so enabling multi-sort no longer silently clears the (single-column) store sort.
+- `<SstDataTable>`'s `mapFilters` / `onSave` props are now read reactively, so
+  swapping them at runtime takes effect (were captured once at setup).
 
 ## [0.1.0] - 2026-06-24
 

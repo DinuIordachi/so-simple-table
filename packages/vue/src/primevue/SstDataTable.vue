@@ -2,8 +2,13 @@
 import { computed, useSlots } from 'vue';
 import DataTable from 'primevue/datatable';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
-import { useSstDataTable, type IUseSstDataTableOptions, type ISstLayoutSlotProps } from './use-sst-data-table';
-import { resolveLayoutSlot, RESERVED_LAYOUT_SLOTS, type TableBreakpoint } from './responsive';
+import {
+	useSstDataTable,
+	defaultMapFilters,
+	type IUseSstDataTableOptions,
+	type ISstLayoutSlotProps,
+} from './use-sst-data-table';
+import { resolveLayoutSlot, RESERVED_LAYOUT_SLOTS, type TableBreakpoint, type BreakpointToken } from './responsive';
 import { useBreakpoint } from './use-breakpoint';
 
 defineOptions({ inheritAttrs: false });
@@ -38,6 +43,8 @@ const props = withDefaults(
 		onSave?: IUseSstDataTableOptions<T>['onSave'];
 		/** Viewport width at/above which the DataTable renders; `'none'` ⇒ never. Default `'lg'`. */
 		tableBreakpoint?: TableBreakpoint;
+		/** Breakpoint assumed before mount / during SSR (no `window`). Default `'2xl'` (the table). */
+		ssrBreakpoint?: BreakpointToken;
 	}>(),
 	{ immediate: true, filterDebounceMs: 300, tableBreakpoint: 'lg' },
 );
@@ -45,12 +52,13 @@ const props = withDefaults(
 const bindings = useSstDataTable<T>(props.store, {
 	immediate: props.immediate,
 	filterDebounceMs: props.filterDebounceMs,
-	...(props.mapFilters ? { mapFilters: props.mapFilters } : {}),
-	...(props.onSave ? { onSave: props.onSave } : {}),
+	// Read the props at call time so swapping `mapFilters` / `onSave` at runtime takes effect.
+	mapFilters: (filters) => (props.mapFilters ?? defaultMapFilters)(filters),
+	onSave: (edit) => props.onSave?.(edit),
 });
 
 const slots = useSlots();
-const breakpoint = useBreakpoint();
+const breakpoint = useBreakpoint(props.ssrBreakpoint ? { ssrDefault: props.ssrBreakpoint } : {});
 
 /** Reserved breakpoint slots the host supplied. */
 const definedLayoutSlots = computed<ReadonlySet<string>>(

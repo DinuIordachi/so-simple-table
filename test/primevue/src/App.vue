@@ -67,9 +67,7 @@ const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): P
 				<button
 					style="margin-top: 8px"
 					:disabled="loading"
-					@click="
-						store.updatePagination({ ...store.pagination.value, page: store.pagination.value.page + 1 })
-					"
+					@click="store.setPage(store.pagination.value.page + 1)"
 				>
 					Load next page
 				</button>

@@ -64,6 +64,10 @@ export interface IUseTableStoreReturn<T> {
 	reset(): void;
 	/** Updates pagination and re-fetches. */
 	updatePagination(p: IPaginationParams): void;
+	/** Sets the current page (1-based), keeping the page size, and re-fetches. */
+	setPage(page: number): void;
+	/** Sets the page size, keeping the current page, and re-fetches. */
+	setPageSize(pageSize: number): void;
 	/** Updates the sort descriptor (pass `undefined` to clear) and re-fetches. */
 	updateSort(sort: ISortParams | undefined): void;
 	/** Replaces the active filters and re-fetches. */
@@ -110,12 +114,14 @@ export function useTableStore<T>(options: ITableStoreOptions<T>): IUseTableStore
 	const store = new TableStore<T>(options);
 	onScopeDispose(() => store.destroy());
 
+	const pagination = useObservable(store.pagination$);
+
 	return {
 		store,
 		data: useObservable(store.data$),
 		total: useObservable(store.total$),
 		loading: useObservable(store.loading$),
-		pagination: useObservable(store.pagination$),
+		pagination,
 		sort: useObservable(store.sort$),
 		filters: useObservable(store.filters$),
 		search: useObservable(store.search$),
@@ -125,6 +131,8 @@ export function useTableStore<T>(options: ITableStoreOptions<T>): IUseTableStore
 		refresh: store.refresh.bind(store),
 		reset: store.reset.bind(store),
 		updatePagination: store.updatePagination.bind(store),
+		setPage: (page: number) => store.updatePagination({ ...pagination.value, page }),
+		setPageSize: (pageSize: number) => store.updatePagination({ ...pagination.value, pageSize }),
 		updateSort: store.updateSort.bind(store),
 		updateFilter: store.updateFilter.bind(store),
 		updateSearch: store.updateSearch.bind(store),

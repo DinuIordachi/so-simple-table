@@ -69,6 +69,26 @@ describe('useTableStore', () => {
 		expect(repository.getListMock).not.toHaveBeenCalled();
 	});
 
+	it('setPage / setPageSize merge with the current pagination and refetch', async () => {
+		const repository = new StubRepository();
+		const scope = effectScope();
+		await scope.run(async () => {
+			const t = useTableStore<IItem>({ repository, sortMap: {} });
+			t.setPage(3);
+			await Promise.resolve();
+			await Promise.resolve();
+			await nextTick();
+			expect(t.pagination.value).toStrictEqual({ page: 3, pageSize: 10 }); // page set, size kept
+			t.setPageSize(25);
+			await Promise.resolve();
+			await Promise.resolve();
+			await nextTick();
+			expect(t.pagination.value).toStrictEqual({ page: 3, pageSize: 25 }); // size set, page kept
+			expect(repository.getListMock).toHaveBeenCalledTimes(2);
+		});
+		scope.stop();
+	});
+
 	it('exposes a bulkDelete that delegates to the repository', async () => {
 		const repository = new StubRepository();
 		const scope = effectScope();

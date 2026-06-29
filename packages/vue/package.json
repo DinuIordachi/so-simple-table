@@ -60,6 +60,9 @@
     "**/*.css",
     "**/*.vue"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "vite build && vue-tsc --noEmit -p tsconfig.build.json",
     "test": "vitest run",

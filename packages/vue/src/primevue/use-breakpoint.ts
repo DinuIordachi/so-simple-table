@@ -4,13 +4,17 @@ import { BREAKPOINT_MIN_WIDTH, BREAKPOINT_ORDER, type BreakpointToken } from './
 /**
  * Reactive current Tailwind viewport breakpoint, driven by `window.matchMedia`.
  *
- * SSR / pre-mount / no `window`: resolves to the largest token (`'2xl'`) so the
- * most-desktop path renders; the real value lands on mount. Media-query
- * listeners are removed on unmount. Call only from a component `setup()`.
+ * SSR / pre-mount / no `window`: resolves to `options.ssrDefault` (default the
+ * largest token, `'2xl'`, so the most-desktop path renders); the real value lands
+ * on mount. Pass `ssrDefault: 'xs'` to server-render the mobile path instead and
+ * avoid a desktop→mobile hydration swap. Media-query listeners are removed on
+ * unmount. Call only from a component `setup()`.
+ *
+ * @param options.ssrDefault - Breakpoint assumed before mount / during SSR.
  */
-export function useBreakpoint(): Ref<BreakpointToken> {
-	const LARGEST = BREAKPOINT_ORDER[BREAKPOINT_ORDER.length - 1]!; // '2xl'
-	const current = ref<BreakpointToken>(LARGEST);
+export function useBreakpoint(options: { ssrDefault?: BreakpointToken } = {}): Ref<BreakpointToken> {
+	const fallback = options.ssrDefault ?? BREAKPOINT_ORDER[BREAKPOINT_ORDER.length - 1]!; // '2xl'
+	const current = ref<BreakpointToken>(fallback);
 
 	if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
 		return current; // SSR / unsupported: keep the desktop default

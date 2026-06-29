@@ -40,11 +40,11 @@ function installMatchMedia(initialWidth: number): { setWidth(next: number): void
 	};
 }
 
-function harness(): { bp: Ref<BreakpointToken> } {
+function harness(options?: { ssrDefault?: BreakpointToken }): { bp: Ref<BreakpointToken> } {
 	let bp!: Ref<BreakpointToken>;
 	const Comp = defineComponent({
 		setup() {
-			bp = useBreakpoint();
+			bp = useBreakpoint(options);
 			return () => h('div');
 		},
 	});
@@ -82,5 +82,9 @@ describe('useBreakpoint', () => {
 	it("defaults to '2xl' when matchMedia is unavailable (SSR-safe)", () => {
 		// no installMatchMedia → window.matchMedia is undefined
 		expect(harness().bp.value).toBe('2xl');
+	});
+
+	it('honors options.ssrDefault when matchMedia is unavailable', () => {
+		expect(harness({ ssrDefault: 'xs' }).bp.value).toBe('xs');
 	});
 });

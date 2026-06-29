@@ -115,8 +115,12 @@ function filtersEqual(a: readonly IFilterParams[], b: readonly IFilterParams[]):
 	return a.every((f, i) => f.key === b[i]?.key && f.value === b[i]?.value);
 }
 
-/** Default filter mapping: `global` → search; every other non-empty value → a `{ key, value }` filter. */
-function defaultMapFilters(filters: DataTableFilterMeta): { search?: string; filters?: IFilterParams[] } {
+/**
+ * Default filter mapping: `global` → search; every other non-empty value → a
+ * `{ key, value }` filter. Exported so consumers can compose it in a custom
+ * `mapFilters` (e.g. fall back to it for keys they don't handle specially).
+ */
+export function defaultMapFilters(filters: DataTableFilterMeta): { search?: string; filters?: IFilterParams[] } {
 	const result: { search?: string; filters?: IFilterParams[] } = {};
 	const out: IFilterParams[] = [];
 	for (const [key, meta] of Object.entries(filters ?? {})) {
@@ -225,13 +229,20 @@ export function useSstDataTable<T extends { id: string | number }>(
 			store.updatePagination({ page: event.page + 1, pageSize: event.rows });
 		},
 		onSort(event: DataTableSortEvent) {
-			const field = event.sortField;
+			// Single-sort store: prefer sortField, but fall back to the first multi-sort
+			// entry (sortMode="multiple") so enabling it doesn't silently clear sorting.
+			let field: unknown = event.sortField;
+			let order = event.sortOrder;
+			if ((typeof field !== 'string' || field.length === 0) && event.multiSortMeta?.length) {
+				field = event.multiSortMeta[0]?.field;
+				order = event.multiSortMeta[0]?.order;
+			}
 			if (typeof field !== 'string' || field.length === 0) {
 				store.updateSort(undefined);
 				return;
 			}
-			const order = event.sortOrder === PRIME_DESC ? ESortOrder.DESC : ESortOrder.ASC;
-			store.updateSort({ id: `${field}-${order}`, field, order });
+			const sortOrder = order === PRIME_DESC ? ESortOrder.DESC : ESortOrder.ASC;
+			store.updateSort({ id: `${field}-${sortOrder}`, field, order: sortOrder });
 		},
 		onFilter(event: DataTableFilterEvent) {
 			if (filterTimer !== undefined) clearTimeout(filterTimer);

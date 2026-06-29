@@ -93,6 +93,17 @@ describe('useSstDataTable', () => {
 		expect(store.updateSort).toHaveBeenLastCalledWith(undefined);
 	});
 
+	it('falls back to the first multiSortMeta entry when sortField is empty (multi-sort)', () => {
+		const store = makeStore();
+		const { bindings } = harness(store);
+		bindings.onSort({ sortField: null, sortOrder: null, multiSortMeta: [{ field: 'name', order: -1 }] } as never);
+		expect(store.updateSort).toHaveBeenCalledWith({
+			id: `name-${ESortOrder.DESC}`,
+			field: 'name',
+			order: ESortOrder.DESC,
+		});
+	});
+
 	it('exposes sortField/sortOrder from the store sort', () => {
 		const store = makeStore();
 		(store.sort as Ref<ISortParams | undefined>).value = { id: 'name-1', field: 'name', order: ESortOrder.ASC };

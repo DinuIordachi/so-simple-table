@@ -139,7 +139,7 @@ const repository = new HttpRepository<IBreed>({ baseUrl: 'https://api.example.co
 const table = useTableStore<IBreed>({ repository, sortMap: { name: 'ByName' } });
 ```
 
-`useTableStore` returns the same `IUseTableStoreReturn<T>` that `defineTable`'s composable does: reactive refs (`data`, `total`, `loading`, `pagination`, `sort`, `filters`, `search`) and bound actions (`refresh`, `updatePagination`, `updateSort`, …).
+`useTableStore` returns the same `IUseTableStoreReturn<T>` that `defineTable`'s composable does: reactive refs (`data`, `total`, `loading`, `pagination`, `sort`, `filters`, `search`) and bound actions (`refresh`, `updatePagination`, `setPage`, `setPageSize`, `updateSort`, …). `setPage(n)` / `setPageSize(n)` keep the other half of pagination and refetch.
 
 ## `<SstTable>`
 
@@ -228,7 +228,7 @@ Below a configurable width, render your own layout per Tailwind breakpoint inste
   <!-- < lg: each row becomes a card; cascades up from xs -->
   <template #xs="{ rows, loading, store }">
     <article v-for="row in rows" :key="row.id" class="card">{{ row.name }}</article>
-    <button @click="store.updatePagination({ ...store.pagination.value, page: store.pagination.value.page + 1 })">More</button>
+    <button @click="store.setPage(store.pagination.value.page + 1)">More</button>
   </template>
 </SstDataTable>
 ```
