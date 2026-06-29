@@ -1,6 +1,6 @@
 # @sst/vue
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
 Vue 3 adapter for **So Simple Table**, built on top of [`@sst/core`](../core/README.md). Define a data table declaratively in one object, then render it with a fully typed `<SstTable>` component.
 
@@ -243,4 +243,4 @@ The `useBreakpoint()` composable (current Tailwind breakpoint, SSR-safe) is also
 
 ## License
 
-[MIT](./LICENSE) © Dinu Iordachi
+Proprietary — © 2026 Dinu Iordachi. All rights reserved. See [LICENSE](./LICENSE).

@@ -1,6 +1,6 @@
 # @sst/core
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
 Framework-agnostic core for **So Simple Table**. Zero runtime dependencies.
 
@@ -115,4 +115,4 @@ new HttpRepository({ baseUrl: '...', httpClient: myClient });
 
 ## License
 
-[MIT](./LICENSE) © Dinu Iordachi
+Proprietary — © 2026 Dinu Iordachi. All rights reserved. See [LICENSE](./LICENSE).

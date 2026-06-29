@@ -1,6 +1,6 @@
 # @sst/dom
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
 Vanilla DOM variant of [@sst/core](../core/README.md). One call —
 `mountTable(...)` — produces an HTML table with sortable headers,
@@ -162,4 +162,4 @@ contract. Skip the import if you want to start from scratch.
 
 ## License
 
-[MIT](./LICENSE) © Dinu Iordachi
+Proprietary — © 2026 Dinu Iordachi. All rights reserved. See [LICENSE](./LICENSE).

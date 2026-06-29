@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/DinuIordachi/so-simple-table/issues"
   },
-  "license": "MIT",
+  "license": "UNLICENSED",
   "author": "Dinu Iordachi <dimaiordachi3@gmail.com>",
   "repository": {
     "type": "git",
@@ -97,6 +97,6 @@
     "vue-tsc": "^2.1.0"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "restricted"
   }
 }

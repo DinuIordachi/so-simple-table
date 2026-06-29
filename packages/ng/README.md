@@ -1,6 +1,6 @@
 # @sst/ng
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
 Angular adapter for **So Simple Table**, built on top of [`@sst/core`](../core/README.md).
 
@@ -128,4 +128,4 @@ When omitted, sensible defaults render automatically.
 
 ## License
 
-[MIT](./LICENSE) © Dinu Iordachi
+Proprietary — © 2026 Dinu Iordachi. All rights reserved. See [LICENSE](./LICENSE).
