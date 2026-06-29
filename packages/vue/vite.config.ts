@@ -11,6 +11,13 @@ export default defineConfig({
 			rollupTypes: false,
 			copyDtsFiles: false,
 			insertTypesEntry: true,
+			// vite-plugin-dts can resolve the workspace `@sst/core` to its built path
+			// (e.g. in the SFC's expose() block), leaking a non-portable monorepo path
+			// into the shipped declarations. Rewrite those back to the bare specifier.
+			beforeWriteFile: (filePath, content) => ({
+				filePath,
+				content: content.replace(/packages\/core\/(?:dist|src)(?:\/index(?:\.d\.ts)?)?/g, '@sst/core'),
+			}),
 		}),
 	],
 	build: {

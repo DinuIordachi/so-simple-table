@@ -80,7 +80,14 @@ defineExpose({
 </script>
 
 <template>
-	<slot v-if="activeSlot" :name="activeSlot" :rows="store.data.value" :loading="store.loading.value" :store="store" />
+	<!-- String() keeps the dynamic slot name a definite `string` for the dts compiler. -->
+	<slot
+		v-if="activeSlot"
+		:name="String(activeSlot)"
+		:rows="store.data.value"
+		:loading="store.loading.value"
+		:store="store"
+	/>
 	<DataTable v-else v-bind="{ dataKey: 'id', ...$attrs, ...bindings }">
 		<template v-for="name in forwardedSlotNames" #[name]="slotProps">
 			<slot :name="name" v-bind="slotProps ?? {}" />

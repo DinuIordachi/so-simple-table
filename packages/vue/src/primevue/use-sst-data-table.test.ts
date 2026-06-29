@@ -209,4 +209,58 @@ describe('useSstDataTable', () => {
 		await bindings.removeSelected();
 		expect(store.bulkDelete).toHaveBeenCalledWith(['1', '2']);
 	});
+
+	it('clears a pending filter debounce on unmount (no fetch after teardown)', () => {
+		const store = makeStore();
+		const { wrapper, bindings } = harness(store);
+		bindings.onFilter({ filters: { global: { value: 'ada', matchMode: 'contains' } } } as never);
+		wrapper.unmount();
+		vi.advanceTimersByTime(300);
+		expect(store.updateSearch).not.toHaveBeenCalled();
+		expect(store.updateFilter).not.toHaveBeenCalled();
+	});
+
+	it('skips the page-reset + refetch when a @filter resolves to no change', () => {
+		const store = makeStore(); // store defaults: search '', filters []
+		const { bindings } = harness(store);
+		bindings.onFilter({ filters: {} } as never); // maps to empty → identical to current
+		vi.advanceTimersByTime(300);
+		expect(store.updateSearch).not.toHaveBeenCalled();
+		expect(store.updateFilter).not.toHaveBeenCalled();
+		expect(store.updatePagination).not.toHaveBeenCalled();
+	});
+
+	it('rolls back the optimistic edit when onSave throws synchronously', async () => {
+		const store = makeStore();
+		(store.data as Ref<readonly IItem[]>).value = [{ id: '1', name: 'a' }];
+		const onSave = vi.fn(() => {
+			throw new Error('invalid');
+		});
+		const { bindings } = harness(store, { onSave });
+		bindings.onCellEditComplete({
+			data: { id: '1', name: 'a' },
+			newData: { id: '1', name: 'b' },
+			field: 'name',
+			newValue: 'b',
+		} as never);
+		await Promise.resolve();
+		await Promise.resolve();
+		expect(store.updateData).toHaveBeenCalledTimes(2);
+		const calls = (store.updateData as ReturnType<typeof vi.fn>).mock.calls;
+		expect(calls[0]?.[0]).toEqual([{ id: '1', name: 'b' }]); // optimistic
+		expect(calls[1]?.[0]).toEqual([{ id: '1', name: 'a' }]); // rolled back
+	});
+
+	it('drops the deleted rows from the selection after removeSelected resolves', async () => {
+		const store = makeStore();
+		const { bindings } = harness(store);
+		bindings['onUpdate:selection']([
+			{ id: '1', name: 'a' },
+			{ id: '2', name: 'b' },
+		]);
+		expect(bindings.selection).toHaveLength(2);
+		await bindings.removeSelected();
+		expect(store.bulkDelete).toHaveBeenCalledWith(['1', '2']);
+		expect(bindings.selection).toEqual([]);
+	});
 });

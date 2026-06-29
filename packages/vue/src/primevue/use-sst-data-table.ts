@@ -1,4 +1,4 @@
-import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
+import { getCurrentInstance, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
 import { ESortOrder, type IFilterParams, type IResponse } from '@sst/core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import type {
@@ -109,6 +109,12 @@ function extractFilterValue(meta: unknown): unknown {
 	return undefined;
 }
 
+/** Value-equality for filter lists (order is stable for a given `mapFilters`). */
+function filtersEqual(a: readonly IFilterParams[], b: readonly IFilterParams[]): boolean {
+	if (a.length !== b.length) return false;
+	return a.every((f, i) => f.key === b[i]?.key && f.value === b[i]?.value);
+}
+
 /** Default filter mapping: `global` → search; every other non-empty value → a `{ key, value }` filter. */
 function defaultMapFilters(filters: DataTableFilterMeta): { search?: string; filters?: IFilterParams[] } {
 	const result: { search?: string; filters?: IFilterParams[] } = {};
@@ -164,6 +170,11 @@ export function useSstDataTable<T extends { id: string | number }>(
 		onMounted(() => {
 			if (immediate) store.refresh();
 		});
+		// Clear a pending filter debounce so it can't fire (and fetch / write store
+		// state) after the component has been torn down.
+		onBeforeUnmount(() => {
+			if (filterTimer !== undefined) clearTimeout(filterTimer);
+		});
 	}
 
 	const selectionRef = ref<readonly T[]>([]);
@@ -172,7 +183,16 @@ export function useSstDataTable<T extends { id: string | number }>(
 		const previous = store.data.value;
 		store.updateData(previous.map((row) => (row.id === edit.row.id ? edit.newData : row)));
 		if (!onSave) return;
-		Promise.resolve(onSave(edit)).catch(() => store.updateData(previous));
+		// Roll back on either a returned rejection OR a synchronous throw (e.g. a
+		// validation guard). Calling onSave eagerly keeps its timing unchanged.
+		try {
+			const result: unknown = onSave(edit);
+			if (result && typeof (result as { then?: unknown }).then === 'function') {
+				(result as Promise<unknown>).catch(() => store.updateData(previous));
+			}
+		} catch {
+			store.updateData(previous);
+		}
 	}
 
 	const bindings = reactive({
@@ -217,10 +237,17 @@ export function useSstDataTable<T extends { id: string | number }>(
 			if (filterTimer !== undefined) clearTimeout(filterTimer);
 			filterTimer = setTimeout(() => {
 				const mapped = mapFilters(event.filters);
+				const nextSearch = mapped.search ?? '';
+				const nextFilters = mapped.filters ?? [];
+				// Skip the page-reset + refetch when nothing actually changed — PrimeVue
+				// re-emits @filter on blur / re-apply with identical values, and mapFilters
+				// returns a fresh array each time, so the store's reference check would
+				// otherwise refetch needlessly.
+				if (nextSearch === store.search.value && filtersEqual(nextFilters, store.filters.value)) return;
 				const current = store.pagination.value;
 				if (current.page !== 1) store.updatePagination({ ...current, page: 1 });
-				store.updateSearch(mapped.search ?? '');
-				store.updateFilter(mapped.filters ?? []);
+				store.updateSearch(nextSearch);
+				store.updateFilter(nextFilters);
 			}, filterDebounceMs);
 		},
 		onCellEditComplete(event: DataTableCellEditCompleteEvent) {
@@ -246,7 +273,16 @@ export function useSstDataTable<T extends { id: string | number }>(
 		removeSelected(rows?: T | readonly T[]): Promise<IResponse<string>> {
 			const source = rows ?? selectionRef.value;
 			const list: readonly T[] = Array.isArray(source) ? (source as readonly T[]) : [source as T];
-			return store.bulkDelete(list.map((row) => String(row.id)));
+			const ids = list.map((row) => String(row.id));
+			return store.bulkDelete(ids).then((response) => {
+				// Drop the deleted rows from the selection so the UI doesn't keep
+				// counting them as selected after they're gone.
+				if (response.isSuccess) {
+					const deleted = new Set(ids);
+					selectionRef.value = selectionRef.value.filter((row) => !deleted.has(String(row.id)));
+				}
+				return response;
+			});
 		},
 	});
 
