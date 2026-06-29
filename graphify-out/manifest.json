@@ -1,0 +1,907 @@
+{
+  "/Users/dinuiordachi/Projects/so-simple-table/.claude/launch.json": {
+    "mtime": 1782310165.2293758,
+    "ast_hash": "d8d9836106d379f0b4706680e86b7a9a",
+    "semantic_hash": "d8d9836106d379f0b4706680e86b7a9a"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/nx.json": {
+    "mtime": 1782301581.0925827,
+    "ast_hash": "8bb56925e56308e78e69ba556ef0cdb8",
+    "semantic_hash": "8bb56925e56308e78e69ba556ef0cdb8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/package.json": {
+    "mtime": 1782717550.6199014,
+    "ast_hash": "547ffb966a7ba45778b42165149c5a32",
+    "semantic_hash": "547ffb966a7ba45778b42165149c5a32"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/package.json": {
+    "mtime": 1782719623.6248376,
+    "ast_hash": "334d89f3341a3c9b89bda87a903b6c6d",
+    "semantic_hash": "334d89f3341a3c9b89bda87a903b6c6d"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/project.json": {
+    "mtime": 1782301581.0942059,
+    "ast_hash": "d47af114162c3588636b4f94056f2b7f",
+    "semantic_hash": "d47af114162c3588636b4f94056f2b7f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/http/fetch-http-client.test.ts": {
+    "mtime": 1782305581.9421391,
+    "ast_hash": "58552894955da4cd176e83b04a223f67",
+    "semantic_hash": "58552894955da4cd176e83b04a223f67"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/http/fetch-http-client.ts": {
+    "mtime": 1782307113.6007233,
+    "ast_hash": "be3411b59f6781c6ca7179683201c9b5",
+    "semantic_hash": "be3411b59f6781c6ca7179683201c9b5"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/index.ts": {
+    "mtime": 1782307113.6008718,
+    "ast_hash": "307b5eebb826f142af60847eb3242026",
+    "semantic_hash": "307b5eebb826f142af60847eb3242026"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/http-list.repository.test.ts": {
+    "mtime": 1782332397.4655635,
+    "ast_hash": "7359e10e754e5b8e885c0733e04d589b",
+    "semantic_hash": "7359e10e754e5b8e885c0733e04d589b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/http-list.repository.ts": {
+    "mtime": 1782332397.4659786,
+    "ast_hash": "c1ee1a65cba786696bff850f078949ba",
+    "semantic_hash": "c1ee1a65cba786696bff850f078949ba"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/http-repository.test.ts": {
+    "mtime": 1782307113.6011677,
+    "ast_hash": "d48a19c729fab6d073d62ba67a58abaa",
+    "semantic_hash": "d48a19c729fab6d073d62ba67a58abaa"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/http-repository.ts": {
+    "mtime": 1782307113.601333,
+    "ast_hash": "a7dde6d3ece6b61c8f6b55062f612779",
+    "semantic_hash": "a7dde6d3ece6b61c8f6b55062f612779"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/http-select.repository.test.ts": {
+    "mtime": 1782301581.0952158,
+    "ast_hash": "8b4bef01e7085530bccf315043c23f7f",
+    "semantic_hash": "8b4bef01e7085530bccf315043c23f7f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/http-select.repository.ts": {
+    "mtime": 1782307113.6014762,
+    "ast_hash": "7f23cb4e6d7a3c5901bcd248afe1eaee",
+    "semantic_hash": "7f23cb4e6d7a3c5901bcd248afe1eaee"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/list.repository.ts": {
+    "mtime": 1782307113.6016076,
+    "ast_hash": "26090f91c44ceb62ca1d76e4ae1e6764",
+    "semantic_hash": "26090f91c44ceb62ca1d76e4ae1e6764"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/repository.ts": {
+    "mtime": 1782307113.6017442,
+    "ast_hash": "87c40766adde2f775f2ee54b5ce985e1",
+    "semantic_hash": "87c40766adde2f775f2ee54b5ce985e1"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/repositories/select.repository.ts": {
+    "mtime": 1782307113.601872,
+    "ast_hash": "d9ecf4b54661fecbed5a4470a2ee2fc4",
+    "semantic_hash": "d9ecf4b54661fecbed5a4470a2ee2fc4"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/state/observable.test.ts": {
+    "mtime": 1782301581.0956688,
+    "ast_hash": "bccd198a6f4a4901ab1ebbeecbf79a82",
+    "semantic_hash": "bccd198a6f4a4901ab1ebbeecbf79a82"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/state/observable.ts": {
+    "mtime": 1782307113.6020174,
+    "ast_hash": "c73954737643435089d1e70b017b9726",
+    "semantic_hash": "c73954737643435089d1e70b017b9726"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/state/watch.test.ts": {
+    "mtime": 1782301581.0959866,
+    "ast_hash": "7b3537b6611f0560db89e4ba69b3ab71",
+    "semantic_hash": "7b3537b6611f0560db89e4ba69b3ab71"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/state/watch.ts": {
+    "mtime": 1782307113.6021683,
+    "ast_hash": "6e6234ad78b0a535402d3487c3b415a9",
+    "semantic_hash": "6e6234ad78b0a535402d3487c3b415a9"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/store/map-table-params.test.ts": {
+    "mtime": 1782481896.0333543,
+    "ast_hash": "e2d5ad27e9d0f03fce159b12b3b569f5",
+    "semantic_hash": "e2d5ad27e9d0f03fce159b12b3b569f5"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/store/map-table-params.ts": {
+    "mtime": 1782481896.033705,
+    "ast_hash": "524cb203be1ad3e80c3304da8266906d",
+    "semantic_hash": "524cb203be1ad3e80c3304da8266906d"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/store/table-store.test.ts": {
+    "mtime": 1782332397.466872,
+    "ast_hash": "4c62fb13175173f3302b6f6009d7fc01",
+    "semantic_hash": "4c62fb13175173f3302b6f6009d7fc01"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/store/table-store.ts": {
+    "mtime": 1782332397.467145,
+    "ast_hash": "f75374e45cc580873bf5f7e4c8116519",
+    "semantic_hash": "f75374e45cc580873bf5f7e4c8116519"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/base-item.ts": {
+    "mtime": 1782307113.6028063,
+    "ast_hash": "0548c43cb00dc9b85cdea6e40a35286a",
+    "semantic_hash": "0548c43cb00dc9b85cdea6e40a35286a"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/column.ts": {
+    "mtime": 1782307113.6029456,
+    "ast_hash": "71ae1729f5cbfd58b5a1acbbb6175e2c",
+    "semantic_hash": "71ae1729f5cbfd58b5a1acbbb6175e2c"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/filter.ts": {
+    "mtime": 1782307113.6030812,
+    "ast_hash": "dc7b8210b7e29d9022de0cae273076fe",
+    "semantic_hash": "dc7b8210b7e29d9022de0cae273076fe"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/http-client.ts": {
+    "mtime": 1782307113.603216,
+    "ast_hash": "d882133acf4ee9ecb0b8d131c7134d98",
+    "semantic_hash": "d882133acf4ee9ecb0b8d131c7134d98"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/index.ts": {
+    "mtime": 1782718696.3070526,
+    "ast_hash": "2a9143318a5a38be397e79bd5230c7a6",
+    "semantic_hash": "2a9143318a5a38be397e79bd5230c7a6"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/pagination.ts": {
+    "mtime": 1782307113.603495,
+    "ast_hash": "060f86e86711b37de12376f8d6e7e480",
+    "semantic_hash": "060f86e86711b37de12376f8d6e7e480"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/realtime-adapter.ts": {
+    "mtime": 1782307113.6039317,
+    "ast_hash": "22557348bbbaeedb0619886bba19cd07",
+    "semantic_hash": "22557348bbbaeedb0619886bba19cd07"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/repository-config.ts": {
+    "mtime": 1782332397.4673195,
+    "ast_hash": "a4655d5fe93c5ea99d6fc0e22442602b",
+    "semantic_hash": "a4655d5fe93c5ea99d6fc0e22442602b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/response.ts": {
+    "mtime": 1782307113.6042943,
+    "ast_hash": "e73a43219c6516a11b1d923bb04679c0",
+    "semantic_hash": "e73a43219c6516a11b1d923bb04679c0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/sort.ts": {
+    "mtime": 1782307113.6044395,
+    "ast_hash": "e81a65251eb08bbc78cc6af38912562b",
+    "semantic_hash": "e81a65251eb08bbc78cc6af38912562b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/types/table-store.ts": {
+    "mtime": 1782307113.6045961,
+    "ast_hash": "ce90c53faeefcd4c006a835a46b6d1ce",
+    "semantic_hash": "ce90c53faeefcd4c006a835a46b6d1ce"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/utils/array-to-map.ts": {
+    "mtime": 1782307113.6047604,
+    "ast_hash": "f23b161ffbe9a1d79d2a5eb0b83dc993",
+    "semantic_hash": "f23b161ffbe9a1d79d2a5eb0b83dc993"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/utils/deep-equal.test.ts": {
+    "mtime": 1782301581.098088,
+    "ast_hash": "717e758a729d42be315a612e8675bce5",
+    "semantic_hash": "717e758a729d42be315a612e8675bce5"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/src/utils/deep-equal.ts": {
+    "mtime": 1782307113.6049194,
+    "ast_hash": "05fda5247004a094ec242ff5d71a1505",
+    "semantic_hash": "05fda5247004a094ec242ff5d71a1505"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/tsconfig.build.json": {
+    "mtime": 1782301581.098361,
+    "ast_hash": "106663187fabec1acfddd6e8da7d96c8",
+    "semantic_hash": "106663187fabec1acfddd6e8da7d96c8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/tsconfig.json": {
+    "mtime": 1782301581.0984347,
+    "ast_hash": "fa64ec7875bd43d34cad37cddb3d4088",
+    "semantic_hash": "fa64ec7875bd43d34cad37cddb3d4088"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/tsup.config.ts": {
+    "mtime": 1782301581.098509,
+    "ast_hash": "4b73598240d10a207efd5515b7345d64",
+    "semantic_hash": "4b73598240d10a207efd5515b7345d64"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/vitest.config.ts": {
+    "mtime": 1782301581.0985787,
+    "ast_hash": "c5b08d9c9454885aedbdc94625ca25f0",
+    "semantic_hash": "c5b08d9c9454885aedbdc94625ca25f0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/package.json": {
+    "mtime": 1782719004.0797226,
+    "ast_hash": "222384fab46d03a76e6c85744c97c0a1",
+    "semantic_hash": "222384fab46d03a76e6c85744c97c0a1"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/project.json": {
+    "mtime": 1782301581.0990882,
+    "ast_hash": "1b66a4adc57cf0755d14d7542b4dc57e",
+    "semantic_hash": "1b66a4adc57cf0755d14d7542b4dc57e"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/index.ts": {
+    "mtime": 1782718696.307744,
+    "ast_hash": "847d8b3ab23b9fbbc663ff6659b47a3f",
+    "semantic_hash": "847d8b3ab23b9fbbc663ff6659b47a3f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/mount-table.test.ts": {
+    "mtime": 1782718696.3079195,
+    "ast_hash": "83af7d22b55fbf59c4baee42bcd2bf50",
+    "semantic_hash": "83af7d22b55fbf59c4baee42bcd2bf50"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/mount-table.ts": {
+    "mtime": 1782718696.3080928,
+    "ast_hash": "fb371132c51960d7ebea0eb1f1cf3603",
+    "semantic_hash": "fb371132c51960d7ebea0eb1f1cf3603"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/render/render-body.test.ts": {
+    "mtime": 1782307113.606046,
+    "ast_hash": "c1decdf765fc6130a172012b0bee3b9f",
+    "semantic_hash": "c1decdf765fc6130a172012b0bee3b9f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/render/render-body.ts": {
+    "mtime": 1782307113.606186,
+    "ast_hash": "2d9860708035f043cfb4967bd100ab03",
+    "semantic_hash": "2d9860708035f043cfb4967bd100ab03"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/render/render-head.test.ts": {
+    "mtime": 1782718696.3082385,
+    "ast_hash": "5800e728922e3de4773027a604f1723c",
+    "semantic_hash": "5800e728922e3de4773027a604f1723c"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/render/render-head.ts": {
+    "mtime": 1782718696.308383,
+    "ast_hash": "0ead6afb57402e0eca9fd7640e24aad5",
+    "semantic_hash": "0ead6afb57402e0eca9fd7640e24aad5"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/render/render-pagination.test.ts": {
+    "mtime": 1782301581.1001253,
+    "ast_hash": "7b26d6a17491dac4687da0ef0a3bdacb",
+    "semantic_hash": "7b26d6a17491dac4687da0ef0a3bdacb"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/render/render-pagination.ts": {
+    "mtime": 1782307113.6066587,
+    "ast_hash": "8d34a8c4f5450dc3f201e971506e3b2f",
+    "semantic_hash": "8d34a8c4f5450dc3f201e971506e3b2f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/target.test.ts": {
+    "mtime": 1782718696.3085217,
+    "ast_hash": "e610a226b781d8919971ee2f39b7585e",
+    "semantic_hash": "e610a226b781d8919971ee2f39b7585e"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/target.ts": {
+    "mtime": 1782718696.3086722,
+    "ast_hash": "d47062ad5fc120f2fd274768cf9f26db",
+    "semantic_hash": "d47062ad5fc120f2fd274768cf9f26db"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/src/types.ts": {
+    "mtime": 1782718696.3088038,
+    "ast_hash": "f1fd825b8c5c38f94fbdca1e8663be20",
+    "semantic_hash": "f1fd825b8c5c38f94fbdca1e8663be20"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/tsconfig.build.json": {
+    "mtime": 1782301581.1005669,
+    "ast_hash": "106663187fabec1acfddd6e8da7d96c8",
+    "semantic_hash": "106663187fabec1acfddd6e8da7d96c8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/tsconfig.json": {
+    "mtime": 1782301581.10078,
+    "ast_hash": "6a6393dfab399c3f7870573fc9da5943",
+    "semantic_hash": "6a6393dfab399c3f7870573fc9da5943"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/tsup.config.ts": {
+    "mtime": 1782301581.100856,
+    "ast_hash": "79391a2044c2aac0526228afa14327f0",
+    "semantic_hash": "79391a2044c2aac0526228afa14327f0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/vitest.config.ts": {
+    "mtime": 1782301581.1009212,
+    "ast_hash": "8284346f79de74357d4deb83dc801a96",
+    "semantic_hash": "8284346f79de74357d4deb83dc801a96"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/jest.config.ts": {
+    "mtime": 1782718696.3092062,
+    "ast_hash": "eb6b2d3546c1be7519dba2f4335cfd52",
+    "semantic_hash": "eb6b2d3546c1be7519dba2f4335cfd52"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/ng-package.json": {
+    "mtime": 1782307113.607429,
+    "ast_hash": "9c18c876e315c80b250e6de5b9a4ed3a",
+    "semantic_hash": "9c18c876e315c80b250e6de5b9a4ed3a"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/package.json": {
+    "mtime": 1782719004.073951,
+    "ast_hash": "36248439e6534a1eef7af59142b18bc8",
+    "semantic_hash": "36248439e6534a1eef7af59142b18bc8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/project.json": {
+    "mtime": 1782301581.1017165,
+    "ast_hash": "2d8d3ee7b425b8e7bbec65af06338c51",
+    "semantic_hash": "2d8d3ee7b425b8e7bbec65af06338c51"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/setup-jest.ts": {
+    "mtime": 1782301581.1017847,
+    "ast_hash": "64a26cec98cf2d72e310fa87b1f29e40",
+    "semantic_hash": "64a26cec98cf2d72e310fa87b1f29e40"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/component/sst-table.component.spec.ts": {
+    "mtime": 1782718696.3095098,
+    "ast_hash": "7850b78c36f998367fec07268b4c0efe",
+    "semantic_hash": "7850b78c36f998367fec07268b4c0efe"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/component/sst-table.component.ts": {
+    "mtime": 1782718696.3096912,
+    "ast_hash": "8743e198fa052b3e8c197715bcc35015",
+    "semantic_hash": "8743e198fa052b3e8c197715bcc35015"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/http/ng-http-client.spec.ts": {
+    "mtime": 1782301581.1024432,
+    "ast_hash": "da0e7e3dd08f51113c14d139f322f09c",
+    "semantic_hash": "da0e7e3dd08f51113c14d139f322f09c"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/http/ng-http-client.ts": {
+    "mtime": 1782718696.3098469,
+    "ast_hash": "35c973b510863288e19fed4681d8c419",
+    "semantic_hash": "35c973b510863288e19fed4681d8c419"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/repositories/sst-ng-list.repository.spec.ts": {
+    "mtime": 1782307113.6081731,
+    "ast_hash": "d311c0b96ce9f2708ff2c62b791b5361",
+    "semantic_hash": "d311c0b96ce9f2708ff2c62b791b5361"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/repositories/sst-ng-list.repository.ts": {
+    "mtime": 1782718696.310008,
+    "ast_hash": "e63cd96dd3d0afa8a7a8eee57ed148d2",
+    "semantic_hash": "e63cd96dd3d0afa8a7a8eee57ed148d2"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/repositories/sst-ng-select.repository.ts": {
+    "mtime": 1782718696.3101394,
+    "ast_hash": "92b481050fc0e77217caa8301eea127a",
+    "semantic_hash": "92b481050fc0e77217caa8301eea127a"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/repositories/sst-ng.repository.ts": {
+    "mtime": 1782718696.3102672,
+    "ast_hash": "8f0cb2acc167f6d1337c02588072bb76",
+    "semantic_hash": "8f0cb2acc167f6d1337c02588072bb76"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/store/sst-table.service.spec.ts": {
+    "mtime": 1782718696.3104,
+    "ast_hash": "fce7abe3b4d833808d8a9fb9ebb511db",
+    "semantic_hash": "fce7abe3b4d833808d8a9fb9ebb511db"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/store/sst-table.service.ts": {
+    "mtime": 1782718696.3105407,
+    "ast_hash": "545682e1b42dc004e3e64c393b7f8087",
+    "semantic_hash": "545682e1b42dc004e3e64c393b7f8087"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/store/to-signal.helper.spec.ts": {
+    "mtime": 1782718696.3106797,
+    "ast_hash": "ccc21b54e45d2cb6e1bf9475d3581890",
+    "semantic_hash": "ccc21b54e45d2cb6e1bf9475d3581890"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/store/to-signal.helper.ts": {
+    "mtime": 1782718696.3108118,
+    "ast_hash": "b8efa4ecf4042d76192bafa3029be514",
+    "semantic_hash": "b8efa4ecf4042d76192bafa3029be514"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/public-api.ts": {
+    "mtime": 1782718696.3109477,
+    "ast_hash": "35dc3a52fbeceb44e82a06d98efe5bd9",
+    "semantic_hash": "35dc3a52fbeceb44e82a06d98efe5bd9"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/tsconfig.json": {
+    "mtime": 1782301581.1034794,
+    "ast_hash": "e2253fa6a2b4326b82fd3811237a8a61",
+    "semantic_hash": "e2253fa6a2b4326b82fd3811237a8a61"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/tsconfig.lib.json": {
+    "mtime": 1782301581.103554,
+    "ast_hash": "89dc2e2a78e9706d51c781455210d364",
+    "semantic_hash": "89dc2e2a78e9706d51c781455210d364"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/tsconfig.lib.prod.json": {
+    "mtime": 1782301581.1036215,
+    "ast_hash": "3c835aa3cfc074eec4e680962532701e",
+    "semantic_hash": "3c835aa3cfc074eec4e680962532701e"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/tsconfig.spec.json": {
+    "mtime": 1782301581.103687,
+    "ast_hash": "cbff17298035aabc91a6ebca4033747e",
+    "semantic_hash": "cbff17298035aabc91a6ebca4033747e"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/package.json": {
+    "mtime": 1782719004.0824394,
+    "ast_hash": "819862d1929703945e81da88a01a6f33",
+    "semantic_hash": "819862d1929703945e81da88a01a6f33"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/project.json": {
+    "mtime": 1782301581.1039362,
+    "ast_hash": "41c837894564079a3d46d5e044f68998",
+    "semantic_hash": "41c837894564079a3d46d5e044f68998"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/src/index.ts": {
+    "mtime": 1782718696.3114223,
+    "ast_hash": "eb43b24f26dde955038880f0a693f947",
+    "semantic_hash": "eb43b24f26dde955038880f0a693f947"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/tsconfig.build.json": {
+    "mtime": 1782301581.104172,
+    "ast_hash": "16b03f3c64c363a294ade4389a33d101",
+    "semantic_hash": "16b03f3c64c363a294ade4389a33d101"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/tsconfig.json": {
+    "mtime": 1782301581.1042483,
+    "ast_hash": "1e8bd78df8a1bda2954919ada1d921a3",
+    "semantic_hash": "1e8bd78df8a1bda2954919ada1d921a3"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/tsup.config.ts": {
+    "mtime": 1782718696.311706,
+    "ast_hash": "eb39b92f4acd5e92ede2980199699cbf",
+    "semantic_hash": "eb39b92f4acd5e92ede2980199699cbf"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/vitest.config.ts": {
+    "mtime": 1782718696.311848,
+    "ast_hash": "84121238865d39111b5a24b0094e9a30",
+    "semantic_hash": "84121238865d39111b5a24b0094e9a30"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/vitest.setup.ts": {
+    "mtime": 1782301581.1044405,
+    "ast_hash": "b6047cb48430aab17d0c9a3cec1e4bb5",
+    "semantic_hash": "b6047cb48430aab17d0c9a3cec1e4bb5"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/eslint.config.mjs": {
+    "mtime": 1782718696.3124614,
+    "ast_hash": "7b33058dce4f78cb95e78ecfa00d7238",
+    "semantic_hash": "7b33058dce4f78cb95e78ecfa00d7238"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/package.json": {
+    "mtime": 1782719623.6250474,
+    "ast_hash": "a5cf0cf001436822a2fc6f0fb59b1fd3",
+    "semantic_hash": "a5cf0cf001436822a2fc6f0fb59b1fd3"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/project.json": {
+    "mtime": 1782301581.104693,
+    "ast_hash": "cb27e840894fa14506d379dc21dc34cf",
+    "semantic_hash": "cb27e840894fa14506d379dc21dc34cf"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/index.ts": {
+    "mtime": 1782718696.312848,
+    "ast_hash": "dbcf516607816ad4e23ecb61f37d32e0",
+    "semantic_hash": "dbcf516607816ad4e23ecb61f37d32e0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/components/SstTable.test.ts": {
+    "mtime": 1782718696.3130445,
+    "ast_hash": "2b7a96d2c0516ea2f8a863bd22f4515b",
+    "semantic_hash": "2b7a96d2c0516ea2f8a863bd22f4515b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/components/SstTable.vue": {
+    "mtime": 1782718696.313231,
+    "ast_hash": "4d40209dbc252e7cd98c24bec7627fa0",
+    "semantic_hash": "4d40209dbc252e7cd98c24bec7627fa0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/composables/define-table.test.ts": {
+    "mtime": 1782718696.3134177,
+    "ast_hash": "0d2e1522040a8524f25ac2c6519546b0",
+    "semantic_hash": "0d2e1522040a8524f25ac2c6519546b0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/composables/define-table.ts": {
+    "mtime": 1782718696.3136802,
+    "ast_hash": "1278f1f733eba6ca2f6e659fa8bac094",
+    "semantic_hash": "1278f1f733eba6ca2f6e659fa8bac094"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/composables/use-observable.test.ts": {
+    "mtime": 1782718696.314104,
+    "ast_hash": "bd2d594e8085ca7d538d379d2b15073d",
+    "semantic_hash": "bd2d594e8085ca7d538d379d2b15073d"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/composables/use-observable.ts": {
+    "mtime": 1782718696.3143892,
+    "ast_hash": "f6507848afbccfe2dc32f274efc415f0",
+    "semantic_hash": "f6507848afbccfe2dc32f274efc415f0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/composables/use-table-store.test.ts": {
+    "mtime": 1782718696.3146148,
+    "ast_hash": "9c7fa8a3502de85f947f5e20cb8eccf7",
+    "semantic_hash": "9c7fa8a3502de85f947f5e20cb8eccf7"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/lib/composables/use-table-store.ts": {
+    "mtime": 1782718696.3148246,
+    "ast_hash": "3669db738784345a16bf5e11385e3880",
+    "semantic_hash": "3669db738784345a16bf5e11385e3880"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/SstDataTable.test.ts": {
+    "mtime": 1782718696.3150458,
+    "ast_hash": "3e5173405efed246203495f9a286fc41",
+    "semantic_hash": "3e5173405efed246203495f9a286fc41"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/SstDataTable.vue": {
+    "mtime": 1782716384.0001721,
+    "ast_hash": "e9e7a44c00f7f144a515540a745a15dc",
+    "semantic_hash": "e9e7a44c00f7f144a515540a745a15dc"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/filter-helpers.test.ts": {
+    "mtime": 1782455544.2803915,
+    "ast_hash": "3e92246db8269fa6cf69a045872cee4f",
+    "semantic_hash": "3e92246db8269fa6cf69a045872cee4f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/filter-helpers.ts": {
+    "mtime": 1782718696.3152115,
+    "ast_hash": "87b92d33ebea9ac481da4e1b56149113",
+    "semantic_hash": "87b92d33ebea9ac481da4e1b56149113"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/index.ts": {
+    "mtime": 1782718696.3153589,
+    "ast_hash": "231c323c0867fd7f27ffc955b3037df6",
+    "semantic_hash": "231c323c0867fd7f27ffc955b3037df6"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/responsive.test.ts": {
+    "mtime": 1782506430.6071641,
+    "ast_hash": "4bae5b70fae47b55a7b991db15c53d6b",
+    "semantic_hash": "4bae5b70fae47b55a7b991db15c53d6b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/responsive.ts": {
+    "mtime": 1782506430.60727,
+    "ast_hash": "9dc090e106fa7a2f33bc0950103afb88",
+    "semantic_hash": "9dc090e106fa7a2f33bc0950103afb88"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/use-breakpoint.test.ts": {
+    "mtime": 1782716501.7684102,
+    "ast_hash": "c9d63e32ee617d9ee2aba8f83a43b571",
+    "semantic_hash": "c9d63e32ee617d9ee2aba8f83a43b571"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/use-breakpoint.ts": {
+    "mtime": 1782716404.2999663,
+    "ast_hash": "3f8feb32d11e0e930e0e0d41929f4c1c",
+    "semantic_hash": "3f8feb32d11e0e930e0e0d41929f4c1c"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/use-sst-data-table.test.ts": {
+    "mtime": 1782718696.3155415,
+    "ast_hash": "0ea7b91eb1e04e7f2fad84f3829bbb09",
+    "semantic_hash": "0ea7b91eb1e04e7f2fad84f3829bbb09"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/src/primevue/use-sst-data-table.ts": {
+    "mtime": 1782718696.3158019,
+    "ast_hash": "eb0ddc87adbbab60510e93595b3b99b0",
+    "semantic_hash": "eb0ddc87adbbab60510e93595b3b99b0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/tsconfig.build.json": {
+    "mtime": 1782301581.105631,
+    "ast_hash": "4f1658d6c3943375ad69eaa52cd8ea1c",
+    "semantic_hash": "4f1658d6c3943375ad69eaa52cd8ea1c"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/tsconfig.json": {
+    "mtime": 1782301581.1057127,
+    "ast_hash": "954c06be26f9a0d2a1e5098bc2ce9d25",
+    "semantic_hash": "954c06be26f9a0d2a1e5098bc2ce9d25"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/vite.config.ts": {
+    "mtime": 1782718696.3160717,
+    "ast_hash": "154cbd5f4b5b1add22c36c05eaf100a2",
+    "semantic_hash": "154cbd5f4b5b1add22c36c05eaf100a2"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/vitest.config.ts": {
+    "mtime": 1782718696.3162432,
+    "ast_hash": "c0b66e92b2419971fe9e99e9209110da",
+    "semantic_hash": "c0b66e92b2419971fe9e99e9209110da"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/scripts/publish-local.mjs": {
+    "mtime": 1782718696.3165023,
+    "ast_hash": "fa12d4846794b2e6806a49c95e5b15b8",
+    "semantic_hash": "fa12d4846794b2e6806a49c95e5b15b8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/dom/package.json": {
+    "mtime": 1782718696.317472,
+    "ast_hash": "48fedaf3c594e9dde49da2b0e52ce109",
+    "semantic_hash": "48fedaf3c594e9dde49da2b0e52ce109"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/dom/src/main.ts": {
+    "mtime": 1782718696.317695,
+    "ast_hash": "9728853c3add966b5e2723c8473a27db",
+    "semantic_hash": "9728853c3add966b5e2723c8473a27db"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/dom/tsconfig.json": {
+    "mtime": 1782301581.1072252,
+    "ast_hash": "6c98ea49feba12c3498ca8816f965d8e",
+    "semantic_hash": "6c98ea49feba12c3498ca8816f965d8e"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/dom/vite.config.ts": {
+    "mtime": 1782301581.107302,
+    "ast_hash": "0a8dcbdb3fae5f9e63e7e8f2bdbec8d7",
+    "semantic_hash": "0a8dcbdb3fae5f9e63e7e8f2bdbec8d7"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/angular.json": {
+    "mtime": 1782301581.1079183,
+    "ast_hash": "3164564af7c4111d065f0f8d2638e58b",
+    "semantic_hash": "3164564af7c4111d065f0f8d2638e58b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/package.json": {
+    "mtime": 1782718696.318416,
+    "ast_hash": "0da6868b7fcfee8d94cba7b98b23fef0",
+    "semantic_hash": "0da6868b7fcfee8d94cba7b98b23fef0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/src/app/app.component.ts": {
+    "mtime": 1782718696.318759,
+    "ast_hash": "5857ccd15a4c00bba045310e701fd8b9",
+    "semantic_hash": "5857ccd15a4c00bba045310e701fd8b9"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/src/app/breed-table.service.ts": {
+    "mtime": 1782718696.318921,
+    "ast_hash": "fe2b270918eda3234a384fe743765cb8",
+    "semantic_hash": "fe2b270918eda3234a384fe743765cb8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/src/app/breed.repository.ts": {
+    "mtime": 1782718696.3190725,
+    "ast_hash": "152999a82e9ff61b14b51df375a02cf8",
+    "semantic_hash": "152999a82e9ff61b14b51df375a02cf8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/src/main.ts": {
+    "mtime": 1782301581.1093016,
+    "ast_hash": "979b2f61cb1f21b4668b705615106145",
+    "semantic_hash": "979b2f61cb1f21b4668b705615106145"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/tsconfig.app.json": {
+    "mtime": 1782301581.1094353,
+    "ast_hash": "feb653279a9b4745c06d48df8d132c18",
+    "semantic_hash": "feb653279a9b4745c06d48df8d132c18"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/tsconfig.json": {
+    "mtime": 1782301581.1095052,
+    "ast_hash": "302f0f3350ca4f10132777e5ca618e95",
+    "semantic_hash": "302f0f3350ca4f10132777e5ca618e95"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/package.json": {
+    "mtime": 1782718696.3195448,
+    "ast_hash": "d2a40cb13d317357021a42e70b7ac248",
+    "semantic_hash": "d2a40cb13d317357021a42e70b7ac248"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/src/App.vue": {
+    "mtime": 1782718696.3197136,
+    "ast_hash": "7e993b4dfa1458feae8d7f47afa74cc6",
+    "semantic_hash": "7e993b4dfa1458feae8d7f47afa74cc6"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/src/main.ts": {
+    "mtime": 1782310165.2370284,
+    "ast_hash": "bbfca2a2de03c794fb9731e1891c6016",
+    "semantic_hash": "bbfca2a2de03c794fb9731e1891c6016"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/src/products-table.ts": {
+    "mtime": 1782718696.3198693,
+    "ast_hash": "9cf2118d854efa967a6a5837a523c93b",
+    "semantic_hash": "9cf2118d854efa967a6a5837a523c93b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/tsconfig.json": {
+    "mtime": 1782310165.2372034,
+    "ast_hash": "34fde940f86672e97fc171811ce5a696",
+    "semantic_hash": "34fde940f86672e97fc171811ce5a696"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/vite.config.ts": {
+    "mtime": 1782310165.2373888,
+    "ast_hash": "5e08faa30c2d3d359eb86f78c4f446c3",
+    "semantic_hash": "5e08faa30c2d3d359eb86f78c4f446c3"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/package.json": {
+    "mtime": 1782718696.3210368,
+    "ast_hash": "416ff3e0b91412bddae41de8b1af5b89",
+    "semantic_hash": "416ff3e0b91412bddae41de8b1af5b89"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/src/App.vue": {
+    "mtime": 1782718696.3212187,
+    "ast_hash": "a9c547195006ea9ea0ef1f8f3330415a",
+    "semantic_hash": "a9c547195006ea9ea0ef1f8f3330415a"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/src/breed-table.ts": {
+    "mtime": 1782718696.321389,
+    "ast_hash": "b8916da209d9c0880464ae4ac938adc5",
+    "semantic_hash": "b8916da209d9c0880464ae4ac938adc5"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/src/main.ts": {
+    "mtime": 1782301581.1106486,
+    "ast_hash": "bd096f7bd44363afa7d29ae09f68911d",
+    "semantic_hash": "bd096f7bd44363afa7d29ae09f68911d"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/tsconfig.json": {
+    "mtime": 1782301581.1108088,
+    "ast_hash": "c65f5939cbd267e8f80dcc090651c493",
+    "semantic_hash": "c65f5939cbd267e8f80dcc090651c493"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/tsconfig.node.json": {
+    "mtime": 1782301581.1108842,
+    "ast_hash": "767b2e9abe6452170cdc399ca052cfbc",
+    "semantic_hash": "767b2e9abe6452170cdc399ca052cfbc"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/vite.config.ts": {
+    "mtime": 1782301581.110948,
+    "ast_hash": "cd41868a92edb1ec8ed209d18eb4dbeb",
+    "semantic_hash": "cd41868a92edb1ec8ed209d18eb4dbeb"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/tsconfig.base.json": {
+    "mtime": 1782718696.3215563,
+    "ast_hash": "946da7fe9dd8b5b31cb21390e393a0c8",
+    "semantic_hash": "946da7fe9dd8b5b31cb21390e393a0c8"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/.verdaccio/config.yaml": {
+    "mtime": 1782718696.3010573,
+    "ast_hash": "3ba4814cd5e9a1aadf42388921f510d6",
+    "semantic_hash": "3ba4814cd5e9a1aadf42388921f510d6"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/01-core.md": {
+    "mtime": 1782718696.3013399,
+    "ast_hash": "c640eea9abc41376f11efa48701f9d0f",
+    "semantic_hash": "c640eea9abc41376f11efa48701f9d0f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/02-angular.md": {
+    "mtime": 1782718696.3016021,
+    "ast_hash": "15cd43a5e5543d8dcab8f93f4064609a",
+    "semantic_hash": "15cd43a5e5543d8dcab8f93f4064609a"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/03-vue.md": {
+    "mtime": 1782718696.3018904,
+    "ast_hash": "1ae5b2a061b79c9f86ce47fcc62b613f",
+    "semantic_hash": "1ae5b2a061b79c9f86ce47fcc62b613f"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/04-react.md": {
+    "mtime": 1782718696.3023112,
+    "ast_hash": "af84a682ff7dca4782daf22e9437c35c",
+    "semantic_hash": "af84a682ff7dca4782daf22e9437c35c"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/README.md": {
+    "mtime": 1782718696.302548,
+    "ast_hash": "07d84070309d84c3f9211555ab9ba899",
+    "semantic_hash": "07d84070309d84c3f9211555ab9ba899"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/plans/2026-05-06-sst-dom.md": {
+    "mtime": 1782718696.3029044,
+    "ast_hash": "d805eca21b3beab8daeaa8e358b989b4",
+    "semantic_hash": "d805eca21b3beab8daeaa8e358b989b4"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/plans/2026-06-24-declarative-backend-conventions.md": {
+    "mtime": 1782718696.3031287,
+    "ast_hash": "b45bca4267a3611de52440fadec6c85e",
+    "semantic_hash": "b45bca4267a3611de52440fadec6c85e"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/plans/2026-06-24-primevue-editing-selection.md": {
+    "mtime": 1782718696.303319,
+    "ast_hash": "7afbf80cd5271b879880f583a995fd94",
+    "semantic_hash": "7afbf80cd5271b879880f583a995fd94"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/plans/2026-06-24-vue-define-table.md": {
+    "mtime": 1782718696.3035023,
+    "ast_hash": "267d20f10d7571908b7ed4612cf9b6e2",
+    "semantic_hash": "267d20f10d7571908b7ed4612cf9b6e2"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/plans/2026-06-24-vue-primevue.md": {
+    "mtime": 1782718696.303703,
+    "ast_hash": "2d3191c6b1f53692ec92a8027ada45c9",
+    "semantic_hash": "2d3191c6b1f53692ec92a8027ada45c9"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/plans/2026-06-26-primevue-responsive-layouts.md": {
+    "mtime": 1782718696.3039236,
+    "ast_hash": "4a89d2211fba812914c6b6220da8c825",
+    "semantic_hash": "4a89d2211fba812914c6b6220da8c825"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/specs/2026-05-06-sst-dom-design.md": {
+    "mtime": 1782718696.3041236,
+    "ast_hash": "358e31fb44e583f2cd10471830da4870",
+    "semantic_hash": "358e31fb44e583f2cd10471830da4870"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/specs/2026-06-24-declarative-backend-conventions-design.md": {
+    "mtime": 1782718696.3043036,
+    "ast_hash": "3c99ee532c2784eca07da3e3970f2b56",
+    "semantic_hash": "3c99ee532c2784eca07da3e3970f2b56"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/specs/2026-06-24-primevue-editing-selection-design.md": {
+    "mtime": 1782718696.3044744,
+    "ast_hash": "c0761f946ae059063482b1c556c790d1",
+    "semantic_hash": "c0761f946ae059063482b1c556c790d1"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/specs/2026-06-24-vue-define-table-design.md": {
+    "mtime": 1782718696.3046443,
+    "ast_hash": "a2d06c2a91aa75b88cee2aacbbfc17e0",
+    "semantic_hash": "a2d06c2a91aa75b88cee2aacbbfc17e0"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/specs/2026-06-24-vue-primevue-design.md": {
+    "mtime": 1782718696.3048027,
+    "ast_hash": "c167ed7434a6c29a6d09ae94442c1547",
+    "semantic_hash": "c167ed7434a6c29a6d09ae94442c1547"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/docs/superpowers/specs/2026-06-26-primevue-responsive-layouts-design.md": {
+    "mtime": 1782718696.3049612,
+    "ast_hash": "ef66ffe0c68b89cb0562369f6ad0cf25",
+    "semantic_hash": "ef66ffe0c68b89cb0562369f6ad0cf25"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/CHANGELOG.md": {
+    "mtime": 1782718696.3065326,
+    "ast_hash": "348696678762ebdae835841840c8bc35",
+    "semantic_hash": "348696678762ebdae835841840c8bc35"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/core/README.md": {
+    "mtime": 1782718696.3067353,
+    "ast_hash": "71c67f96752defbe45aaf46739566e15",
+    "semantic_hash": "71c67f96752defbe45aaf46739566e15"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/CHANGELOG.md": {
+    "mtime": 1782718696.307232,
+    "ast_hash": "f70d5a0ca3073e0736cfa649120bc2f3",
+    "semantic_hash": "f70d5a0ca3073e0736cfa649120bc2f3"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/dom/README.md": {
+    "mtime": 1782718696.3074312,
+    "ast_hash": "a3f00347a25ed09da2238ec2528fd847",
+    "semantic_hash": "a3f00347a25ed09da2238ec2528fd847"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/CHANGELOG.md": {
+    "mtime": 1782718696.3089404,
+    "ast_hash": "71be23e0e367afeb907620ba1ca19dbb",
+    "semantic_hash": "71be23e0e367afeb907620ba1ca19dbb"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/README.md": {
+    "mtime": 1782718696.3090744,
+    "ast_hash": "3dad2783fed27ea2b6be1fd4083eb0c1",
+    "semantic_hash": "3dad2783fed27ea2b6be1fd4083eb0c1"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/ng/src/lib/component/sst-table.component.html": {
+    "mtime": 1782481896.0342255,
+    "ast_hash": "29cfad418a01ac0264eb0713b83f2182",
+    "semantic_hash": "29cfad418a01ac0264eb0713b83f2182"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/react/README.md": {
+    "mtime": 1782718696.311086,
+    "ast_hash": "c3aeb12bcfe5c4886bd742d6c089c110",
+    "semantic_hash": "c3aeb12bcfe5c4886bd742d6c089c110"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/CHANGELOG.md": {
+    "mtime": 1782718696.312068,
+    "ast_hash": "e89c448231fa7fd9bad25b07a67ef395",
+    "semantic_hash": "e89c448231fa7fd9bad25b07a67ef395"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/packages/vue/README.md": {
+    "mtime": 1782718696.3122983,
+    "ast_hash": "218bd825d301b0fe8b6d3f886ff5d665",
+    "semantic_hash": "218bd825d301b0fe8b6d3f886ff5d665"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/dom/README.md": {
+    "mtime": 1782718696.317038,
+    "ast_hash": "c276054b1995e6c5bb581499eceaffe9",
+    "semantic_hash": "c276054b1995e6c5bb581499eceaffe9"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/dom/index.html": {
+    "mtime": 1782718696.3172653,
+    "ast_hash": "8b017f6cca272237b418e70ef0f08c27",
+    "semantic_hash": "8b017f6cca272237b418e70ef0f08c27"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/README.md": {
+    "mtime": 1782718696.3180146,
+    "ast_hash": "7739687ae6cd9322b78b97a3d0b21ce6",
+    "semantic_hash": "7739687ae6cd9322b78b97a3d0b21ce6"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/index.html": {
+    "mtime": 1782718696.3182497,
+    "ast_hash": "4a00f417c501c62439a8441375fca701",
+    "semantic_hash": "4a00f417c501c62439a8441375fca701"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/ng/src/app/app.component.html": {
+    "mtime": 1782718696.3185976,
+    "ast_hash": "cbf8b4259b6a6003c37929f167777477",
+    "semantic_hash": "cbf8b4259b6a6003c37929f167777477"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/primevue/index.html": {
+    "mtime": 1782718696.3193865,
+    "ast_hash": "3e090b8f8911273b32c45fb97ffb2a63",
+    "semantic_hash": "3e090b8f8911273b32c45fb97ffb2a63"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/README.md": {
+    "mtime": 1782718696.320501,
+    "ast_hash": "44e0290e939bfee80c1ff97d658cc65b",
+    "semantic_hash": "44e0290e939bfee80c1ff97d658cc65b"
+  },
+  "/Users/dinuiordachi/Projects/so-simple-table/test/vue/index.html": {
+    "mtime": 1782718696.3208122,
+    "ast_hash": "210a7feb9aca2a02fd4d9612269825e7",
+    "semantic_hash": "210a7feb9aca2a02fd4d9612269825e7"
+  }
+}
