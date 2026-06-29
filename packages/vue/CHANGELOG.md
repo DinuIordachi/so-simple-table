@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@sst/vue` are documented in this file.
+All notable changes to `@bridgebyte/sst-vue` are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -11,16 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `@sst/vue/primevue` subpath: `useSstDataTable` composable and `<SstDataTable>`
+- `@bridgebyte/sst-vue/primevue` subpath: `useSstDataTable` composable and `<SstDataTable>`
   wrapper binding a `TableStore` to a PrimeVue v4 `DataTable` (lazy mode), with
   `primevue` as an optional peer dependency.
 - `defineTable` backend-convention options (`paginationStyle`, `sortStyle`,
   `sortDirections`, `searchEndpoint`) — adapt offset pagination, `asc/desc` sort,
   and a search sub-endpoint without a custom HTTP client.
-- `@sst/vue/primevue`: inline editing via `onSave` (optimistic + rollback), reactive
+- `@bridgebyte/sst-vue/primevue`: inline editing via `onSave` (optimistic + rollback), reactive
   `selection` with `clearSelection`/`removeSelected`, DataTable-level named-slot
   typing, and `searchColumn`/`withMatchModes` filter helpers.
-- `@sst/vue/primevue` responsive layouts: per-breakpoint layout slots
+- `@bridgebyte/sst-vue/primevue` responsive layouts: per-breakpoint layout slots
   (`#xs`…`#2xl`, Tailwind widths) on `<SstDataTable>` with a mobile-first cascade
   and a `tableBreakpoint` prop (default `lg`, or `'none'`). Each slot receives
   `{ rows, loading, store }`. Exports the `useBreakpoint` composable. SSR-safe;
@@ -44,9 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (each `row` is `T`) with no annotation. Forwarded slots (PrimeVue's `header`/`empty`/
   `expansion`/… and `<Column>`) keep `any` props so they stay narrowable —
   e.g. `#expansion="{ data }: { data: Row }"` — just like on a raw `<DataTable>`.
-- Pinned the `@sst/core` peer dependency to `^0.2.0` (was `*`) and `primevue` to
+- Pinned the `@bridgebyte/sst-core` peer dependency to `^0.2.0` (was `*`) and `primevue` to
   `^4.5.0` (the tested baseline); added a `typesVersions` fallback so the
-  `@sst/vue/primevue` subpath resolves types under legacy `moduleResolution: node`.
+  `@bridgebyte/sst-vue/primevue` subpath resolves types under legacy `moduleResolution: node`.
 
 ### Fixed
 
@@ -59,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `@filter` no longer resets pagination and refetches when the resolved search and
   filters are unchanged (PrimeVue re-emits `@filter` on blur with identical values).
 - Shipped declarations no longer leak the monorepo path `packages/core/dist`; the
-  `<SstDataTable>` `removeSelected` type resolves to `@sst/core`, so template-ref
+  `<SstDataTable>` `removeSelected` type resolves to `@bridgebyte/sst-core`, so template-ref
   usage type-checks for consumers.
 - `vite build` no longer prints a spurious `TS2538` from the dynamic layout-slot
   binding; `npm run lint` works again under ESLint 9 (flat config).

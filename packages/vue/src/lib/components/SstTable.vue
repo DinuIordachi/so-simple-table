@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends { id: string | number }">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
+import { ESortOrder, type IColumn, type ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../composables/use-table-store';
 
 export interface ISstTableProps<TItem extends { id: string | number }> {

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { SstTableComponent, type IColumn } from '@sst/ng';
+import { SstTableComponent, type IColumn } from '@bridgebyte/sst-ng';
 import { BreedTableService } from './breed-table.service';
 
 @Component({

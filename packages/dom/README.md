@@ -1,8 +1,8 @@
-# @sst/dom
+# @bridgebyte/sst-dom
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
-Vanilla DOM variant of [@sst/core](../core/README.md). One call —
+Vanilla DOM variant of [@bridgebyte/sst-core](../core/README.md). One call —
 `mountTable(...)` — produces an HTML table with sortable headers,
 default-or-custom cells, and pagination controls, wired reactively to a
 `TableStore<T>`.
@@ -10,15 +10,15 @@ default-or-custom cells, and pagination controls, wired reactively to a
 ## Install
 
 ```bash
-npm install @sst/core @sst/dom
+npm install @bridgebyte/sst-core @bridgebyte/sst-dom
 ```
 
 ## Quick start
 
 ```ts
-import { HttpRepository, TableStore, type IBaseItem } from '@sst/core';
-import { mountTable, type IDomColumn } from '@sst/dom';
-import '@sst/dom/style.css'; // optional but recommended
+import { HttpRepository, TableStore, type IBaseItem } from '@bridgebyte/sst-core';
+import { mountTable, type IDomColumn } from '@bridgebyte/sst-dom';
+import '@bridgebyte/sst-dom/style.css'; // optional but recommended
 
 interface IStrategy extends IBaseItem {
   createdAt: string;
@@ -73,7 +73,7 @@ unsubscribes from the store, removes the DOM nodes, and drops listeners.
 
 ### `IDomColumn<T>`
 
-Extends `IColumn` from `@sst/core` with one field:
+Extends `IColumn` from `@bridgebyte/sst-core` with one field:
 
 ```ts
 render?: (row: T, column: IDomColumn<T>) => string | HTMLElement;
@@ -157,7 +157,7 @@ contract. Skip the import if you want to start from scratch.
 ## Links
 
 - [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)
-- [`@sst/core`](../core/README.md) — the framework-agnostic core
+- [`@bridgebyte/sst-core`](../core/README.md) — the framework-agnostic core
 - [Changelog](./CHANGELOG.md)
 
 ## License

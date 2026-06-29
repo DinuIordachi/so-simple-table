@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add viewport-responsive, slot-based layouts to `@sst/vue/primevue`'s `<SstDataTable>`: below a configurable breakpoint, the host renders a custom layout (e.g. each row as a card) instead of the PrimeVue DataTable, with a mobile-first cascade across Tailwind breakpoints.
+**Goal:** Add viewport-responsive, slot-based layouts to `@bridgebyte/sst-vue/primevue`'s `<SstDataTable>`: below a configurable breakpoint, the host renders a custom layout (e.g. each row as a card) instead of the PrimeVue DataTable, with a mobile-first cascade across Tailwind breakpoints.
 
-**Architecture:** Three isolated units — a pure `resolveLayoutSlot` cascade function (`responsive.ts`), a `useBreakpoint()` composable over `window.matchMedia` (`use-breakpoint.ts`), and a template fork in `SstDataTable.vue` that renders the active layout slot or the DataTable. No `@sst/core` change; no change to the standalone `<SstTable>`.
+**Architecture:** Three isolated units — a pure `resolveLayoutSlot` cascade function (`responsive.ts`), a `useBreakpoint()` composable over `window.matchMedia` (`use-breakpoint.ts`), and a template fork in `SstDataTable.vue` that renders the active layout slot or the DataTable. No `@bridgebyte/sst-core` change; no change to the standalone `<SstTable>`.
 
 **Tech Stack:** TypeScript (strict), Vue 3 `<script setup>`, PrimeVue v4 DataTable, Vitest + @vue/test-utils.
 
@@ -17,7 +17,7 @@
 - **Slot payload:** every layout slot receives `{ rows: readonly T[]; loading: boolean; store: IUseTableStoreReturn<T> }`.
 - **`tableBreakpoint` default:** `'lg'`; accepts `'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'none'`.
 - **SSR-safe:** no `window` access at module top level; the composable defaults to the largest token before mount / when `matchMedia` is unavailable.
-- **Verdaccio:** `test/primevue` consumes the published `@sst/vue`; run `npm run publish:local` (repo root) and reinstall in `test/primevue` before browser verification. Unit/component tests are the authoritative gate.
+- **Verdaccio:** `test/primevue` consumes the published `@bridgebyte/sst-vue`; run `npm run publish:local` (repo root) and reinstall in `test/primevue` before browser verification. Unit/component tests are the authoritative gate.
 
 ---
 
@@ -562,7 +562,7 @@ Replace `packages/vue/src/primevue/index.ts` with:
  * {@link useSstDataTable} composable, the {@link SstDataTable} wrapper, and
  * responsive layout utilities ({@link useBreakpoint}, {@link resolveLayoutSlot}).
  *
- * Import from the `@sst/vue/primevue` subpath. Requires `primevue` (>= 4) and
+ * Import from the `@bridgebyte/sst-vue/primevue` subpath. Requires `primevue` (>= 4) and
  * `vue` as peer dependencies.
  */
 export * from './use-sst-data-table';
@@ -600,7 +600,7 @@ git commit -m "feat(vue): responsive layout slots + tableBreakpoint on SstDataTa
 - Modify: `packages/vue/CHANGELOG.md`
 
 **Interfaces:**
-- Consumes: the published `@sst/vue/primevue` `<SstDataTable>` with `tableBreakpoint` + `#xs` slot.
+- Consumes: the published `@bridgebyte/sst-vue/primevue` `<SstDataTable>` with `tableBreakpoint` + `#xs` slot.
 
 - [ ] **Step 1: Add a `#xs` card layout to the demo (PrimeVue `Card`)**
 
@@ -634,7 +634,7 @@ Then add `table-breakpoint="lg"` to the opening `<SstDataTable` tag (it already 
 
 - [ ] **Step 2: Add a README section**
 
-Append the following subsection to the `@sst/vue/primevue` portion of `packages/vue/README.md` (after the editing/selection content, before any closing/footer section):
+Append the following subsection to the `@bridgebyte/sst-vue/primevue` portion of `packages/vue/README.md` (after the editing/selection content, before any closing/footer section):
 
 ```markdown
 ### Responsive layouts
@@ -667,7 +667,7 @@ exported for standalone use.
 In `packages/vue/CHANGELOG.md`, under `## [Unreleased]` → `### Added`, add as a new bullet:
 
 ```markdown
-- `@sst/vue/primevue` responsive layouts: per-breakpoint layout slots
+- `@bridgebyte/sst-vue/primevue` responsive layouts: per-breakpoint layout slots
   (`#xs`…`#2xl`, Tailwind widths) on `<SstDataTable>` with a mobile-first cascade
   and a `tableBreakpoint` prop (default `lg`, or `'none'`). Each slot receives
   `{ rows, loading, store }`. Exports the `useBreakpoint` composable. SSR-safe;
@@ -678,10 +678,10 @@ In `packages/vue/CHANGELOG.md`, under `## [Unreleased]` → `### Added`, add as 
 
 ```bash
 cd /Users/dinuiordachi/Projects/so-simple-table
-npm run publish:local                      # bump + publish @sst/* to Verdaccio
-cd test/primevue && npm install @sst/vue@latest && cd ../..
+npm run publish:local                      # bump + publish @bridgebyte/sst-* to Verdaccio
+cd test/primevue && npm install @bridgebyte/sst-vue@latest && cd ../..
 ```
-Expected: install resolves the new `@sst/vue` from `http://localhost:4873`.
+Expected: install resolves the new `@bridgebyte/sst-vue` from `http://localhost:4873`.
 
 - [ ] **Step 5: Browser-verify the responsive switch**
 
@@ -717,7 +717,7 @@ git commit -m "docs(vue): responsive layout example (test/primevue) + README + C
 - Tests (`responsive.test.ts`, `use-breakpoint.test.ts`, `SstDataTable.test.ts`) — Tasks 1–3. ✓
 - `test/primevue` example + README + CHANGELOG — Task 4. ✓
 - E2E resize verification — Task 4 Step 5. ✓
-- No `@sst/core` change; no `<SstTable>` change — confirmed (files not touched). ✓
+- No `@bridgebyte/sst-core` change; no `<SstTable>` change — confirmed (files not touched). ✓
 
 **Placeholder scan:** none — every step has full code/commands.
 

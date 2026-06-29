@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import type { IResponse, IResponseList } from '@sst/core';
-import { ListRepository } from '@sst/core';
+import type { IResponse, IResponseList } from '@bridgebyte/sst-core';
+import { ListRepository } from '@bridgebyte/sst-core';
 import { SstTableService } from './sst-table.service';
 
 interface IItem {

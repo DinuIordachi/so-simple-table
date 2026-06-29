@@ -1,9 +1,9 @@
 /**
  * @packageDocumentation
- * Vanilla-DOM renderer for `@sst/core` table stores.
+ * Vanilla-DOM renderer for `@bridgebyte/sst-core` table stores.
  *
  * This package mounts a fully reactive, dependency-free HTML table into the
- * page and keeps it in sync with an {@link @sst/core#ITableStore}. The single
+ * page and keeps it in sync with an {@link @bridgebyte/sst-core#ITableStore}. The single
  * consumer entry point is {@link mountTable}, which renders the table head,
  * body, and pagination controls, wires up sort/pagination interactions, and
  * returns an {@link ITableHandle} for refreshing or tearing the table down.

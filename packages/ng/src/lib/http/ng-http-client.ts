@@ -1,15 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { HttpQueryParams, IHttpClient, IHttpRequestOptions } from '@sst/core';
+import type { HttpQueryParams, IHttpClient, IHttpRequestOptions } from '@bridgebyte/sst-core';
 
 /**
  * Adapts Angular's {@link HttpClient} to the framework-agnostic {@link IHttpClient}
- * contract consumed by `@sst/core` repositories.
+ * contract consumed by `@bridgebyte/sst-core` repositories.
  *
  * @remarks
  * Each verb resolves the Angular `Observable` to a `Promise` via `firstValueFrom`,
- * returning the parsed JSON response body. The `@sst/ng` repositories inject this
+ * returning the parsed JSON response body. The `@bridgebyte/sst-ng` repositories inject this
  * client by default, so registering it (as a root-provided service it requires no
  * manual provider wiring beyond `provideHttpClient`) is normally the only setup needed.
  *

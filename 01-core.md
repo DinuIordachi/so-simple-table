@@ -1,4 +1,4 @@
-# So Simple Table — Core (`@sst/core`) Implementation Plan
+# So Simple Table — Core (`@bridgebyte/sst-core`) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -13,10 +13,10 @@
 **Tech Stack:** TypeScript 5.6+, Vitest (testing), tsup (bundling), Nx (monorepo orchestrator) + npm workspaces. ESM-first with CJS fallback. Node 20+ for development.
 
 **Plans in this series:**
-1. **`@sst/core`** ← this file
-2. `@sst/ng` (Angular variant) — `02-angular.md`
-3. `@sst/vue` (Vue 3 variant) — `03-vue.md`
-4. `@sst/react` (React variant) — `04-react.md`
+1. **`@bridgebyte/sst-core`** ← this file
+2. `@bridgebyte/sst-ng` (Angular variant) — `02-angular.md`
+3. `@bridgebyte/sst-vue` (Vue 3 variant) — `03-vue.md`
+4. `@bridgebyte/sst-react` (React variant) — `04-react.md`
 
 ---
 
@@ -42,7 +42,7 @@ The monorepo layout established by this plan:
 ├── README.md
 └── packages/
     └── core/
-        ├── package.json               # name: "@sst/core", type: "module"
+        ├── package.json               # name: "@bridgebyte/sst-core", type: "module"
         ├── tsconfig.json
         ├── tsconfig.build.json
         ├── tsup.config.ts
@@ -200,7 +200,7 @@ git init
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
     "paths": {
-      "@sst/core": ["packages/core/src/index.ts"]
+      "@bridgebyte/sst-core": ["packages/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "**/dist", "**/coverage"]
@@ -279,7 +279,7 @@ git commit -m "chore: bootstrap so-simple-table monorepo (npm + nx)"
 
 ---
 
-## Task 2: Scaffold `@sst/core` package
+## Task 2: Scaffold `@bridgebyte/sst-core` package
 
 **Files:**
 - Create: `packages/core/package.json`
@@ -295,7 +295,7 @@ git commit -m "chore: bootstrap so-simple-table monorepo (npm + nx)"
 
 ```json
 {
-  "name": "@sst/core",
+  "name": "@bridgebyte/sst-core",
   "version": "0.1.0",
   "description": "So Simple Table — framework-agnostic core: reactive table state and configurable repositories.",
   "type": "module",
@@ -413,14 +413,14 @@ export default defineConfig({
 - [ ] **Step 7: Create empty barrel `packages/core/src/index.ts`**
 
 ```ts
-// @sst/core public API — populated by subsequent tasks.
+// @bridgebyte/sst-core public API — populated by subsequent tasks.
 export {};
 ```
 
 - [ ] **Step 8: Create `packages/core/README.md`**
 
 ```markdown
-# @sst/core
+# @bridgebyte/sst-core
 
 Framework-agnostic core for So Simple Table. Provides:
 
@@ -429,14 +429,14 @@ Framework-agnostic core for So Simple Table. Provides:
 - `Repository` chain — `ListRepository`, `SelectRepository`, `Repository` with HTTP variants.
 - `IHttpClient` adapter with default `FetchHttpClient`.
 
-See per-framework variants `@sst/ng`, `@sst/vue`, `@sst/react`.
+See per-framework variants `@bridgebyte/sst-ng`, `@bridgebyte/sst-vue`, `@bridgebyte/sst-react`.
 ```
 
 - [ ] **Step 9: Install workspace dependencies**
 
 From `<repo-root>`:
 ```bash
-npm install --workspace @sst/core
+npm install --workspace @bridgebyte/sst-core
 ```
 
 Expected: `packages/core/node_modules/.bin/` contains `tsup`, `vitest`.
@@ -453,7 +453,7 @@ Expected: `0 errors`.
 
 ```bash
 git add packages/core
-git commit -m "feat(core): scaffold @sst/core package"
+git commit -m "feat(core): scaffold @bridgebyte/sst-core package"
 ```
 
 ---
@@ -2706,7 +2706,7 @@ git commit -m "chore(core): build verification fixes"
 
 ---
 
-## Task 18: Write `@sst/core` README usage examples
+## Task 18: Write `@bridgebyte/sst-core` README usage examples
 
 **Files:**
 - Modify: `packages/core/README.md`
@@ -2714,20 +2714,20 @@ git commit -m "chore(core): build verification fixes"
 - [ ] **Step 1: Replace the placeholder README with usage examples**
 
 ```markdown
-# @sst/core
+# @bridgebyte/sst-core
 
 Framework-agnostic core for **So Simple Table**. Zero runtime dependencies.
 
 ## Installation
 
 ```bash
-npm install @sst/core
+npm install @bridgebyte/sst-core
 ```
 
 ## Quick start
 
 ```ts
-import { HttpRepository, TableStore, type IBaseItem } from '@sst/core';
+import { HttpRepository, TableStore, type IBaseItem } from '@bridgebyte/sst-core';
 
 interface IStrategy extends IBaseItem {
 	createdAt: string;
@@ -2779,7 +2779,7 @@ new HttpRepository<IStrategy>({
 ## Plugging your own HTTP client
 
 ```ts
-import type { IHttpClient } from '@sst/core';
+import type { IHttpClient } from '@bridgebyte/sst-core';
 
 const myClient: IHttpClient = {
 	get: (url, opts) => fetch(url, { ...opts }).then((r) => r.json()),
@@ -2813,7 +2813,7 @@ MIT
 
 ```bash
 git add packages/core/README.md
-git commit -m "docs(core): add @sst/core README with usage examples"
+git commit -m "docs(core): add @bridgebyte/sst-core README with usage examples"
 ```
 
 ---

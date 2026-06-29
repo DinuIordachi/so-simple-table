@@ -1,9 +1,9 @@
 {
-  "name": "@sst/test-ng",
+  "name": "@bridgebyte/sst-test-ng",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Browser smoke-test app for @sst/core + @sst/ng consumed via local Verdaccio.",
+  "description": "Browser smoke-test app for @bridgebyte/sst-core + @bridgebyte/sst-ng consumed via local Verdaccio.",
   "scripts": {
     "start": "ng serve --port 5173",
     "build": "ng build",
@@ -17,8 +17,8 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/platform-browser-dynamic": "^20.3.0",
-    "@sst/core": "^0.2.0",
-    "@sst/ng": "^0.1.0",
+    "@bridgebyte/sst-core": "^0.2.0",
+    "@bridgebyte/sst-ng": "^0.1.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.8.1",
     "zone.js": "^0.15.0"

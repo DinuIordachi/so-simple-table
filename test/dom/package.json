@@ -1,17 +1,17 @@
 {
-  "name": "@sst/test-dom",
+  "name": "@bridgebyte/sst-test-dom",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Browser smoke-test app for @sst/core + @sst/dom consumed via the local Verdaccio registry.",
+  "description": "Browser smoke-test app for @bridgebyte/sst-core + @bridgebyte/sst-dom consumed via the local Verdaccio registry.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sst/core": "^0.2.0",
-    "@sst/dom": "^0.1.0"
+    "@bridgebyte/sst-core": "^0.2.0",
+    "@bridgebyte/sst-dom": "^0.1.0"
   },
   "devDependencies": {
     "typescript": "^5.6.0",

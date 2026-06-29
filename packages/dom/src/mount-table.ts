@@ -1,4 +1,4 @@
-import { ESortOrder, type ISortParams, type Unsubscribe } from '@sst/core';
+import { ESortOrder, type ISortParams, type Unsubscribe } from '@bridgebyte/sst-core';
 import type { IDomColumn, IMountOptions, ITableHandle } from './types';
 import { resolveTarget } from './target';
 import { renderBody } from './render/render-body';
@@ -10,7 +10,7 @@ const DEFAULT_LOADING_MESSAGE = 'Loading…';
 
 /**
  * Mounts a reactive HTML table into the page and keeps it synchronized with a
- * {@link @sst/core#ITableStore}.
+ * {@link @bridgebyte/sst-core#ITableStore}.
  *
  * The table is rendered as a `<div class="sst-table">` wrapper containing a
  * `<table>` (head + body) and a pagination `<nav>`. After the initial render,

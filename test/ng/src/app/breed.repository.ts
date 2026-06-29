@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SstNgRepository, type IResponseList, type IRepositoryQueryKeys, type ResponseListMapper } from '@sst/ng';
+import { SstNgRepository, type IResponseList, type IRepositoryQueryKeys, type ResponseListMapper } from '@bridgebyte/sst-ng';
 
 export interface IBreed {
 	id: string;

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { defineComponent, h, ref, type Ref } from 'vue';
 import { mount } from '@vue/test-utils';
-import { ESortOrder, type IFilterParams, type IPaginationParams, type ISortParams } from '@sst/core';
+import { ESortOrder, type IFilterParams, type IPaginationParams, type ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import { useSstDataTable, type IUseSstDataTableOptions, type ISstDataTableBindings } from './use-sst-data-table';
 

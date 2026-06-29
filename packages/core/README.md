@@ -1,4 +1,4 @@
-# @sst/core
+# @bridgebyte/sst-core
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
@@ -7,13 +7,13 @@ Framework-agnostic core for **So Simple Table**. Zero runtime dependencies.
 ## Installation
 
 ```bash
-npm install @sst/core
+npm install @bridgebyte/sst-core
 ```
 
 ## Quick start
 
 ```ts
-import { HttpRepository, TableStore, type IBaseItem } from '@sst/core';
+import { HttpRepository, TableStore, type IBaseItem } from '@bridgebyte/sst-core';
 
 interface IStrategy extends IBaseItem {
   createdAt: string;
@@ -83,7 +83,7 @@ new HttpRepository<IStrategy>({
 ## Plugging your own HTTP client
 
 ```ts
-import type { IHttpClient } from '@sst/core';
+import type { IHttpClient } from '@bridgebyte/sst-core';
 
 const myClient: IHttpClient = {
 	get: (url, opts) => fetch(url, { ...opts }).then((r) => r.json()),

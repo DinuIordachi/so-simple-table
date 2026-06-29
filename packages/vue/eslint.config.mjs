@@ -1,4 +1,4 @@
-// Flat config (ESLint 9). Lints the `@sst/vue` source: TypeScript + Vue SFCs.
+// Flat config (ESLint 9). Lints the `@bridgebyte/sst-vue` source: TypeScript + Vue SFCs.
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import vue from 'eslint-plugin-vue';

@@ -1,8 +1,8 @@
-# Design: `defineTable` ergonomic API for `@sst/vue`
+# Design: `defineTable` ergonomic API for `@bridgebyte/sst-vue`
 
 **Date:** 2026-06-24
 **Status:** Approved (design)
-**Scope:** Add a declarative `defineTable` factory to `@sst/vue` and rewrite the `test/vue` smoke-test app to use it, bringing Vue consumer DX to parity with the Angular adapter.
+**Scope:** Add a declarative `defineTable` factory to `@bridgebyte/sst-vue` and rewrite the `test/vue` smoke-test app to use it, bringing Vue consumer DX to parity with the Angular adapter.
 
 ## Motivation
 
@@ -94,7 +94,7 @@ Notes:
 
 ```ts
 // breed-table.ts
-import { defineTable } from '@sst/vue';
+import { defineTable } from '@bridgebyte/sst-vue';
 
 export interface IBreed {
   id: string;
@@ -125,8 +125,8 @@ export const useBreedTable = defineTable<IBreed, IDogApiResponse>({
 ```vue
 <!-- App.vue -->
 <script setup lang="ts">
-import { SstTable, type IColumn } from '@sst/vue';
-import '@sst/vue/style.css';
+import { SstTable, type IColumn } from '@bridgebyte/sst-vue';
+import '@bridgebyte/sst-vue/style.css';
 import { useBreedTable, type IBreed } from './breed-table';
 
 const table = useBreedTable();
@@ -163,19 +163,19 @@ const truncate = (t: string, max = 90) => (t.length > max ? `${t.slice(0, max)}â
   - honors the `httpClient` escape hatch (custom client is used instead of the default)
   - returns a working `IUseTableStoreReturn<T>` (store fetches via the repository)
   - Follow the existing `use-table-store.test.ts` patterns; stub the repository/http client; run within an effect scope where `onScopeDispose` is needed.
-- **Build/typecheck:** `nx run-many -t typecheck build` for `@sst/vue`; then republish locally and `npm run build --prefix test/vue` to confirm the rewritten example typechecks and builds against the published package.
+- **Build/typecheck:** `nx run-many -t typecheck build` for `@bridgebyte/sst-vue`; then republish locally and `npm run build --prefix test/vue` to confirm the rewritten example typechecks and builds against the published package.
 - **Behavioral parity:** `test/vue` still renders dogapi breeds with pagination, matching prior behavior minus the call-log panel.
 
 ## Out of scope
 
 - Create/update/delete in the factory (list-only for now).
-- Changes to `@sst/ng`, `@sst/dom`, or `@sst/react`.
+- Changes to `@bridgebyte/sst-ng`, `@bridgebyte/sst-dom`, or `@bridgebyte/sst-react`.
 - React adapter ergonomics (could mirror this later).
 - Changing `SstTable.vue`'s generic constraint or slot contracts.
 
-## Addendum (discovered during implementation): `@sst/core` `+json` fix
+## Addendum (discovered during implementation): `@bridgebyte/sst-core` `+json` fix
 
-Originally `@sst/core` was out of scope. Implementation surfaced a real bug that
+Originally `@bridgebyte/sst-core` was out of scope. Implementation surfaced a real bug that
 blocked the clean example: dogapi returns `content-type: application/vnd.api+json`,
 but `FetchHttpClient` only parsed bodies whose content-type `includes('application/json')`
 â€” which the JSON:API media type does not. It fell through to `response.text()`, so
@@ -193,4 +193,4 @@ example free of a custom HTTP client.
 
 - A Vue consumer can define a working table in one `defineTable` object literal plus a columns array, with no hand-written HTTP client and no imperative param stripping.
 - `body-cell` slot row access is cast-free for concrete fields.
-- `@sst/vue` builds and typechecks; new unit tests pass; `test/vue` builds against the published package and renders as before.
+- `@bridgebyte/sst-vue` builds and typechecks; new unit tests pass; `test/vue` builds against the published package and renders as before.

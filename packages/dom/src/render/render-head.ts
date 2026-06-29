@@ -1,4 +1,4 @@
-import { ESortOrder, type ISortParams } from '@sst/core';
+import { ESortOrder, type ISortParams } from '@bridgebyte/sst-core';
 import type { IDomColumn } from '../types';
 
 /**

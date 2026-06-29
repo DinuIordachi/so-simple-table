@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { defineComponent, h, type Component } from 'vue';
-import { ListRepository, type IColumn, type IResponse, type IResponseList } from '@sst/core';
+import { ListRepository, type IColumn, type IResponse, type IResponseList } from '@bridgebyte/sst-core';
 import { useTableStore } from '../composables/use-table-store';
 import SstTable from './SstTable.vue';
 

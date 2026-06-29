@@ -1,4 +1,4 @@
-import * as sst from '@sst/core';
+import * as sst from '@bridgebyte/sst-core';
 import {
 	HttpListRepository,
 	type HttpQueryParams,
@@ -6,9 +6,9 @@ import {
 	type IHttpRequestOptions,
 	type IResponseList,
 	TableStore,
-} from '@sst/core';
-import { mountTable, type IDomColumn } from '@sst/dom';
-import '@sst/dom/style.css';
+} from '@bridgebyte/sst-core';
+import { mountTable, type IDomColumn } from '@bridgebyte/sst-dom';
+import '@bridgebyte/sst-dom/style.css';
 
 interface IBreed {
 	id: string;
@@ -48,16 +48,16 @@ for (const name of Object.keys(sst).sort()) {
 	li.textContent = name;
 	exportsList.appendChild(li);
 }
-$('#lib-version').textContent = `loaded ${Object.keys(sst).length} exports from @sst/core`;
+$('#lib-version').textContent = `loaded ${Object.keys(sst).length} exports from @bridgebyte/sst-core`;
 
-// 2. Wrap @sst/core's FetchHttpClient so we can log every request as it goes out.
+// 2. Wrap @bridgebyte/sst-core's FetchHttpClient so we can log every request as it goes out.
 // (Helps demonstrate that pagination clicks actually hit the network.)
 const callLog: string[] = [];
 const renderCallLog = (): void => {
 	$('#call-log').textContent = callLog.slice(-20).join('\n');
 };
 
-// Minimal IHttpClient — dogapi serves `application/vnd.api+json`, which @sst/core's
+// Minimal IHttpClient — dogapi serves `application/vnd.api+json`, which @bridgebyte/sst-core's
 // FetchHttpClient won't auto-parse (it checks for `application/json` specifically).
 // Logs every outgoing request so the call log on the page reflects real network activity.
 const buildUrl = (url: string, params: Record<string, unknown> | undefined): string => {

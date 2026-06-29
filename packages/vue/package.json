@@ -1,7 +1,7 @@
 {
-  "name": "@sst/vue",
+  "name": "@bridgebyte/sst-vue",
   "version": "0.2.0",
-  "description": "So Simple Table — Vue 3 adapter on top of @sst/core.",
+  "description": "So Simple Table — Vue 3 adapter on top of @bridgebyte/sst-core.",
   "keywords": [
     "table",
     "data-table",
@@ -72,7 +72,7 @@
     "clean": "rimraf dist coverage"
   },
   "peerDependencies": {
-    "@sst/core": "^0.2.0",
+    "@bridgebyte/sst-core": "^0.2.0",
     "primevue": "^4.5.0",
     "vue": "^3.5.0"
   },

@@ -1,8 +1,8 @@
-# So Simple Table — React (`@sst/react`) Implementation Plan
+# So Simple Table — React (`@bridgebyte/sst-react`) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Provide a React 18+ adapter on top of `@sst/core` that bridges the headless `TableStore<T>` to React's render model via `useSyncExternalStore`, and ships a default styled `<SstTable>` component with full render-prop / slot overrides.
+**Goal:** Provide a React 18+ adapter on top of `@bridgebyte/sst-core` that bridges the headless `TableStore<T>` to React's render model via `useSyncExternalStore`, and ships a default styled `<SstTable>` component with full render-prop / slot overrides.
 
 **Architecture:**
 - `useObservable<T>` hook subscribes a component to an `IReadonlyObservable<T>` using `useSyncExternalStore` — the canonical React 18 way to consume an external store with concurrent rendering safety.
@@ -10,9 +10,9 @@
 - `<SstTable>` accepts render-prop overrides for `renderHeaderCell`, `renderBodyCell`, `renderEmptyState`, `renderBulkActions`, and `renderPagination`. No external UI library.
 - HTTP defaults to `FetchHttpClient` from core; users may pass any `IHttpClient`.
 
-**Tech Stack:** React 18+, tsup (build), Vitest + `@testing-library/react` + `happy-dom` (tests), `@sst/core` peer dep.
+**Tech Stack:** React 18+, tsup (build), Vitest + `@testing-library/react` + `happy-dom` (tests), `@bridgebyte/sst-core` peer dep.
 
-**Prerequisites:** Plan `01-core.md` is fully implemented and `@sst/core` builds clean.
+**Prerequisites:** Plan `01-core.md` is fully implemented and `@bridgebyte/sst-core` builds clean.
 
 ---
 
@@ -20,7 +20,7 @@
 
 ```
 packages/react/
-├── package.json                  # name: "@sst/react"
+├── package.json                  # name: "@bridgebyte/sst-react"
 ├── project.json
 ├── tsconfig.json
 ├── tsconfig.build.json
@@ -43,7 +43,7 @@ packages/react/
 
 ---
 
-## Task 1: Scaffold `@sst/react` package
+## Task 1: Scaffold `@bridgebyte/sst-react` package
 
 **Files:**
 - Create: `packages/react/package.json`
@@ -60,9 +60,9 @@ packages/react/
 
 ```json
 {
-  "name": "@sst/react",
+  "name": "@bridgebyte/sst-react",
   "version": "0.1.0",
-  "description": "So Simple Table — React adapter on top of @sst/core.",
+  "description": "So Simple Table — React adapter on top of @bridgebyte/sst-core.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -87,7 +87,7 @@ packages/react/
     "clean": "rm -rf dist coverage"
   },
   "peerDependencies": {
-    "@sst/core": "workspace:*",
+    "@bridgebyte/sst-core": "workspace:*",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
@@ -144,7 +144,7 @@ export default defineConfig({
 	clean: true,
 	target: 'es2022',
 	tsconfig: './tsconfig.build.json',
-	external: ['react', 'react-dom', '@sst/core'],
+	external: ['react', 'react-dom', '@bridgebyte/sst-core'],
 	splitting: false,
 	treeshake: true,
 	onSuccess: async () => {
@@ -160,7 +160,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	resolve: {
-		alias: { '@sst/core': new URL('../core/src/index.ts', import.meta.url).pathname },
+		alias: { '@bridgebyte/sst-core': new URL('../core/src/index.ts', import.meta.url).pathname },
 	},
 	test: {
 		globals: true,
@@ -203,7 +203,7 @@ export default defineConfig({
 
 `packages/react/src/index.ts`:
 ```ts
-// @sst/react public API — populated by subsequent tasks.
+// @bridgebyte/sst-react public API — populated by subsequent tasks.
 export {};
 ```
 
@@ -231,31 +231,31 @@ export {};
 - [ ] **Step 8: Create `packages/react/README.md`**
 
 ```markdown
-# @sst/react
+# @bridgebyte/sst-react
 
-React adapter for **So Simple Table**. Built on top of [`@sst/core`](../core).
+React adapter for **So Simple Table**. Built on top of [`@bridgebyte/sst-core`](../core).
 
 - `useObservable` — concurrent-safe hook over `IReadonlyObservable`
 - `useTableStore` — hook wrapping `TableStore<T>` lifecycle
 - `<SstTable>` component — default UI with render-prop overrides
 ```
 
-- [ ] **Step 9: Add `@sst/react` path mapping**
+- [ ] **Step 9: Add `@bridgebyte/sst-react` path mapping**
 
 Update `<repo-root>/tsconfig.base.json` `paths`:
 ```json
 "paths": {
-  "@sst/core": ["packages/core/src/index.ts"],
-  "@sst/ng": ["packages/ng/src/public-api.ts"],
-  "@sst/vue": ["packages/vue/src/index.ts"],
-  "@sst/react": ["packages/react/src/index.ts"]
+  "@bridgebyte/sst-core": ["packages/core/src/index.ts"],
+  "@bridgebyte/sst-ng": ["packages/ng/src/public-api.ts"],
+  "@bridgebyte/sst-vue": ["packages/vue/src/index.ts"],
+  "@bridgebyte/sst-react": ["packages/react/src/index.ts"]
 }
 ```
 
 - [ ] **Step 10: Install workspace dependencies**
 
 ```bash
-npm install --workspace @sst/react
+npm install --workspace @bridgebyte/sst-react
 ```
 
 - [ ] **Step 11: Verify typecheck passes**
@@ -270,7 +270,7 @@ Expected: `0 errors`.
 
 ```bash
 git add packages/react tsconfig.base.json package.json package-lock.json
-git commit -m "feat(react): scaffold @sst/react package"
+git commit -m "feat(react): scaffold @bridgebyte/sst-react package"
 ```
 
 ---
@@ -287,7 +287,7 @@ git commit -m "feat(react): scaffold @sst/react package"
 ```ts
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { Observable } from '@sst/core';
+import { Observable } from '@bridgebyte/sst-core';
 import { useObservable } from './use-observable';
 
 describe('useObservable', () => {
@@ -338,7 +338,7 @@ Expected: FAIL — module not found.
 
 ```ts
 import { useCallback, useSyncExternalStore } from 'react';
-import type { IReadonlyObservable } from '@sst/core';
+import type { IReadonlyObservable } from '@bridgebyte/sst-core';
 
 export function useObservable<T>(source: IReadonlyObservable<T>): T {
 	const subscribe = useCallback(
@@ -385,7 +385,7 @@ git commit -m "feat(react): add useObservable hook"
 ```tsx
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { ListRepository, type IResponse, type IResponseList } from '@sst/core';
+import { ListRepository, type IResponse, type IResponseList } from '@bridgebyte/sst-core';
 import { useTableStore } from './use-table-store';
 
 interface IItem { id: string; name: string; }
@@ -475,7 +475,7 @@ import {
 	type IResponse,
 	type ISortParams,
 	type ITableStoreOptions,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { useObservable } from './use-observable';
 
 export interface IUseTableStoreReturn<T> {
@@ -575,7 +575,7 @@ git commit -m "feat(react): add useTableStore hook"
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ListRepository, type IColumn, type IResponse, type IResponseList } from '@sst/core';
+import { ListRepository, type IColumn, type IResponse, type IResponseList } from '@bridgebyte/sst-core';
 import { useTableStore } from '../hooks/use-table-store';
 import { SstTable } from './SstTable';
 
@@ -687,7 +687,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	resolve: {
-		alias: { '@sst/core': new URL('../core/src/index.ts', import.meta.url).pathname },
+		alias: { '@bridgebyte/sst-core': new URL('../core/src/index.ts', import.meta.url).pathname },
 	},
 	test: {
 		globals: true,
@@ -711,7 +711,7 @@ Add `@testing-library/jest-dom` to devDependencies in `packages/react/package.js
 
 Then re-install:
 ```bash
-npm install --workspace @sst/react
+npm install --workspace @bridgebyte/sst-react
 ```
 
 - [ ] **Step 3: Run tests to verify they fail**
@@ -726,7 +726,7 @@ Expected: FAIL — `SstTable` not found.
 
 ```tsx
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
+import { ESortOrder, type IColumn, type ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../hooks/use-table-store';
 
 export interface IRenderHeaderCellArgs {
@@ -1033,7 +1033,7 @@ git commit -m "feat(react): add <SstTable> with render-prop overrides"
 
 ---
 
-## Task 5: Re-export `@sst/core` types from `@sst/react`
+## Task 5: Re-export `@bridgebyte/sst-core` types from `@bridgebyte/sst-react`
 
 **Files:**
 - Modify: `packages/react/src/index.ts`
@@ -1064,7 +1064,7 @@ export type {
 	Listener,
 	ResponseListMapper,
 	Unsubscribe,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 export {
 	DEFAULT_QUERY_KEYS,
 	ESortOrder,
@@ -1081,7 +1081,7 @@ export {
 	deepEqual,
 	mapTableParams,
 	watch,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 
 export * from './lib/hooks/use-observable';
 export * from './lib/hooks/use-table-store';
@@ -1108,12 +1108,12 @@ Expected: PASS.
 
 ```bash
 git add packages/react/src
-git commit -m "feat(react): re-export @sst/core types from @sst/react barrel"
+git commit -m "feat(react): re-export @bridgebyte/sst-core types from @bridgebyte/sst-react barrel"
 ```
 
 ---
 
-## Task 6: Build `@sst/react` and verify artifact
+## Task 6: Build `@bridgebyte/sst-react` and verify artifact
 
 **Files:** none modified — verification only.
 
@@ -1134,7 +1134,7 @@ Expected: `packages/react/dist/` contains `index.js`, `index.cjs`, `index.d.ts`,
 - [ ] **Step 3: Verify externals**
 
 ```bash
-node -e "const c = require('fs').readFileSync('./packages/react/dist/index.js', 'utf8'); console.log(c.includes('@sst/core') ? 'OK: core kept external' : 'FAIL: core inlined'); console.log(c.includes('react/jsx-runtime') ? 'OK: react kept external' : 'FAIL: react inlined');"
+node -e "const c = require('fs').readFileSync('./packages/react/dist/index.js', 'utf8'); console.log(c.includes('@bridgebyte/sst-core') ? 'OK: core kept external' : 'FAIL: core inlined'); console.log(c.includes('react/jsx-runtime') ? 'OK: react kept external' : 'FAIL: react inlined');"
 ```
 
 Expected:
@@ -1168,7 +1168,7 @@ git add . 2>/dev/null; git commit -m "chore(react): build verification" 2>/dev/n
 
 ---
 
-## Task 7: Write `@sst/react` README usage examples
+## Task 7: Write `@bridgebyte/sst-react` README usage examples
 
 **Files:**
 - Modify: `packages/react/README.md`
@@ -1176,26 +1176,26 @@ git add . 2>/dev/null; git commit -m "chore(react): build verification" 2>/dev/n
 - [ ] **Step 1: Replace the placeholder README**
 
 ```markdown
-# @sst/react
+# @bridgebyte/sst-react
 
-React 18+ adapter for **So Simple Table**, built on top of [`@sst/core`](https://www.npmjs.com/package/@sst/core).
+React 18+ adapter for **So Simple Table**, built on top of [`@bridgebyte/sst-core`](https://www.npmjs.com/package/@bridgebyte/sst-core).
 
 ## Installation
 
 ```bash
-npm install @sst/core @sst/react
+npm install @bridgebyte/sst-core @bridgebyte/sst-react
 ```
 
 Import the bundled CSS once at app entry:
 
 ```ts
-import '@sst/react/styles.css';
+import '@bridgebyte/sst-react/styles.css';
 ```
 
 ## 1. Define a repository
 
 ```ts
-import { HttpRepository } from '@sst/react';
+import { HttpRepository } from '@bridgebyte/sst-react';
 
 interface IStrategy { id: string; name: string; createdAt: string; }
 
@@ -1209,7 +1209,7 @@ export const strategyRepository = new StrategyRepository({
 ## 2. Use the hook + component
 
 ```tsx
-import { SstTable, useTableStore, type IColumn } from '@sst/react';
+import { SstTable, useTableStore, type IColumn } from '@bridgebyte/sst-react';
 import { strategyRepository } from './strategies.repository';
 
 interface IStrategy { id: string; name: string; createdAt: string; }
@@ -1261,7 +1261,7 @@ MIT
 
 ```bash
 git add packages/react/README.md
-git commit -m "docs(react): add @sst/react README with usage examples"
+git commit -m "docs(react): add @bridgebyte/sst-react README with usage examples"
 ```
 
 ---

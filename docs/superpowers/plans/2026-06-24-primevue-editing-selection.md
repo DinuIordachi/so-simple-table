@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add three non-breaking enhancements to `@sst/vue/primevue`: (#6) named-slot typing + filter helpers, (#2) inline editing via `onSave` with optimistic update/rollback, (#3) reactive selection + bulk helpers. Prove with the `test/primevue` app.
+**Goal:** Add three non-breaking enhancements to `@bridgebyte/sst-vue/primevue`: (#6) named-slot typing + filter helpers, (#2) inline editing via `onSave` with optimistic update/rollback, (#3) reactive selection + bulk helpers. Prove with the `test/primevue` app.
 
-**Architecture:** All additions live in the existing `useSstDataTable` single `v-bind`-able bag (real DataTable props/events or plain functions — no leaked attrs) plus `SstDataTable.vue` (`defineSlots`, `onSave` prop, `defineExpose`). No `@sst/core` change.
+**Architecture:** All additions live in the existing `useSstDataTable` single `v-bind`-able bag (real DataTable props/events or plain functions — no leaked attrs) plus `SstDataTable.vue` (`defineSlots`, `onSave` prop, `defineExpose`). No `@bridgebyte/sst-core` change.
 
 **Tech Stack:** TypeScript (strict), Vue 3, PrimeVue v4 DataTable, Vitest + @vue/test-utils.
 
@@ -13,8 +13,8 @@
 - **Non-breaking:** `useSstDataTable(store)` still returns the same `v-bind`-able object; `v-bind="useSstDataTable(store)"` keeps working. New members are DataTable props/events or functions.
 - **TS:** strict, `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess`; conditional spreads for optionals.
 - **Formatting:** tabs; `npx prettier --write` touched files.
-- **No `@sst/core` change.** Editing uses the `onSave` callback; selection is loaded-rows only.
-- **Verdaccio:** `test/primevue` consumes the published `@sst/vue`; republish (`npm run publish:local`) before reinstalling.
+- **No `@bridgebyte/sst-core` change.** Editing uses the `onSave` callback; selection is loaded-rows only.
+- **Verdaccio:** `test/primevue` consumes the published `@bridgebyte/sst-vue`; republish (`npm run publish:local`) before reinstalling.
 
 ---
 
@@ -40,7 +40,7 @@ defineSlots<Record<string, (props: Record<string, unknown>) => unknown>>();
 Create `packages/vue/src/primevue/filter-helpers.ts`:
 
 ```ts
-import type { IFilterParams } from '@sst/core';
+import type { IFilterParams } from '@bridgebyte/sst-core';
 import type { DataTableFilterMeta } from 'primevue/datatable';
 
 function readFilterValue(meta: unknown): unknown {
@@ -464,7 +464,7 @@ import Column from 'primevue/column';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
-import { SstDataTable, searchColumn } from '@sst/vue/primevue';
+import { SstDataTable, searchColumn } from '@bridgebyte/sst-vue/primevue';
 import { useProductsTable, type IProduct } from './products-table';
 
 const table = useProductsTable();
@@ -485,7 +485,7 @@ const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): P
 
 <template>
 	<main style="max-width: 1040px; margin: 24px auto; font-family: sans-serif">
-		<h1>@sst/vue/primevue — smoke test</h1>
+		<h1>@bridgebyte/sst-vue/primevue — smoke test</h1>
 		<SstDataTable
 			ref="tableRef"
 			:store="table"
@@ -535,7 +535,7 @@ const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): P
 Add a short note under the vue README "PrimeVue" section covering `onSave`, selection (`selectionMode` + the exposed `selection`/`clearSelection`/`removeSelected`), the `#header` slot, and the `searchColumn`/`withMatchModes` helpers. Add a `[Unreleased]` CHANGELOG bullet to `packages/vue/CHANGELOG.md`:
 
 ```markdown
-- `@sst/vue/primevue`: inline editing via `onSave` (optimistic + rollback), reactive
+- `@bridgebyte/sst-vue/primevue`: inline editing via `onSave` (optimistic + rollback), reactive
   `selection` with `clearSelection`/`removeSelected`, DataTable-level named-slot
   typing, and `searchColumn`/`withMatchModes` filter helpers.
 ```
@@ -570,7 +570,7 @@ git commit -m "test(primevue): showcase editing, selection toolbar, and filter h
 
 ## Notes for the executor
 
-- Tasks 1–3 run against `@sst/core` source via the Vitest alias and only need `primevue` installed (devDep). Only Task 4 needs `publish:local`.
+- Tasks 1–3 run against `@bridgebyte/sst-core` source via the Vitest alias and only need `primevue` installed (devDep). Only Task 4 needs `publish:local`.
 - `onCellEditComplete`/`onRowEditSave`/`onUpdate:selection`/`selection` are real DataTable props/events; `clearSelection`/`removeSelected` are functions — none leak as DOM attrs when spread via `v-bind`, preserving the single-bag, non-breaking API.
 - If PrimeVue's `DataTableRowEditSaveEvent` field names differ in the installed version, adjust the handler reads (tests cast event literals with `as never`, so only production reads are version-sensitive).
 - `defineExpose` accessors read the reactive `bindings` so the wrapper's `selection` stays live for the `#header` toolbar.

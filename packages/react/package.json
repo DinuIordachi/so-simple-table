@@ -1,7 +1,7 @@
 {
-  "name": "@sst/react",
+  "name": "@bridgebyte/sst-react",
   "version": "0.1.0",
-  "description": "So Simple Table — React adapter on top of @sst/core.",
+  "description": "So Simple Table — React adapter on top of @bridgebyte/sst-core.",
   "license": "UNLICENSED",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -27,7 +27,7 @@
     "clean": "rimraf dist coverage"
   },
   "peerDependencies": {
-    "@sst/core": "*",
+    "@bridgebyte/sst-core": "*",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

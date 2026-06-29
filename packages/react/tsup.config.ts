@@ -9,7 +9,7 @@ export default defineConfig({
 	clean: true,
 	target: 'es2022',
 	tsconfig: './tsconfig.build.json',
-	external: ['react', 'react-dom', '@sst/core'],
+	external: ['react', 'react-dom', '@bridgebyte/sst-core'],
 	splitting: false,
 	treeshake: true,
 	onSuccess: async () => {

@@ -1,8 +1,8 @@
-# @sst/vue/primevue Implementation Plan
+# @bridgebyte/sst-vue/primevue Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a `@sst/vue/primevue` subpath that binds a So Simple Table `TableStore` to a PrimeVue v4 `DataTable` (lazy mode) via a headless composable `useSstDataTable` and a thin `<SstDataTable>` wrapper, preserving all native DataTable features and the host theme.
+**Goal:** Add a `@bridgebyte/sst-vue/primevue` subpath that binds a So Simple Table `TableStore` to a PrimeVue v4 `DataTable` (lazy mode) via a headless composable `useSstDataTable` and a thin `<SstDataTable>` wrapper, preserving all native DataTable features and the host theme.
 
 **Architecture:** `useSstDataTable(store, options)` returns a reactive, `v-bind`-able bag of lazy DataTable props + `@page`/`@sort`/`@filter` handlers + a `removeSelected` helper, mapping events onto the existing `TableStore`. `<SstDataTable>` calls the composable and renders `<DataTable v-bind>` forwarding `$attrs` + all slots. Built as a second Vite lib entry; `primevue` is an optional peer dependency.
 
@@ -12,12 +12,12 @@
 
 - **TypeScript:** `strict`, `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess` (from `tsconfig.base.json`). Never assign `undefined` to an optional property — use conditional-spread or `withDefaults`.
 - **Formatting:** tabs; run `npx prettier --write` on touched files.
-- **No runtime CSS** shipped from the package. No `@sst/core` changes.
-- **PrimeVue:** v4 only; `primevue` is an **optional** peer dependency of `@sst/vue` and a devDependency for build/test. `@primevue/themes` is used **only** in `test/primevue`.
+- **No runtime CSS** shipped from the package. No `@bridgebyte/sst-core` changes.
+- **PrimeVue:** v4 only; `primevue` is an **optional** peer dependency of `@bridgebyte/sst-vue` and a devDependency for build/test. `@primevue/themes` is used **only** in `test/primevue`.
 - **Row constraint:** `T extends { id: string }`.
-- **Type imports** from `@sst/core` and `../lib/composables/use-table-store` must be `import type` (erased) so the `primevue` entry shares no runtime chunk with the main entry.
+- **Type imports** from `@bridgebyte/sst-core` and `../lib/composables/use-table-store` must be `import type` (erased) so the `primevue` entry shares no runtime chunk with the main entry.
 - **Sort encoding:** PrimeVue `1` = ascending → `ESortOrder.ASC`; `-1` = descending → `ESortOrder.DESC`.
-- **Verdaccio:** `test/primevue` consumes the published `@sst/vue`; rebuild + republish before installing it (`npm run publish:local`). Its `package-lock.json` is gitignored (the `test/*/package-lock.json` rule already covers it).
+- **Verdaccio:** `test/primevue` consumes the published `@bridgebyte/sst-vue`; rebuild + republish before installing it (`npm run publish:local`). Its `package-lock.json` is gitignored (the `test/*/package-lock.json` rule already covers it).
 
 ---
 
@@ -29,7 +29,7 @@
 - Modify: `packages/vue/package.json` (add `primevue` devDependency)
 
 **Interfaces:**
-- Consumes: `ESortOrder`, `IFilterParams`, `IResponse` (type) from `@sst/core`; `IUseTableStoreReturn` (type) from `../lib/composables/use-table-store`; `DataTablePageEvent`, `DataTableSortEvent`, `DataTableFilterEvent`, `DataTableFilterMeta` (types) from `primevue/datatable`.
+- Consumes: `ESortOrder`, `IFilterParams`, `IResponse` (type) from `@bridgebyte/sst-core`; `IUseTableStoreReturn` (type) from `../lib/composables/use-table-store`; `DataTablePageEvent`, `DataTableSortEvent`, `DataTableFilterEvent`, `DataTableFilterMeta` (types) from `primevue/datatable`.
 - Produces: `IUseSstDataTableOptions<T>`, `ISstDataTableBindings<T>`, and `useSstDataTable<T extends { id: string }>(store, options?) => ISstDataTableBindings<T>`.
 
 - [ ] **Step 1: Add `primevue` devDependency and install**
@@ -54,7 +54,7 @@ Create `packages/vue/src/primevue/use-sst-data-table.test.ts`:
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { defineComponent, h, ref, type Ref } from 'vue';
 import { mount } from '@vue/test-utils';
-import { ESortOrder, type IFilterParams, type IPaginationParams, type ISortParams } from '@sst/core';
+import { ESortOrder, type IFilterParams, type IPaginationParams, type ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import { useSstDataTable, type IUseSstDataTableOptions, type ISstDataTableBindings } from './use-sst-data-table';
 
@@ -191,7 +191,7 @@ Create `packages/vue/src/primevue/use-sst-data-table.ts`:
 
 ```ts
 import { getCurrentInstance, onMounted, reactive } from 'vue';
-import { ESortOrder, type IFilterParams, type IResponse } from '@sst/core';
+import { ESortOrder, type IFilterParams, type IResponse } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import type {
 	DataTableFilterEvent,
@@ -279,7 +279,7 @@ function defaultMapFilters(filters: DataTableFilterMeta): { search?: string; fil
  * <script setup lang="ts">
  * import DataTable from 'primevue/datatable';
  * import Column from 'primevue/column';
- * import { useSstDataTable } from '@sst/vue/primevue';
+ * import { useSstDataTable } from '@bridgebyte/sst-vue/primevue';
  * const bindings = useSstDataTable(table);
  * </script>
  * <template>
@@ -441,7 +441,7 @@ Create `packages/vue/src/primevue/index.ts`:
  * native DataTable feature and the host theme. Exposes the headless
  * {@link useSstDataTable} composable and the {@link SstDataTable} wrapper.
  *
- * Import from the `@sst/vue/primevue` subpath. Requires `primevue` (>= 4) and
+ * Import from the `@bridgebyte/sst-vue/primevue` subpath. Requires `primevue` (>= 4) and
  * `vue` as peer dependencies.
  */
 export * from './use-sst-data-table';
@@ -458,7 +458,7 @@ import { ref, type Ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import Column from 'primevue/column';
-import type { IFilterParams, IPaginationParams, ISortParams } from '@sst/core';
+import type { IFilterParams, IPaginationParams, ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import SstDataTable from './SstDataTable.vue';
 
@@ -515,7 +515,7 @@ Expected: PASS (composable 8 + wrapper 1).
 ```bash
 npx prettier --write packages/vue/src/primevue/SstDataTable.vue packages/vue/src/primevue/index.ts packages/vue/src/primevue/SstDataTable.test.ts
 git add packages/vue/src/primevue/SstDataTable.vue packages/vue/src/primevue/index.ts packages/vue/src/primevue/SstDataTable.test.ts
-git commit -m "feat(vue): add SstDataTable wrapper + @sst/vue/primevue barrel"
+git commit -m "feat(vue): add SstDataTable wrapper + @bridgebyte/sst-vue/primevue barrel"
 ```
 
 ---
@@ -528,7 +528,7 @@ git commit -m "feat(vue): add SstDataTable wrapper + @sst/vue/primevue barrel"
 - Modify: `packages/vue/README.md`, `packages/vue/CHANGELOG.md`
 
 **Interfaces:**
-- Produces: `dist/primevue.js`, `dist/primevue.cjs`, `dist/primevue/index.d.ts`; the `@sst/vue/primevue` export path.
+- Produces: `dist/primevue.js`, `dist/primevue.cjs`, `dist/primevue/index.d.ts`; the `@bridgebyte/sst-vue/primevue` export path.
 
 - [ ] **Step 1: Switch Vite to a multi-entry lib build**
 
@@ -547,12 +547,12 @@ Replace the `build` block in `packages/vue/vite.config.ts` with:
 		rollupOptions: {
 			external: (id) =>
 				id === 'vue' ||
-				id === '@sst/core' ||
+				id === '@bridgebyte/sst-core' ||
 				id === 'primevue' ||
 				id.startsWith('primevue/') ||
 				id.startsWith('@primevue/'),
 			output: {
-				globals: { vue: 'Vue', '@sst/core': 'SstCore' },
+				globals: { vue: 'Vue', '@bridgebyte/sst-core': 'SstCore' },
 				assetFileNames: (assetInfo) => (assetInfo.name === 'style.css' ? 'style.css' : (assetInfo.name ?? 'asset')),
 			},
 		},
@@ -617,16 +617,16 @@ Expected: typecheck clean; all vue tests pass (existing + new primevue tests).
 Append a section to `packages/vue/README.md` (before `## Links`):
 
 ```markdown
-## PrimeVue (`@sst/vue/primevue`)
+## PrimeVue (`@bridgebyte/sst-vue/primevue`)
 
 Render your table with PrimeVue v4's `DataTable` (lazy mode) while keeping every
 native DataTable feature and your app's theme. Requires `primevue` (>= 4) as a
-peer dependency; `@sst/vue/primevue` ships no CSS.
+peer dependency; `@bridgebyte/sst-vue/primevue` ships no CSS.
 
 ```vue
 <script setup lang="ts">
 import Column from 'primevue/column';
-import { SstDataTable } from '@sst/vue/primevue';
+import { SstDataTable } from '@bridgebyte/sst-vue/primevue';
 import { useBreedsTable } from './breeds-table'; // a defineTable composable
 
 const table = useBreedsTable();
@@ -645,7 +645,7 @@ const table = useBreedsTable();
 Prefer full control? Use the headless composable and render `<DataTable>` yourself:
 
 ```ts
-import { useSstDataTable } from '@sst/vue/primevue';
+import { useSstDataTable } from '@bridgebyte/sst-vue/primevue';
 const bindings = useSstDataTable(table); // spread onto <DataTable v-bind="bindings" dataKey="id">
 ```
 
@@ -660,7 +660,7 @@ Add to `packages/vue/CHANGELOG.md` under `## [Unreleased]`:
 ```markdown
 ### Added
 
-- `@sst/vue/primevue` subpath: `useSstDataTable` composable and `<SstDataTable>`
+- `@bridgebyte/sst-vue/primevue` subpath: `useSstDataTable` composable and `<SstDataTable>`
   wrapper binding a `TableStore` to a PrimeVue v4 `DataTable` (lazy mode), with
   `primevue` as an optional peer dependency.
 ```
@@ -670,7 +670,7 @@ Add to `packages/vue/CHANGELOG.md` under `## [Unreleased]`:
 ```bash
 npx prettier --write packages/vue/vite.config.ts packages/vue/package.json packages/vue/README.md packages/vue/CHANGELOG.md
 git add packages/vue/vite.config.ts packages/vue/package.json packages/vue/README.md packages/vue/CHANGELOG.md
-git commit -m "build(vue): expose @sst/vue/primevue subpath; optional primevue peer; docs"
+git commit -m "build(vue): expose @bridgebyte/sst-vue/primevue subpath; optional primevue peer; docs"
 ```
 
 ---
@@ -686,11 +686,11 @@ git commit -m "build(vue): expose @sst/vue/primevue subpath; optional primevue p
 `test/primevue/package.json`:
 ```json
 {
-  "name": "@sst/test-primevue",
+  "name": "@bridgebyte/sst-test-primevue",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Browser smoke-test app for @sst/vue/primevue consumed via the local Verdaccio registry.",
+  "description": "Browser smoke-test app for @bridgebyte/sst-vue/primevue consumed via the local Verdaccio registry.",
   "scripts": {
     "dev": "vite --port 5174",
     "build": "vue-tsc --noEmit && vite build",
@@ -698,8 +698,8 @@ git commit -m "build(vue): expose @sst/vue/primevue subpath; optional primevue p
   },
   "dependencies": {
     "@primevue/themes": "^4.5.0",
-    "@sst/core": "^0.2.0",
-    "@sst/vue": "^0.1.0",
+    "@bridgebyte/sst-core": "^0.2.0",
+    "@bridgebyte/sst-vue": "^0.1.0",
     "primevue": "^4.5.0",
     "vue": "^3.5.0"
   },
@@ -714,7 +714,7 @@ git commit -m "build(vue): expose @sst/vue/primevue subpath; optional primevue p
 
 `test/primevue/.npmrc`:
 ```
-@sst:registry=http://localhost:4873/
+@bridgebyte:registry=http://localhost:4873/
 ```
 
 `test/primevue/vite.config.ts`:
@@ -754,7 +754,7 @@ export default defineConfig({
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>@sst/vue/primevue — smoke test</title>
+		<title>@bridgebyte/sst-vue/primevue — smoke test</title>
 	</head>
 	<body>
 		<div id="app"></div>
@@ -777,7 +777,7 @@ createApp(App)
 
 `test/primevue/src/breeds-table.ts`:
 ```ts
-import { defineTable } from '@sst/vue';
+import { defineTable } from '@bridgebyte/sst-vue';
 
 export interface IBreed {
 	id: string;
@@ -818,7 +818,7 @@ export const useBreedsTable = defineTable<IBreed, IDogApiResponse>({
 ```vue
 <script setup lang="ts">
 import Column from 'primevue/column';
-import { SstDataTable } from '@sst/vue/primevue';
+import { SstDataTable } from '@bridgebyte/sst-vue/primevue';
 import { useBreedsTable } from './breeds-table';
 
 const table = useBreedsTable();
@@ -827,7 +827,7 @@ const truncate = (text: string, max = 90): string => (text.length > max ? `${tex
 
 <template>
 	<main style="max-width: 960px; margin: 24px auto; font-family: sans-serif">
-		<h1>@sst/vue/primevue — smoke test</h1>
+		<h1>@bridgebyte/sst-vue/primevue — smoke test</h1>
 		<p>PrimeVue DataTable (Aura theme) backed by a So Simple Table store, rendering dogapi.dog.</p>
 		<SstDataTable :store="table" paginator :rows="10" :rowsPerPageOptions="[10, 20, 50]">
 			<Column field="name" header="Breed" />
@@ -857,20 +857,20 @@ In `.claude/launch.json`, add a second configuration to the `configurations` arr
 		}
 ```
 
-- [ ] **Step 3: Republish @sst/vue and install the app**
+- [ ] **Step 3: Republish @bridgebyte/sst-vue and install the app**
 
 Run (from repo root):
 ```bash
-npm run publish:local          # rebuilds + republishes @sst/* (incl. the new subpath) to Verdaccio
+npm run publish:local          # rebuilds + republishes @bridgebyte/sst-* (incl. the new subpath) to Verdaccio
 rm -rf test/primevue/node_modules test/primevue/package-lock.json
 npm install --prefix test/primevue
 ```
-Expected: install resolves `@sst/core`/`@sst/vue` from the local registry and `primevue`/`@primevue/themes`/`vue` from npmjs.
+Expected: install resolves `@bridgebyte/sst-core`/`@bridgebyte/sst-vue` from the local registry and `primevue`/`@primevue/themes`/`vue` from npmjs.
 
 - [ ] **Step 4: Typecheck + build the app**
 
 Run (from repo root): `npm run build --prefix test/primevue`
-Expected: `vue-tsc --noEmit` passes (confirms `@sst/vue/primevue` types resolve through the subpath) and `vite build` emits `dist/`.
+Expected: `vue-tsc --noEmit` passes (confirms `@bridgebyte/sst-vue/primevue` types resolve through the subpath) and `vite build` emits `dist/`.
 
 - [ ] **Step 5: Verify in the browser**
 
@@ -880,14 +880,14 @@ Use the preview tooling (`preview_start` with `test-primevue`), then snapshot/sc
 
 ```bash
 git add test/primevue .claude/launch.json
-git commit -m "test(vue): add test/primevue smoke app for @sst/vue/primevue"
+git commit -m "test(vue): add test/primevue smoke app for @bridgebyte/sst-vue/primevue"
 ```
 
 ---
 
 ## Notes for the executor
 
-- Unit tests (Tasks 1-2) run against `@sst/core` **source** via the Vitest alias and need only `primevue` installed (devDependency) — no publish required.
-- The publish step (Task 4) is only because `test/primevue` consumes the **published** `@sst/vue`.
+- Unit tests (Tasks 1-2) run against `@bridgebyte/sst-core` **source** via the Vitest alias and need only `primevue` installed (devDependency) — no publish required.
+- The publish step (Task 4) is only because `test/primevue` consumes the **published** `@bridgebyte/sst-vue`.
 - `primevue`'s DataTable event types (`DataTablePageEvent`, `DataTableSortEvent`, `DataTableFilterEvent`, `DataTableFilterMeta`) are exported from `primevue/datatable` in v4. If a name differs in the installed version, adjust the imports (the tests cast event literals with `as never`, so only the production imports are version-sensitive).
 - If `npm run publish:local` reports the registry is down, it auto-starts Verdaccio; ensure port 4873 is free.

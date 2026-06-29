@@ -11,12 +11,12 @@ export default defineConfig({
 			rollupTypes: false,
 			copyDtsFiles: false,
 			insertTypesEntry: true,
-			// vite-plugin-dts can resolve the workspace `@sst/core` to its built path
+			// vite-plugin-dts can resolve the workspace `@bridgebyte/sst-core` to its built path
 			// (e.g. in the SFC's expose() block), leaking a non-portable monorepo path
 			// into the shipped declarations. Rewrite those back to the bare specifier.
 			beforeWriteFile: (filePath, content) => ({
 				filePath,
-				content: content.replace(/packages\/core\/(?:dist|src)(?:\/index(?:\.d\.ts)?)?/g, '@sst/core'),
+				content: content.replace(/packages\/core\/(?:dist|src)(?:\/index(?:\.d\.ts)?)?/g, '@bridgebyte/sst-core'),
 			}),
 		}),
 	],
@@ -32,12 +32,12 @@ export default defineConfig({
 		rollupOptions: {
 			external: (id) =>
 				id === 'vue' ||
-				id === '@sst/core' ||
+				id === '@bridgebyte/sst-core' ||
 				id === 'primevue' ||
 				id.startsWith('primevue/') ||
 				id.startsWith('@primevue/'),
 			output: {
-				globals: { vue: 'Vue', '@sst/core': 'SstCore' },
+				globals: { vue: 'Vue', '@bridgebyte/sst-core': 'SstCore' },
 				assetFileNames: (assetInfo) =>
 					assetInfo.name === 'style.css' ? 'style.css' : (assetInfo.name ?? 'asset'),
 			},

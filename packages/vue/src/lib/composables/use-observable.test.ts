@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { effectScope, nextTick } from 'vue';
-import { Observable } from '@sst/core';
+import { Observable } from '@bridgebyte/sst-core';
 import { useObservable } from './use-observable';
 
 describe('useObservable', () => {

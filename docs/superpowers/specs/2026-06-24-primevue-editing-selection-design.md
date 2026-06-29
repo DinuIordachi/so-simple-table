@@ -1,8 +1,8 @@
-# Design: round out `@sst/vue/primevue` — slots, editing, selection
+# Design: round out `@bridgebyte/sst-vue/primevue` — slots, editing, selection
 
 **Date:** 2026-06-24
 **Status:** Approved (design)
-**Scope:** Three independent enhancements to `@sst/vue/primevue`, bundled into one spec/plan: (#6) named-slot typing fix + filter helpers, (#2) inline editing → `onSave`, (#3) reactive selection + bulk helpers. Non-breaking; no `@sst/core` change. Proven by extending the `test/primevue` app.
+**Scope:** Three independent enhancements to `@bridgebyte/sst-vue/primevue`, bundled into one spec/plan: (#6) named-slot typing fix + filter helpers, (#2) inline editing → `onSave`, (#3) reactive selection + bulk helpers. Non-breaking; no `@bridgebyte/sst-core` change. Proven by extending the `test/primevue` app.
 
 ## Motivation
 
@@ -38,7 +38,7 @@ export function withMatchModes(options?: { suffix?: string }): (
   filters: DataTableFilterMeta,
 ) => { search?: string; filters?: IFilterParams[] };
 ```
-Both return a `mapFilters` function (the existing `useSstDataTable`/`SstDataTable` option). `searchColumn('title')` replaces the test app's hand-written mapper. `withMatchModes()` emits e.g. `title=phone` + `titleMatchMode=contains` for backends that want the operator. Exported from `@sst/vue/primevue`.
+Both return a `mapFilters` function (the existing `useSstDataTable`/`SstDataTable` option). `searchColumn('title')` replaces the test app's hand-written mapper. `withMatchModes()` emits e.g. `title=phone` + `titleMatchMode=contains` for backends that want the operator. Exported from `@bridgebyte/sst-vue/primevue`.
 
 ## #2 — Inline editing
 
@@ -57,7 +57,7 @@ The bag gains `onCellEditComplete(event)` and `onRowEditSave(event)`. Both:
 2. **optimistically** replace the row by `id` in the store (`store.updateData(next)`),
 3. `await onSave?.(edit)`; on rejection, revert via `store.updateData(previous)`.
 
-The consumer sets `editMode="cell"|"row"` and editable columns (`#editor` slots) in their template; the adapter only bridges the save. No `@sst/core` change.
+The consumer sets `editMode="cell"|"row"` and editable columns (`#editor` slots) in their template; the adapter only bridges the save. No `@bridgebyte/sst-core` change.
 
 ## #3 — Selection
 
@@ -90,7 +90,7 @@ Read selection via `t.selection`; count via `t.selection.length`. The consumer j
 ## Out of scope
 
 - Multi-column sort, cross-page "select all matching the query", virtual-scroll lazy loading, state/URL persistence (future).
-- Full-CRUD-repository coupling in `@sst/core` (editing uses the `onSave` callback instead).
+- Full-CRUD-repository coupling in `@bridgebyte/sst-core` (editing uses the `onSave` callback instead).
 - Real bulk-delete E2E (dummyjson has no bulk endpoint; covered by unit tests).
 
 ## Success criteria

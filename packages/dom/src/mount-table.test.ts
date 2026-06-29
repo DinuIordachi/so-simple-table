@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { ESortOrder, type IResponse, type IResponseList, TableStore } from '@sst/core';
+import { ESortOrder, type IResponse, type IResponseList, TableStore } from '@bridgebyte/sst-core';
 import type { IDomColumn } from './types';
 import { mountTable } from './mount-table';
 

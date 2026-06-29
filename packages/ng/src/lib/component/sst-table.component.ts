@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
+import { ESortOrder, type IColumn, type ISortParams } from '@bridgebyte/sst-core';
 import { SstTableService } from '../store/sst-table.service';
 
 /**

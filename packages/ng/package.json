@@ -1,7 +1,7 @@
 {
-  "name": "@sst/ng",
+  "name": "@bridgebyte/sst-ng",
   "version": "0.1.0",
-  "description": "So Simple Table — Angular adapter and default UI component on top of @sst/core.",
+  "description": "So Simple Table — Angular adapter and default UI component on top of @bridgebyte/sst-core.",
   "keywords": [
     "table",
     "data-table",
@@ -39,7 +39,7 @@
     "@angular/common": ">=20.0.0",
     "@angular/core": ">=20.0.0",
     "@angular/forms": ">=20.0.0",
-    "@sst/core": "*",
+    "@bridgebyte/sst-core": "*",
     "rxjs": ">=7.8.0"
   },
   "devDependencies": {

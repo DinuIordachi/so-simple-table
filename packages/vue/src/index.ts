@@ -1,8 +1,8 @@
 /**
- * Vue 3 bindings for `@sst/core` — the so-simple-table data layer.
+ * Vue 3 bindings for `@bridgebyte/sst-core` — the so-simple-table data layer.
  *
- * This is the public entry point of the `@sst/vue` package. It re-exports the
- * framework-agnostic `@sst/core` surface (types, the `TableStore`, repositories,
+ * This is the public entry point of the `@bridgebyte/sst-vue` package. It re-exports the
+ * framework-agnostic `@bridgebyte/sst-core` surface (types, the `TableStore`, repositories,
  * HTTP client, the `Observable` primitive, and helper utilities) for ergonomic
  * single-import usage, alongside the Vue-specific surface:
  *
@@ -14,7 +14,7 @@
  * @packageDocumentation
  */
 
-// Re-exports from @sst/core for ergonomic imports
+// Re-exports from @bridgebyte/sst-core for ergonomic imports
 export type {
 	HttpQueryParams,
 	IBaseItem,
@@ -38,7 +38,7 @@ export type {
 	Listener,
 	ResponseListMapper,
 	Unsubscribe,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 export {
 	DEFAULT_QUERY_KEYS,
 	ESortOrder,
@@ -55,7 +55,7 @@ export {
 	deepEqual,
 	mapTableParams,
 	watch,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 
 // Vue surface
 export * from './lib/composables/use-observable';

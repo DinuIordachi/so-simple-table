@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { ESortOrder } from '@sst/core';
+import { ESortOrder } from '@bridgebyte/sst-core';
 import type { IDomColumn } from '../types';
 import { renderHead } from './render-head';
 

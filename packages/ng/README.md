@@ -1,13 +1,13 @@
-# @sst/ng
+# @bridgebyte/sst-ng
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
-Angular adapter for **So Simple Table**, built on top of [`@sst/core`](../core/README.md).
+Angular adapter for **So Simple Table**, built on top of [`@bridgebyte/sst-core`](../core/README.md).
 
 ## Installation
 
 ```bash
-npm install @sst/core @sst/ng
+npm install @bridgebyte/sst-core @bridgebyte/sst-ng
 ```
 
 Make sure `provideHttpClient()` is added to the application's bootstrap providers.
@@ -16,7 +16,7 @@ Make sure `provideHttpClient()` is added to the application's bootstrap provider
 
 ```ts
 import { Injectable } from '@angular/core';
-import { SstNgRepository } from '@sst/ng';
+import { SstNgRepository } from '@bridgebyte/sst-ng';
 
 interface IStrategy {
   id: string;
@@ -36,7 +36,7 @@ export class StrategyRepository extends SstNgRepository<IStrategy> {
 
 ```ts
 import { Injectable, inject } from '@angular/core';
-import { SstTableService } from '@sst/ng';
+import { SstTableService } from '@bridgebyte/sst-ng';
 import { StrategyRepository } from './strategy.repository';
 
 @Injectable()
@@ -68,7 +68,7 @@ export class StrategyTableService extends SstTableService<IStrategy> {
 
 ```ts
 import { Component, inject } from '@angular/core';
-import { SstTableComponent, type IColumn } from '@sst/ng';
+import { SstTableComponent, type IColumn } from '@bridgebyte/sst-ng';
 import { StrategyTableService } from './strategy-table.service';
 
 @Component({
@@ -123,7 +123,7 @@ When omitted, sensible defaults render automatically.
 ## Links
 
 - [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)
-- [`@sst/core`](../core/README.md) — the framework-agnostic core
+- [`@bridgebyte/sst-core`](../core/README.md) — the framework-agnostic core
 - [Changelog](./CHANGELOG.md)
 
 ## License

@@ -1,6 +1,6 @@
-# @sst/vue — browser smoke test
+# @bridgebyte/sst-vue — browser smoke test
 
-Vue 3 + Vite app that imports `@sst/core` and `@sst/vue` from the local Verdaccio registry and renders a real table backed by [dogapi.dog](https://dogapi.dog/api/v2/breeds).
+Vue 3 + Vite app that imports `@bridgebyte/sst-core` and `@bridgebyte/sst-vue` from the local Verdaccio registry and renders a real table backed by [dogapi.dog](https://dogapi.dog/api/v2/breeds).
 
 ## Run
 
@@ -25,7 +25,7 @@ Open http://localhost:5173/.
 
 ## What it covers
 
-- **Import smoke** — `@sst/core` + `@sst/vue` resolve from Verdaccio.
+- **Import smoke** — `@bridgebyte/sst-core` + `@bridgebyte/sst-vue` resolve from Verdaccio.
 - **`<SstTable>`** — renders 283 breeds with default pagination.
 - **`useTableStore`** — reactive `Ref` exposure of the headless store.
 - **Custom queryKeys** — JSON:API `page[number]` / `page[size]`.

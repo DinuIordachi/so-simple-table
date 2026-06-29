@@ -1,5 +1,5 @@
 import { getCurrentInstance, onBeforeUnmount, onMounted, reactive, ref } from 'vue';
-import { ESortOrder, type IFilterParams, type IResponse } from '@sst/core';
+import { ESortOrder, type IFilterParams, type IResponse } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import type {
 	DataTableCellEditCompleteEvent,
@@ -153,7 +153,7 @@ export function defaultMapFilters(filters: DataTableFilterMeta): { search?: stri
  * <script setup lang="ts">
  * import DataTable from 'primevue/datatable';
  * import Column from 'primevue/column';
- * import { useSstDataTable } from '@sst/vue/primevue';
+ * import { useSstDataTable } from '@bridgebyte/sst-vue/primevue';
  * const bindings = useSstDataTable(table);
  * </script>
  * <template>

@@ -4,11 +4,11 @@ A framework-agnostic table library with pluggable framework variants.
 
 ## Packages
 
-- **[@sst/core](packages/core)** — pure JS/TS reactive table state and configurable repositories.
-- **[@sst/dom](packages/dom)** — vanilla DOM variant; renders a `TableStore` as an HTML table via `mountTable`.
-- **[@sst/ng](packages/ng)** — Angular 20+ adapter and default UI component.
-- **[@sst/vue](packages/vue)** — Vue 3 adapter with composables, the `defineTable` factory, and SFC.
-- **@sst/react** — React 18+ adapter _(planned; not yet implemented)_.
+- **[@bridgebyte/sst-core](packages/core)** — pure JS/TS reactive table state and configurable repositories.
+- **[@bridgebyte/sst-dom](packages/dom)** — vanilla DOM variant; renders a `TableStore` as an HTML table via `mountTable`.
+- **[@bridgebyte/sst-ng](packages/ng)** — Angular 20+ adapter and default UI component.
+- **[@bridgebyte/sst-vue](packages/vue)** — Vue 3 adapter with composables, the `defineTable` factory, and SFC.
+- **@bridgebyte/sst-react** — React 18+ adapter _(planned; not yet implemented)_.
 
 ## Implementation plans
 
@@ -27,13 +27,13 @@ npx nx run-many -t typecheck
 ```
 
 That's all you need to **develop the library**. npm workspaces symlink the
-`@sst/*` packages into the root `node_modules`, so edits in `packages/*` are
+`@bridgebyte/sst-*` packages into the root `node_modules`, so edits in `packages/*` are
 picked up live — no registry required.
 
 ## Local end-to-end testing (Verdaccio)
 
 The apps under [`test/`](test) are standalone consumers that install the
-**published** `@sst/*` packages from a local [Verdaccio](https://verdaccio.org/)
+**published** `@bridgebyte/sst-*` packages from a local [Verdaccio](https://verdaccio.org/)
 registry (`http://localhost:4873`) — exactly as a downstream user would. Use
 them to verify the published artifacts, not just the source.
 
@@ -45,7 +45,7 @@ With the registry running (or it will start automatically):
 npm run publish:local -- --with-tests
 ```
 
-This builds every package, (re)publishes each `@sst/*` package to the local
+This builds every package, (re)publishes each `@bridgebyte/sst-*` package to the local
 registry, then refreshes and installs the `test/*` apps. Drop `--with-tests` to
 publish only; add `--no-build` to publish the current `dist/` as-is. Stop a
 registry it started with `npm run registry:stop`.
@@ -70,8 +70,8 @@ npm adduser --registry http://localhost:4873
 # 3. Build all packages
 npx nx run-many -t build
 
-# 4. Publish each @sst/* package to the local registry.
-#    core/dom/react/vue publish from their package root; @sst/ng is built by
+# 4. Publish each @bridgebyte/sst-* package to the local registry.
+#    core/dom/react/vue publish from their package root; @bridgebyte/sst-ng is built by
 #    ng-packagr and publishes from packages/ng/dist.
 npm publish ./packages/core --registry http://localhost:4873
 npm publish ./packages/dom --registry http://localhost:4873

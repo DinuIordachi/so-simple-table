@@ -2,11 +2,11 @@
 /**
  * publish-local.mjs — one-command local release to the Verdaccio registry.
  *
- * Does the whole end-to-end loop for smoke-testing the published @sst/* packages:
+ * Does the whole end-to-end loop for smoke-testing the published @bridgebyte/sst-* packages:
  *   1. ensures the local Verdaccio registry is running (starts it if needed)
  *   2. ensures a local "dev" auth token (writes the gitignored root .npmrc)
  *   3. builds every package (skip with --no-build)
- *   4. (re)publishes every @sst/* package to the local registry
+ *   4. (re)publishes every @bridgebyte/sst-* package to the local registry
  *   5. with --with-tests, refreshes + installs the test/* consumer apps
  *
  * Usage:
@@ -33,13 +33,13 @@ const NO_BUILD = args.includes('--no-build');
 const WITH_TESTS = args.includes('--with-tests') || args.includes('--tests');
 
 // dir = directory whose package.json/contents get published.
-// @sst/ng is published from its ng-packagr output (packages/ng/dist).
+// @bridgebyte/sst-ng is published from its ng-packagr output (packages/ng/dist).
 const PACKAGES = [
-  { name: '@sst/core', dir: 'packages/core' },
-  { name: '@sst/dom', dir: 'packages/dom' },
-  { name: '@sst/react', dir: 'packages/react' },
-  { name: '@sst/vue', dir: 'packages/vue' },
-  { name: '@sst/ng', dir: 'packages/ng/dist' },
+  { name: '@bridgebyte/sst-core', dir: 'packages/core' },
+  { name: '@bridgebyte/sst-dom', dir: 'packages/dom' },
+  { name: '@bridgebyte/sst-react', dir: 'packages/react' },
+  { name: '@bridgebyte/sst-vue', dir: 'packages/vue' },
+  { name: '@bridgebyte/sst-ng', dir: 'packages/ng/dist' },
 ];
 const TEST_APPS = ['dom', 'vue', 'ng'];
 
@@ -112,7 +112,7 @@ async function ensureAuth() {
   const host = REGISTRY.replace(/^https?:/, '');
   writeFileSync(
     resolve(ROOT, '.npmrc'),
-    `@sst:registry=${REGISTRY}/\n${host}/:_authToken=${token}\n`,
+    `@bridgebyte:registry=${REGISTRY}/\n${host}/:_authToken=${token}\n`,
   );
   log(`authenticated as "${USER}" (token written to gitignored root .npmrc)`);
 }
@@ -146,7 +146,7 @@ function installTestApps() {
   }
   for (const app of TEST_APPS) {
     const dir = `test/${app}`;
-    log(`refreshing + installing ${dir} (clears stale @sst lock entries)…`);
+    log(`refreshing + installing ${dir} (clears stale @bridgebyte/sst-* lock entries)…`);
     // The lockfiles pin localhost tarball hashes that change on every republish,
     // so they must be regenerated or npm fails with EINTEGRITY.
     run('rm', ['-rf', resolve(ROOT, dir, 'node_modules'), resolve(ROOT, dir, 'package-lock.json')]);
@@ -161,7 +161,7 @@ async function main() {
   buildAll();
   publishAll();
   installTestApps();
-  log('\x1b[32mdone.\x1b[0m All @sst/* packages published to the local registry.');
+  log('\x1b[32mdone.\x1b[0m All @bridgebyte/sst-* packages published to the local registry.');
   if (!WITH_TESTS) {
     log('Next: `npm run publish:local -- --with-tests`, or install a single app, e.g. `npm install --prefix test/ng`.');
   }

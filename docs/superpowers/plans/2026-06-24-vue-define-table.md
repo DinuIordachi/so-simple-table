@@ -2,21 +2,21 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a declarative `defineTable<T>()` factory to `@sst/vue` that returns a typed `useTable()` composable, and rewrite the `test/vue` smoke-test app to use it.
+**Goal:** Add a declarative `defineTable<T>()` factory to `@bridgebyte/sst-vue` that returns a typed `useTable()` composable, and rewrite the `test/vue` smoke-test app to use it.
 
 **Architecture:** `defineTable(config)` captures a config object and returns a `useTable()` composable. On call, `useTable()` builds an `HttpListRepository` (defaulting to `FetchHttpClient`, with `headers` → `baseHeaders`) and delegates to the existing `useTableStore` composable, returning the existing `IUseTableStoreReturn<T>`. No core/Angular/React changes.
 
-**Tech Stack:** TypeScript, Vue 3 (`<script setup>`, composables, `effectScope`), Vitest + happy-dom, `@sst/core` repository/store primitives.
+**Tech Stack:** TypeScript, Vue 3 (`<script setup>`, composables, `effectScope`), Vitest + happy-dom, `@bridgebyte/sst-core` repository/store primitives.
 
 ## Global Constraints
 
 - **Node:** `>=20`.
 - **TypeScript:** `strict`, `exactOptionalPropertyTypes: true`, `noUncheckedIndexedAccess: true` (from `tsconfig.base.json`). Never assign `undefined` to an optional property — use the conditional-spread idiom `...(cond ? { key: value } : {})` (as in `table-store.ts` and `sst-ng-list.repository.ts`).
-- **Imports:** import `@sst/core` symbols from `'@sst/core'` (matches `use-table-store.ts`); import package-local symbols by relative path.
+- **Imports:** import `@bridgebyte/sst-core` symbols from `'@bridgebyte/sst-core'` (matches `use-table-store.ts`); import package-local symbols by relative path.
 - **Formatting:** tab indentation; run Prettier (`npx prettier --write <files>`). Lint with the repo ESLint config (no non-null assertions — capture in a local instead).
 - **Row type constraint:** the factory's `T` must `extend { id: string }` to match `SstTable`'s generic constraint.
 - **CRUD scope:** list-only (no create/update/delete in the factory).
-- **Test apps consume the published package:** `test/vue` imports from `@sst/vue` (the local Verdaccio build), so the package must be rebuilt + republished before the example can resolve `defineTable`. Use `npm run publish:local -- --with-tests`.
+- **Test apps consume the published package:** `test/vue` imports from `@bridgebyte/sst-vue` (the local Verdaccio build), so the package must be rebuilt + republished before the example can resolve `defineTable`. Use `npm run publish:local -- --with-tests`.
 
 ---
 
@@ -28,7 +28,7 @@
 - Modify: `packages/vue/src/index.ts`
 
 **Interfaces:**
-- Consumes: `useTableStore` and `IUseTableStoreReturn<T>` from `./use-table-store`; `FetchHttpClient`, `HttpListRepository`, and the types `IHttpClient`, `IHttpRequestOptions`, `IPaginationParams`, `IParamFormattingStrategy`, `IRepositoryQueryKeys`, `IResponseList`, `ESortOrder` from `@sst/core`.
+- Consumes: `useTableStore` and `IUseTableStoreReturn<T>` from `./use-table-store`; `FetchHttpClient`, `HttpListRepository`, and the types `IHttpClient`, `IHttpRequestOptions`, `IPaginationParams`, `IParamFormattingStrategy`, `IRepositoryQueryKeys`, `IResponseList`, `ESortOrder` from `@bridgebyte/sst-core`.
 - Produces:
   - `interface IDefineTableConfig<T extends { id: string }, TRaw = unknown>` with fields: `baseUrl: string`, `headers?: Record<string, string>`, `httpClient?: IHttpClient`, `mapResponse?: (raw: TRaw) => IResponseList<T[]>`, `queryKeys?: Partial<IRepositoryQueryKeys>`, `sortMap?: Readonly<Record<string, string>>`, `filterMap?: Readonly<Record<string, string>>`, `initialPagination?: IPaginationParams`, `paramFormatting?: IParamFormattingStrategy`.
   - `function defineTable<T extends { id: string }, TRaw = unknown>(config: IDefineTableConfig<T, TRaw>): () => IUseTableStoreReturn<T>`.
@@ -40,7 +40,7 @@ Create `packages/vue/src/lib/composables/define-table.test.ts`:
 ```ts
 import { describe, it, expect, vi } from 'vitest';
 import { effectScope, nextTick } from 'vue';
-import { ESortOrder, type IHttpClient, type IHttpRequestOptions, type IResponseList } from '@sst/core';
+import { ESortOrder, type IHttpClient, type IHttpRequestOptions, type IResponseList } from '@bridgebyte/sst-core';
 import { defineTable } from './define-table';
 
 interface IItem {
@@ -194,7 +194,7 @@ import {
 	type IParamFormattingStrategy,
 	type IRepositoryQueryKeys,
 	type IResponseList,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { useTableStore, type IUseTableStoreReturn } from './use-table-store';
 
 export interface IDefineTableConfig<T extends { id: string }, TRaw = unknown> {
@@ -292,7 +292,7 @@ git commit -m "feat(vue): add defineTable factory for declarative table setup"
 - Modify: `test/vue/src/App.vue`
 
 **Interfaces:**
-- Consumes: `defineTable` and `SstTable`, `IColumn` from `@sst/vue` (the locally published build from Task 1).
+- Consumes: `defineTable` and `SstTable`, `IColumn` from `@bridgebyte/sst-vue` (the locally published build from Task 1).
 - Produces: `useBreedTable` composable and `IBreed` interface, imported by `App.vue`.
 
 - [ ] **Step 1: Create the declarative table definition**
@@ -300,7 +300,7 @@ git commit -m "feat(vue): add defineTable factory for declarative table setup"
 Create `test/vue/src/breed-table.ts`:
 
 ```ts
-import { defineTable } from '@sst/vue';
+import { defineTable } from '@bridgebyte/sst-vue';
 
 export interface IBreed {
 	id: string;
@@ -359,8 +359,8 @@ Replace the entire contents of `test/vue/src/App.vue` with:
 
 ```vue
 <script setup lang="ts">
-import { SstTable, type IColumn } from '@sst/vue';
-import '@sst/vue/style.css';
+import { SstTable, type IColumn } from '@bridgebyte/sst-vue';
+import '@bridgebyte/sst-vue/style.css';
 import { useBreedTable } from './breed-table';
 
 const columns: IColumn[] = [
@@ -378,7 +378,7 @@ const truncate = (text: string, max = 90): string => (text.length > max ? `${tex
 <template>
 	<main>
 		<header>
-			<h1>@sst/vue — browser smoke test</h1>
+			<h1>@bridgebyte/sst-vue — browser smoke test</h1>
 			<p>
 				Renders <a href="https://dogapi.dog/api/v2/breeds" target="_blank" rel="noopener">dogapi.dog</a>
 				through <code>&lt;SstTable&gt;</code>.
@@ -415,7 +415,7 @@ Run (from repo root):
 ```bash
 npm run publish:local -- --with-tests
 ```
-Expected: builds all packages (incl. the new `defineTable`), republishes `@sst/*` to the local Verdaccio registry, and reinstalls `test/*` (resolving the new `@sst/vue`). Requires the registry — `publish:local` auto-starts it if needed.
+Expected: builds all packages (incl. the new `defineTable`), republishes `@bridgebyte/sst-*` to the local Verdaccio registry, and reinstalls `test/*` (resolving the new `@bridgebyte/sst-vue`). Requires the registry — `publish:local` auto-starts it if needed.
 
 - [ ] **Step 5: Typecheck + build the example**
 
@@ -438,6 +438,6 @@ git commit -m "test(vue): rewrite smoke-test app with defineTable"
 
 ## Notes for the executor
 
-- Unit tests (Task 1) run against `@sst/core` **source** via the Vitest alias in `packages/vue/vitest.config.ts` — no publish needed for tests. The publish step (Task 2) is only because `test/vue` consumes the **published** `@sst/vue`.
+- Unit tests (Task 1) run against `@bridgebyte/sst-core` **source** via the Vitest alias in `packages/vue/vitest.config.ts` — no publish needed for tests. The publish step (Task 2) is only because `test/vue` consumes the **published** `@bridgebyte/sst-vue`.
 - `test/vue/package-lock.json` is gitignored and regenerated by `publish:local --with-tests`; do not commit it.
 - If `vue-tsc` flags the `:store="table"` binding's row type as `unknown`, ensure `defineTable`'s `T extends { id: string }` constraint is present and that `IUseTableStoreReturn<T>` is the declared return type — the generic must be inferable from the `store` prop.

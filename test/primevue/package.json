@@ -1,9 +1,9 @@
 {
-  "name": "@sst/test-primevue",
+  "name": "@bridgebyte/sst-test-primevue",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Browser smoke-test app for @sst/vue/primevue consumed via the local Verdaccio registry.",
+  "description": "Browser smoke-test app for @bridgebyte/sst-vue/primevue consumed via the local Verdaccio registry.",
   "scripts": {
     "dev": "vite --port 5174",
     "build": "vue-tsc --noEmit && vite build",
@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@primevue/themes": "^4.5.0",
-    "@sst/core": "^0.2.0",
-    "@sst/vue": "^0.2.0",
+    "@bridgebyte/sst-core": "^0.2.0",
+    "@bridgebyte/sst-vue": "^0.2.0",
     "primevue": "^4.5.0",
     "vue": "^3.5.0"
   },

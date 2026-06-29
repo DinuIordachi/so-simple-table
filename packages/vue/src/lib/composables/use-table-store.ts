@@ -6,7 +6,7 @@ import {
 	type IResponse,
 	type ISortParams,
 	type ITableStoreOptions,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { useObservable } from './use-observable';
 
 /**
@@ -100,7 +100,7 @@ export interface IUseTableStoreReturn<T> {
  *
  * @example
  * ```ts
- * import { useTableStore, HttpListRepository, FetchHttpClient } from '@sst/vue';
+ * import { useTableStore, HttpListRepository, FetchHttpClient } from '@bridgebyte/sst-vue';
  *
  * const { data, loading, total, updatePagination } = useTableStore({
  * 	repository: new HttpListRepository({

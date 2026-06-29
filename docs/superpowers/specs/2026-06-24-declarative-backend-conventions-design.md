@@ -1,12 +1,12 @@
-# Design: declarative backend conventions in `@sst/core`
+# Design: declarative backend conventions in `@bridgebyte/sst-core`
 
 **Date:** 2026-06-24
 **Status:** Approved (design)
-**Scope:** Let consumers adapt common REST conventions (offset pagination, `asc/desc` sort direction, a search sub-endpoint) through **declarative config** — no custom `IHttpClient`. Implemented in `@sst/core`, surfaced via `@sst/vue`'s `defineTable`, and proven by rewriting the `test/primevue` app to drop its `DummyJsonClient`.
+**Scope:** Let consumers adapt common REST conventions (offset pagination, `asc/desc` sort direction, a search sub-endpoint) through **declarative config** — no custom `IHttpClient`. Implemented in `@bridgebyte/sst-core`, surfaced via `@bridgebyte/sst-vue`'s `defineTable`, and proven by rewriting the `test/primevue` app to drop its `DummyJsonClient`.
 
 ## Motivation
 
-`@sst/core`'s wire format is fixed: page-based pagination (`page`/`pageSize`), boolean sort (`orderBy` + `orderByDescending`), and search as a query param on the base URL. Real APIs vary. DummyJSON (a representative public API used by `test/primevue`) needs:
+`@bridgebyte/sst-core`'s wire format is fixed: page-based pagination (`page`/`pageSize`), boolean sort (`orderBy` + `orderByDescending`), and search as a query param on the base URL. Real APIs vary. DummyJSON (a representative public API used by `test/primevue`) needs:
 
 - **offset pagination** — `skip = (page-1)·pageSize` + `limit`
 - **direction sort** — `sortBy=<field>` + `order=asc|desc`
@@ -17,7 +17,7 @@ Today the only way to bridge this is to hand-write a full `IHttpClient` (fetch +
 ## Decisions (from brainstorming)
 
 - **Shape:** declarative convention options (not a `buildRequest` hook, not named presets).
-- **Layer:** `@sst/core` (framework-agnostic param/request logic), surfaced through `defineTable`. Adapters built on core's `TableStore` / `HttpListRepository` benefit automatically.
+- **Layer:** `@bridgebyte/sst-core` (framework-agnostic param/request logic), surfaced through `defineTable`. Adapters built on core's `TableStore` / `HttpListRepository` benefit automatically.
 - **Non-breaking:** every option defaults to current behavior.
 - **Key names reuse `queryKeys`** — no new naming concept.
 - **YAGNI:** only these three axes. Combined-sort (`sort=-field`), static query params, and per-adapter (ng) config surfacing are out of scope; `httpClient` remains the escape hatch for unusual APIs.
@@ -113,7 +113,7 @@ Produces, e.g., `GET https://dummyjson.com/products/search?skip=0&limit=10&sortB
 - **`packages/core/src/repositories/http-list.repository.ts`** — `searchEndpoint` routing + `searchKey` resolution.
 - **`packages/vue/src/lib/composables/define-table.ts`** — add the four options to `IDefineTableConfig`; route them.
 - **`test/primevue/src/products-table.ts`** — use the new options; **delete** `test/primevue/src/dummyjson-client.ts`.
-- READMEs/CHANGELOGs: a short note in `@sst/core` and `@sst/vue` READMEs + `[Unreleased]` CHANGELOG entries.
+- READMEs/CHANGELOGs: a short note in `@bridgebyte/sst-core` and `@bridgebyte/sst-vue` READMEs + `[Unreleased]` CHANGELOG entries.
 
 ## Testing
 
@@ -128,7 +128,7 @@ Produces, e.g., `GET https://dummyjson.com/products/search?skip=0&limit=10&sortB
 - Combined single-param sort (`sort=-field` / `sort=field:desc`).
 - Static/constant query params (e.g. dummyjson `select`).
 - Surfacing these options on the Angular adapter's custom repository (`SstNgListRepository` overrides `getList`); it gets the param-style options via core's `TableStore` but not `searchEndpoint`. Future work.
-- `@sst/react` (unimplemented).
+- `@bridgebyte/sst-react` (unimplemented).
 
 ## Success criteria
 

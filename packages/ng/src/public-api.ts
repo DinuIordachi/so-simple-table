@@ -1,11 +1,11 @@
 /**
- * Public API surface for `@sst/ng` — the Angular adapter for the so-simple-table
- * (`@sst`) data-table toolkit.
+ * Public API surface for `@bridgebyte/sst-ng` — the Angular adapter for the so-simple-table
+ * (`@bridgebyte/sst-*`) data-table toolkit.
  *
  * @remarks
  * This barrel re-exports two layers:
  *
- * - **Framework-agnostic core** (re-exported from `@sst/core` for ergonomic imports):
+ * - **Framework-agnostic core** (re-exported from `@bridgebyte/sst-core` for ergonomic imports):
  *   shared types ({@link IColumn}, {@link IResponseList}, {@link IHttpClient}, …) and
  *   utilities ({@link Observable}, {@link watch}, {@link mapTableParams}, …).
  * - **Angular surface**: the dependency-injection-friendly building blocks that
@@ -27,7 +27,7 @@
  * @packageDocumentation
  */
 
-// Re-exports from @sst/core for ergonomic imports
+// Re-exports from @bridgebyte/sst-core for ergonomic imports
 export type {
 	HttpQueryParams,
 	IBaseItem,
@@ -51,8 +51,8 @@ export type {
 	Listener,
 	ResponseListMapper,
 	Unsubscribe,
-} from '@sst/core';
-export { ESortOrder, DEFAULT_QUERY_KEYS, Observable, watch, deepEqual, arrayToMap, mapTableParams } from '@sst/core';
+} from '@bridgebyte/sst-core';
+export { ESortOrder, DEFAULT_QUERY_KEYS, Observable, watch, deepEqual, arrayToMap, mapTableParams } from '@bridgebyte/sst-core';
 
 // Angular surface
 export * from './lib/http/ng-http-client';

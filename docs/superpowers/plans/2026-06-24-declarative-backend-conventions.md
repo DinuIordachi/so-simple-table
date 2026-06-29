@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Let consumers adapt offset pagination, `asc/desc` sort direction, and a search sub-endpoint through declarative config (no custom `IHttpClient`). Implement in `@sst/core`, surface via `@sst/vue`'s `defineTable`, and prove it by removing `DummyJsonClient` from `test/primevue`.
+**Goal:** Let consumers adapt offset pagination, `asc/desc` sort direction, and a search sub-endpoint through declarative config (no custom `IHttpClient`). Implement in `@bridgebyte/sst-core`, surface via `@bridgebyte/sst-vue`'s `defineTable`, and prove it by removing `DummyJsonClient` from `test/primevue`.
 
 **Architecture:** Param-style options (`paginationStyle`, `sortStyle`, `sortDirections`) are applied in `mapTableParams` and threaded through `TableStore`; URL routing (`searchEndpoint`) lives in `HttpListRepository.getList`. `defineTable` routes each to the right place. All options default to current behavior.
 
-**Tech Stack:** TypeScript (strict), Vitest, `@sst/core` store/repository, `@sst/vue` `defineTable`, `test/primevue` (Vite + PrimeVue).
+**Tech Stack:** TypeScript (strict), Vitest, `@bridgebyte/sst-core` store/repository, `@bridgebyte/sst-vue` `defineTable`, `test/primevue` (Vite + PrimeVue).
 
 ## Global Constraints
 
@@ -14,7 +14,7 @@
 - **Non-breaking:** every new option is optional and defaults to today's behavior; existing tests must stay green.
 - **Layer separation:** `paginationStyle`/`sortStyle`/`sortDirections` → `ITableStoreOptions` + `mapTableParams`; `searchEndpoint` → `IRepositoryConfig` + `HttpListRepository`. Shared literal types live in `repository-config.ts`.
 - **Formatting:** tabs; run `npx prettier --write` on touched files.
-- **Verdaccio:** `test/primevue` consumes the published `@sst/core`+`@sst/vue`; republish (`npm run publish:local`) before reinstalling. `test/*/package-lock.json` is gitignored.
+- **Verdaccio:** `test/primevue` consumes the published `@bridgebyte/sst-core`+`@bridgebyte/sst-vue`; republish (`npm run publish:local`) before reinstalling. `test/*/package-lock.json` is gitignored.
 
 ---
 
@@ -377,12 +377,12 @@ git commit -m "feat(core): searchEndpoint routing in HttpListRepository"
 - Test: `packages/vue/src/lib/composables/define-table.test.ts`
 
 **Interfaces:**
-- Consumes: `PaginationStyle`, `SortStyle`, `ISortDirections` (types) from `@sst/core`.
+- Consumes: `PaginationStyle`, `SortStyle`, `ISortDirections` (types) from `@bridgebyte/sst-core`.
 - Produces: `IDefineTableConfig` gains `paginationStyle`, `sortStyle`, `sortDirections`, `searchEndpoint`; routed to the repository (searchEndpoint) and store (the rest).
 
 - [ ] **Step 1: Add the options to `IDefineTableConfig`**
 
-In `define-table.ts`, extend the `@sst/core` type import to include `PaginationStyle, SortStyle, ISortDirections`, and add to `IDefineTableConfig` (after `queryKeys`):
+In `define-table.ts`, extend the `@bridgebyte/sst-core` type import to include `PaginationStyle, SortStyle, ISortDirections`, and add to `IDefineTableConfig` (after `queryKeys`):
 
 ```ts
 	/** Pagination wire style; `'page'` (default) or `'offset'` (skip + limit). */
@@ -440,7 +440,7 @@ Append to `packages/vue/src/lib/composables/define-table.test.ts` a test using t
 	});
 ```
 
-(Reuse the existing `stubClient`/`flush` helpers and imports already in the file; add `IHttpRequestOptions` to the `@sst/core` import if not present.)
+(Reuse the existing `stubClient`/`flush` helpers and imports already in the file; add `IHttpRequestOptions` to the `@bridgebyte/sst-core` import if not present.)
 
 - [ ] **Step 4: Verify + format + commit**
 
@@ -466,7 +466,7 @@ git commit -m "feat(vue): surface paginationStyle/sortStyle/sortDirections/searc
 Replace the body of `test/primevue/src/products-table.ts` — remove the `DummyJsonClient` import and `httpClient`, add the new options:
 
 ```ts
-import { defineTable } from '@sst/vue';
+import { defineTable } from '@bridgebyte/sst-vue';
 
 export interface IProduct {
 	id: string;
@@ -570,7 +570,7 @@ npm install --prefix test/primevue
 - [ ] **Step 5: Typecheck + build the app**
 
 Run (from repo root): `npm run build --prefix test/primevue`
-Expected: `vue-tsc` passes (the new options typecheck through `@sst/vue/primevue`'s deps) and `vite build` succeeds. No reference to `DummyJsonClient` remains.
+Expected: `vue-tsc` passes (the new options typecheck through `@bridgebyte/sst-vue/primevue`'s deps) and `vite build` succeeds. No reference to `DummyJsonClient` remains.
 
 - [ ] **Step 6: Browser-verify (no custom client)**
 
@@ -593,6 +593,6 @@ git commit -m "test(primevue): drop DummyJsonClient; dummyjson via declarative o
 
 ## Notes for the executor
 
-- Tasks 1–3 run against `@sst/core` source via the Vitest alias — no publish needed. Only Task 4 (the consumer app) needs `publish:local`.
+- Tasks 1–3 run against `@bridgebyte/sst-core` source via the Vitest alias — no publish needed. Only Task 4 (the consumer app) needs `publish:local`.
 - The store keeps page-based internal state; only the **emitted** params change in offset mode, so the PrimeVue adapter's `first`/`onPage` (page-based) still work unchanged.
 - If the `table-store.test.ts` / `http-list.repository.test.ts` stub shapes differ from the sketches, follow each file's existing pattern — the assertions (params/URL) are what matter.

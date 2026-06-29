@@ -1,8 +1,8 @@
 import { onScopeDispose, ref, type Ref } from 'vue';
-import type { IReadonlyObservable } from '@sst/core';
+import type { IReadonlyObservable } from '@bridgebyte/sst-core';
 
 /**
- * Bridges a framework-agnostic `@sst/core` {@link IReadonlyObservable} to a
+ * Bridges a framework-agnostic `@bridgebyte/sst-core` {@link IReadonlyObservable} to a
  * reactive Vue {@link Ref}.
  *
  * The returned ref is seeded with the observable's current value and stays in

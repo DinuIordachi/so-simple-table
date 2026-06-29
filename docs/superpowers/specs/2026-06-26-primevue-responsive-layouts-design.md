@@ -1,8 +1,8 @@
-# Design: responsive layout slots for `@sst/vue/primevue` `SstDataTable`
+# Design: responsive layout slots for `@bridgebyte/sst-vue/primevue` `SstDataTable`
 
 **Date:** 2026-06-26
 **Status:** Approved (design)
-**Scope:** Add viewport-responsive, slot-based layouts to `<SstDataTable>`: below a configurable breakpoint the host renders a custom layout (e.g. each row as a card) instead of the PrimeVue DataTable, with a mobile-first cascade across Tailwind breakpoints. Non-breaking; no `@sst/core` change. Proven by extending the `test/primevue` app.
+**Scope:** Add viewport-responsive, slot-based layouts to `<SstDataTable>`: below a configurable breakpoint the host renders a custom layout (e.g. each row as a card) instead of the PrimeVue DataTable, with a mobile-first cascade across Tailwind breakpoints. Non-breaking; no `@bridgebyte/sst-core` change. Proven by extending the `test/primevue` app.
 
 ## Motivation
 
@@ -66,7 +66,7 @@ All **non-reserved** slots (PrimeVue's `header`/`footer`/`empty`/`loading`/`expa
 - `onMounted` (client only): registers `window.matchMedia('(min-width: <px>px)')` for sm…2xl, computes the current token (largest whose min-width ≤ viewport), updates a `ref` on change.
 - SSR / pre-mount / no `window`: resolves to the largest token (`'2xl'`) so the most-desktop path renders (the table, or — when `tableBreakpoint="none"` — the largest defined layout slot); the real value lands on mount.
 - `onBeforeUnmount`: removes listeners.
-- Returns `Ref<BreakpointToken>`. Exported from the `@sst/vue/primevue` subpath as a public utility.
+- Returns `Ref<BreakpointToken>`. Exported from the `@bridgebyte/sst-vue/primevue` subpath as a public utility.
 
 ### 2. `responsive.ts` → `resolveLayoutSlot(...)` (pure)
 ```ts
@@ -144,7 +144,7 @@ Pure, no DOM — the cascade brain, exhaustively unit-tested. Also exports the o
 - Container queries (`ResizeObserver` on the component's own box) — future opt-in.
 - Per-row slot convenience (we pass the whole `rows` array; the host writes its own `v-for`).
 - A built-in mobile paginator/sort UI — the slot gets `store` and builds its own controls.
-- Any `@sst/core` change, and any change to the standalone `<SstTable>` component (this feature is PrimeVue-subpath only).
+- Any `@bridgebyte/sst-core` change, and any change to the standalone `<SstTable>` component (this feature is PrimeVue-subpath only).
 
 ## Success criteria
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { SstTable, type IColumn } from '@sst/vue';
-import '@sst/vue/style.css';
+import { SstTable, type IColumn } from '@bridgebyte/sst-vue';
+import '@bridgebyte/sst-vue/style.css';
 import { useBreedTable } from './breed-table';
 
 const columns: IColumn[] = [
@@ -18,7 +18,7 @@ const truncate = (text: string, max = 90): string => (text.length > max ? `${tex
 <template>
 	<main>
 		<header>
-			<h1>@sst/vue — browser smoke test</h1>
+			<h1>@bridgebyte/sst-vue — browser smoke test</h1>
 			<p>
 				Renders <a href="https://dogapi.dog/api/v2/breeds" target="_blank" rel="noopener">dogapi.dog</a>
 				through <code>&lt;SstTable&gt;</code>.

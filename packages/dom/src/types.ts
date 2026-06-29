@@ -1,9 +1,9 @@
-import type { IColumn, ITableStore } from '@sst/core';
+import type { IColumn, ITableStore } from '@bridgebyte/sst-core';
 
 /**
  * Column definition for the DOM table renderer.
  *
- * Extends the core {@link @sst/core#IColumn} with an optional `render` callback
+ * Extends the core {@link @bridgebyte/sst-core#IColumn} with an optional `render` callback
  * that lets a column produce custom cell content instead of relying on the
  * default value-to-text conversion.
  *

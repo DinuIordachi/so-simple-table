@@ -1,19 +1,19 @@
-# So Simple Table — Angular (`@sst/ng`) Implementation Plan
+# So Simple Table — Angular (`@bridgebyte/sst-ng`) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Provide an Angular 20+ adapter on top of `@sst/core` that exposes signals, an Angular `HttpClient`-backed repository chain, and a default styled `<sst-table>` component with full template-override hooks. This package is the spiritual successor of the existing `np-table` from `platform/libs/ngx-oppo`, but framework-agnostic at the core.
+**Goal:** Provide an Angular 20+ adapter on top of `@bridgebyte/sst-core` that exposes signals, an Angular `HttpClient`-backed repository chain, and a default styled `<sst-table>` component with full template-override hooks. This package is the spiritual successor of the existing `np-table` from `platform/libs/ngx-oppo`, but framework-agnostic at the core.
 
 **Architecture:**
-- `SstTableService<T>` extends `TableStore<T>` from `@sst/core`. No new state — it just exposes the same observables and adds Angular-friendly signal accessors via a `toSignal` adapter.
-- `NgHttpClient` adapter wraps Angular's `HttpClient` and implements `@sst/core`'s `IHttpClient`. Allows users to drop the abstract repositories from `@sst/core` into Angular DI without rewriting them.
+- `SstTableService<T>` extends `TableStore<T>` from `@bridgebyte/sst-core`. No new state — it just exposes the same observables and adds Angular-friendly signal accessors via a `toSignal` adapter.
+- `NgHttpClient` adapter wraps Angular's `HttpClient` and implements `@bridgebyte/sst-core`'s `IHttpClient`. Allows users to drop the abstract repositories from `@bridgebyte/sst-core` into Angular DI without rewriting them.
 - `SstNgListRepository<T>`, `SstNgSelectRepository<T>`, `SstNgRepository<T>` are `@Injectable` bases that pre-wire the `NgHttpClient` adapter and require subclasses to provide `baseUrl` (mirrors the legacy `HttpRepository` `get baseUrl()` pattern).
 - `SstTableComponent<T>` renders a basic styled HTML `<table>` by default and exposes content slots (`#headerCell`, `#bodyCell`, `#emptyState`, `#searchInput`, `#bulkActions`) for full UI override. No ng-zorro, no responsive split — those live in future plugin packages.
 - Standalone components, signal-based change detection, `inject()` DI, no NgModules.
 
-**Tech Stack:** Angular 20+, ng-packagr (build), Jest + jest-preset-angular (tests), `@sst/core` peer dep. RxJS is used internally only to bridge Angular `HttpClient`'s observable returns to promises.
+**Tech Stack:** Angular 20+, ng-packagr (build), Jest + jest-preset-angular (tests), `@bridgebyte/sst-core` peer dep. RxJS is used internally only to bridge Angular `HttpClient`'s observable returns to promises.
 
-**Prerequisites:** Plan `01-core.md` is fully implemented and `@sst/core` builds clean.
+**Prerequisites:** Plan `01-core.md` is fully implemented and `@bridgebyte/sst-core` builds clean.
 
 ---
 
@@ -21,7 +21,7 @@
 
 ```
 packages/ng/
-├── package.json                  # name: "@sst/ng"
+├── package.json                  # name: "@bridgebyte/sst-ng"
 ├── ng-package.json
 ├── project.json
 ├── tsconfig.json
@@ -54,11 +54,11 @@ packages/ng/
             └── sst-table.component.spec.ts
 ```
 
-**Why this split:** mirrors the layering in `@sst/core` (`http/`, `repositories/`, `store/`) plus an Angular-specific `component/` folder. Each subdirectory can be tree-shaken independently via TypeScript barrels.
+**Why this split:** mirrors the layering in `@bridgebyte/sst-core` (`http/`, `repositories/`, `store/`) plus an Angular-specific `component/` folder. Each subdirectory can be tree-shaken independently via TypeScript barrels.
 
 ---
 
-## Task 1: Scaffold `@sst/ng` package
+## Task 1: Scaffold `@bridgebyte/sst-ng` package
 
 **Files:**
 - Create: `packages/ng/package.json`
@@ -79,9 +79,9 @@ packages/ng/
 
 ```json
 {
-  "name": "@sst/ng",
+  "name": "@bridgebyte/sst-ng",
   "version": "0.1.0",
-  "description": "So Simple Table — Angular adapter and default UI component on top of @sst/core.",
+  "description": "So Simple Table — Angular adapter and default UI component on top of @bridgebyte/sst-core.",
   "type": "module",
   "sideEffects": false,
   "scripts": {
@@ -95,7 +95,7 @@ packages/ng/
     "@angular/common": ">=20.0.0",
     "@angular/core": ">=20.0.0",
     "@angular/forms": ">=20.0.0",
-    "@sst/core": "workspace:*",
+    "@bridgebyte/sst-core": "workspace:*",
     "rxjs": ">=7.8.0"
   },
   "devDependencies": {
@@ -150,7 +150,7 @@ packages/ng/
 }
 ```
 
-> **Note:** `useDefineForClassFields` is set to `false` because Angular's component decorators rely on the legacy field-init semantics. The base tsconfig sets it to `true` for `@sst/core` (correct for tsup). `noUncheckedIndexedAccess` is relaxed for the Angular package because Angular template typings struggle with strict tuple indexing.
+> **Note:** `useDefineForClassFields` is set to `false` because Angular's component decorators rely on the legacy field-init semantics. The base tsconfig sets it to `true` for `@bridgebyte/sst-core` (correct for tsup). `noUncheckedIndexedAccess` is relaxed for the Angular package because Angular template typings struggle with strict tuple indexing.
 
 - [ ] **Step 4: Create `packages/ng/tsconfig.lib.json`**
 
@@ -205,7 +205,7 @@ const config: Config = {
 	setupFilesAfterEach: ['<rootDir>/setup-jest.ts'],
 	rootDir: '.',
 	testMatch: ['<rootDir>/src/**/*.spec.ts'],
-	moduleNameMapper: { '^@sst/core$': '<rootDir>/../core/src/index.ts' },
+	moduleNameMapper: { '^@bridgebyte/sst-core$': '<rootDir>/../core/src/index.ts' },
 	transform: {
 		'^.+\\.(ts|mjs|js|html)$': [
 			'jest-preset-angular',
@@ -247,16 +247,16 @@ export default config;
 - [ ] **Step 10: Create `packages/ng/src/public-api.ts`**
 
 ```ts
-// @sst/ng public API — populated by subsequent tasks.
+// @bridgebyte/sst-ng public API — populated by subsequent tasks.
 export {};
 ```
 
 - [ ] **Step 11: Create `packages/ng/README.md`**
 
 ```markdown
-# @sst/ng
+# @bridgebyte/sst-ng
 
-Angular adapter for **So Simple Table**. Built on top of [`@sst/core`](../core).
+Angular adapter for **So Simple Table**. Built on top of [`@bridgebyte/sst-core`](../core).
 
 - Angular `HttpClient`-backed repositories (`SstNgListRepository`, `SstNgSelectRepository`, `SstNgRepository`)
 - `SstTableService<T>` — `TableStore<T>` plus signal accessors
@@ -265,20 +265,20 @@ Angular adapter for **So Simple Table**. Built on top of [`@sst/core`](../core).
 See `02-angular.md` for the full plan.
 ```
 
-- [ ] **Step 12: Add `@sst/ng` path mapping to root tsconfig.base.json**
+- [ ] **Step 12: Add `@bridgebyte/sst-ng` path mapping to root tsconfig.base.json**
 
 In `<repo-root>/tsconfig.base.json`, extend the `paths` block:
 ```json
 "paths": {
-  "@sst/core": ["packages/core/src/index.ts"],
-  "@sst/ng": ["packages/ng/src/public-api.ts"]
+  "@bridgebyte/sst-core": ["packages/core/src/index.ts"],
+  "@bridgebyte/sst-ng": ["packages/ng/src/public-api.ts"]
 }
 ```
 
 - [ ] **Step 13: Install Angular toolchain at workspace root**
 
 ```bash
-npm install --workspace @sst/ng
+npm install --workspace @bridgebyte/sst-ng
 ```
 
 Expected: `packages/ng/node_modules/.bin/` contains `ng-packagr` and `jest`.
@@ -295,14 +295,14 @@ Expected: `0 errors`.
 
 ```bash
 git add packages/ng tsconfig.base.json package.json package-lock.json
-git commit -m "feat(ng): scaffold @sst/ng package"
+git commit -m "feat(ng): scaffold @bridgebyte/sst-ng package"
 ```
 
 ---
 
 ## Task 2: Implement `NgHttpClient` adapter
 
-Wraps Angular's `HttpClient` so `@sst/core`'s repositories can be reused under Angular DI.
+Wraps Angular's `HttpClient` so `@bridgebyte/sst-core`'s repositories can be reused under Angular DI.
 
 **Files:**
 - Create: `packages/ng/src/lib/http/ng-http-client.ts`
@@ -407,7 +407,7 @@ Expected: FAIL — module `./ng-http-client` not found.
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import type { HttpQueryParams, IHttpClient, IHttpRequestOptions } from '@sst/core';
+import type { HttpQueryParams, IHttpClient, IHttpRequestOptions } from '@bridgebyte/sst-core';
 
 @Injectable({ providedIn: 'root' })
 export class NgHttpClient implements IHttpClient {
@@ -608,7 +608,7 @@ import {
 	type IResponse,
 	type IResponseList,
 	type ResponseListMapper,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { NgHttpClient } from '../http/ng-http-client';
 
 /**
@@ -658,7 +658,7 @@ export abstract class SstNgListRepository<T> extends ListRepository<T> {
 
 ```ts
 import { Injectable } from '@angular/core';
-import type { HttpQueryParams, IPaginationParams, IResponse, IResponseList } from '@sst/core';
+import type { HttpQueryParams, IPaginationParams, IResponse, IResponseList } from '@bridgebyte/sst-core';
 import { SstNgListRepository } from './sst-ng-list.repository';
 
 @Injectable()
@@ -683,7 +683,7 @@ export abstract class SstNgSelectRepository<T> extends SstNgListRepository<T> {
 
 ```ts
 import { Injectable } from '@angular/core';
-import type { IResponse } from '@sst/core';
+import type { IResponse } from '@bridgebyte/sst-core';
 import { SstNgSelectRepository } from './sst-ng-select.repository';
 
 @Injectable()
@@ -745,7 +745,7 @@ git commit -m "feat(ng): add SstNgListRepository, SstNgSelectRepository, SstNgRe
 ```ts
 import { TestBed } from '@angular/core/testing';
 import { Component, effect, signal } from '@angular/core';
-import { Observable } from '@sst/core';
+import { Observable } from '@bridgebyte/sst-core';
 import { observableToSignal } from './to-signal.helper';
 
 describe('observableToSignal', () => {
@@ -790,10 +790,10 @@ Expected: FAIL — module not found.
 
 ```ts
 import { DestroyRef, Signal, inject, signal } from '@angular/core';
-import type { IReadonlyObservable } from '@sst/core';
+import type { IReadonlyObservable } from '@bridgebyte/sst-core';
 
 /**
- * Bridge an `@sst/core` IReadonlyObservable<T> into an Angular Signal<T>.
+ * Bridge an `@bridgebyte/sst-core` IReadonlyObservable<T> into an Angular Signal<T>.
  * Must be called within an injection context. The subscription is auto-cleaned
  * via DestroyRef when the host injector is destroyed.
  */
@@ -835,8 +835,8 @@ git commit -m "feat(ng): add observableToSignal adapter"
 ```ts
 import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
-import type { IResponse, IResponseList } from '@sst/core';
-import { ListRepository } from '@sst/core';
+import type { IResponse, IResponseList } from '@bridgebyte/sst-core';
+import { ListRepository } from '@bridgebyte/sst-core';
 import { SstTableService } from './sst-table.service';
 
 interface IItem { id: string; name: string; }
@@ -921,7 +921,7 @@ Expected: FAIL — module not found.
 
 ```ts
 import { DestroyRef, Injectable, Signal, computed, inject } from '@angular/core';
-import { TableStore, type IFilterParams, type IPaginationParams, type ISortParams, type ITableStoreOptions } from '@sst/core';
+import { TableStore, type IFilterParams, type IPaginationParams, type ISortParams, type ITableStoreOptions } from '@bridgebyte/sst-core';
 import { observableToSignal } from './to-signal.helper';
 
 @Injectable()
@@ -987,8 +987,8 @@ git commit -m "feat(ng): add SstTableService with signal-backed accessors"
 ```ts
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component, Injectable, signal } from '@angular/core';
-import type { IColumn, IResponse, IResponseList } from '@sst/core';
-import { ListRepository } from '@sst/core';
+import type { IColumn, IResponse, IResponseList } from '@bridgebyte/sst-core';
+import { ListRepository } from '@bridgebyte/sst-core';
 import { SstTableService } from '../store/sst-table.service';
 import { SstTableComponent } from './sst-table.component';
 
@@ -1119,7 +1119,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
+import { ESortOrder, type IColumn, type ISortParams } from '@bridgebyte/sst-core';
 import { SstTableService } from '../store/sst-table.service';
 
 @Component({
@@ -1496,9 +1496,9 @@ git commit -m "feat(ng): add SstTableComponent default UI with template override
 
 ---
 
-## Task 7: Re-export `@sst/core` types for ergonomic imports
+## Task 7: Re-export `@bridgebyte/sst-core` types for ergonomic imports
 
-Users should be able to write `import { IColumn, ESortOrder } from '@sst/ng';` without reaching into core for plain types.
+Users should be able to write `import { IColumn, ESortOrder } from '@bridgebyte/sst-ng';` without reaching into core for plain types.
 
 **Files:**
 - Modify: `packages/ng/src/public-api.ts`
@@ -1530,8 +1530,8 @@ export type {
 	Listener,
 	ResponseListMapper,
 	Unsubscribe,
-} from '@sst/core';
-export { ESortOrder, DEFAULT_QUERY_KEYS, Observable, watch, deepEqual, arrayToMap, mapTableParams } from '@sst/core';
+} from '@bridgebyte/sst-core';
+export { ESortOrder, DEFAULT_QUERY_KEYS, Observable, watch, deepEqual, arrayToMap, mapTableParams } from '@bridgebyte/sst-core';
 
 // Angular surface
 export * from './lib/http/ng-http-client';
@@ -1563,16 +1563,16 @@ Expected: PASS.
 
 ```bash
 git add packages/ng/src
-git commit -m "feat(ng): re-export @sst/core types from the @sst/ng barrel"
+git commit -m "feat(ng): re-export @bridgebyte/sst-core types from the @bridgebyte/sst-ng barrel"
 ```
 
 ---
 
-## Task 8: Build `@sst/ng` and verify FESM artifact
+## Task 8: Build `@bridgebyte/sst-ng` and verify FESM artifact
 
 **Files:** none modified — verification only.
 
-- [ ] **Step 1: Build core first (ng-packagr resolves `@sst/core` from `dist/`)**
+- [ ] **Step 1: Build core first (ng-packagr resolves `@bridgebyte/sst-core` from `dist/`)**
 
 ```bash
 npx nx run core:build
@@ -1587,7 +1587,7 @@ npx nx run ng:build
 ```
 
 Expected: `packages/ng/dist/` contains:
-- `package.json` with `peerDependencies` pointing at `@sst/core`
+- `package.json` with `peerDependencies` pointing at `@bridgebyte/sst-core`
 - `fesm2022/sst-ng.mjs`
 - `index.d.ts`
 - ng-packagr did not emit warnings about missing peer dependencies.
@@ -1598,7 +1598,7 @@ Expected: `packages/ng/dist/` contains:
 cat packages/ng/dist/package.json
 ```
 
-Verify `peerDependencies` includes `@sst/core` and Angular packages.
+Verify `peerDependencies` includes `@bridgebyte/sst-core` and Angular packages.
 
 - [ ] **Step 4: Run tests one more time**
 
@@ -1617,7 +1617,7 @@ git add . 2>/dev/null; git commit -m "chore(ng): build verification" 2>/dev/null
 
 ---
 
-## Task 9: Write `@sst/ng` README usage examples
+## Task 9: Write `@bridgebyte/sst-ng` README usage examples
 
 **Files:**
 - Modify: `packages/ng/README.md`
@@ -1625,14 +1625,14 @@ git add . 2>/dev/null; git commit -m "chore(ng): build verification" 2>/dev/null
 - [ ] **Step 1: Replace the placeholder README**
 
 ```markdown
-# @sst/ng
+# @bridgebyte/sst-ng
 
-Angular adapter for **So Simple Table**, built on top of [`@sst/core`](https://www.npmjs.com/package/@sst/core).
+Angular adapter for **So Simple Table**, built on top of [`@bridgebyte/sst-core`](https://www.npmjs.com/package/@bridgebyte/sst-core).
 
 ## Installation
 
 ```bash
-npm install @sst/core @sst/ng
+npm install @bridgebyte/sst-core @bridgebyte/sst-ng
 ```
 
 Make sure `provideHttpClient()` is added to the application's bootstrap providers.
@@ -1641,7 +1641,7 @@ Make sure `provideHttpClient()` is added to the application's bootstrap provider
 
 ```ts
 import { Injectable } from '@angular/core';
-import { SstNgRepository } from '@sst/ng';
+import { SstNgRepository } from '@bridgebyte/sst-ng';
 
 interface IStrategy { id: string; name: string; createdAt: string; }
 
@@ -1657,7 +1657,7 @@ export class StrategyRepository extends SstNgRepository<IStrategy> {
 
 ```ts
 import { Injectable, inject } from '@angular/core';
-import { SstTableService } from '@sst/ng';
+import { SstTableService } from '@bridgebyte/sst-ng';
 import { StrategyRepository } from './strategy.repository';
 
 @Injectable()
@@ -1696,7 +1696,7 @@ export class StrategyTableService extends SstTableService<IStrategy> {
 
 ```ts
 import { Component, inject } from '@angular/core';
-import { SstTableComponent, type IColumn } from '@sst/ng';
+import { SstTableComponent, type IColumn } from '@bridgebyte/sst-ng';
 import { StrategyTableService } from './strategy-table.service';
 
 @Component({
@@ -1742,7 +1742,7 @@ MIT
 
 ```bash
 git add packages/ng/README.md
-git commit -m "docs(ng): add @sst/ng README with usage examples"
+git commit -m "docs(ng): add @bridgebyte/sst-ng README with usage examples"
 ```
 
 ---
@@ -1750,14 +1750,14 @@ git commit -m "docs(ng): add @sst/ng README with usage examples"
 ## Self-Review Checklist
 
 1. **Spec coverage**
-	- ✅ Angular variant of `np-table` lifted into `@sst/ng` — Tasks 5, 6.
+	- ✅ Angular variant of `np-table` lifted into `@bridgebyte/sst-ng` — Tasks 5, 6.
 	- ✅ Inheritable repository chain — `SstNgListRepository`, `SstNgSelectRepository`, `SstNgRepository` (Task 3).
 	- ✅ Configurable `baseUrl`, query keys, response mapper — Task 3 + re-uses core config.
 	- ✅ `baseUrl` mandatory — `requireBaseUrl()` throws (Task 3).
 	- ✅ Default UI + slot overrides — Task 6 (`#headerCell`, `#bodyCell`, `#emptyState`, `#bulkActions`).
 	- ✅ No translation layer.
 	- ✅ No responsive split (mobile cards) — moved to future plugin scope.
-	- ✅ Real-time adapter contract re-exported from `@sst/core` (Task 7).
+	- ✅ Real-time adapter contract re-exported from `@bridgebyte/sst-core` (Task 7).
 
 2. **Placeholder scan** — none. The duplicate `setupFilesAfterEach` lines in Step 8 of Task 1 are explicitly called out as a typo and immediately followed by the corrected config.
 

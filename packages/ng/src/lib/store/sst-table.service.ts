@@ -5,7 +5,7 @@ import {
 	type IPaginationParams,
 	type ISortParams,
 	type ITableStoreOptions,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { observableToSignal } from './to-signal.helper';
 
 /**

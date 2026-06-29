@@ -6,7 +6,7 @@ const config: Config = {
 	rootDir: '.',
 	testMatch: ['<rootDir>/src/**/*.spec.ts'],
 	modulePathIgnorePatterns: ['<rootDir>/dist'],
-	moduleNameMapper: { '^@sst/core$': '<rootDir>/../core/src/index.ts' },
+	moduleNameMapper: { '^@bridgebyte/sst-core$': '<rootDir>/../core/src/index.ts' },
 	transform: {
 		'^.+\\.(ts|mjs|js|html)$': [
 			'jest-preset-angular',

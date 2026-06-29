@@ -1,30 +1,30 @@
-# `@sst/dom` — Vanilla DOM Variant Design
+# `@bridgebyte/sst-dom` — Vanilla DOM Variant Design
 
 **Date:** 2026-05-06
 **Status:** Approved, ready for implementation plan
 
 ## Goal
 
-Provide a "drop-in" HTML table for `@sst/core` consumers who don't want a
+Provide a "drop-in" HTML table for `@bridgebyte/sst-core` consumers who don't want a
 framework. A single call — `mountTable({ target, store, columns })` — produces a
 working table with header, sortable columns, body rows, and pagination
 controls, wired reactively to a `TableStore<T>`.
 
 ## Architecture Decision
 
-`@sst/dom` is a **sibling package** alongside the planned `@sst/ng`,
-`@sst/vue`, `@sst/react`. It depends on `@sst/core` but does not modify it
+`@bridgebyte/sst-dom` is a **sibling package** alongside the planned `@bridgebyte/sst-ng`,
+`@bridgebyte/sst-vue`, `@bridgebyte/sst-react`. It depends on `@bridgebyte/sst-core` but does not modify it
 (except for the small `IColumn.render` cleanup below).
 
-This preserves the architectural promise that `@sst/core` is framework-agnostic
+This preserves the architectural promise that `@bridgebyte/sst-core` is framework-agnostic
 and free of DOM dependencies — core can still run in Node, SSR, React Native
-(via `@sst/react`), etc.
+(via `@bridgebyte/sst-react`), etc.
 
 ## Package Layout
 
 ```
 packages/dom/
-├── package.json              # name "@sst/dom", type "module", peerDeps @sst/core
+├── package.json              # name "@bridgebyte/sst-dom", type "module", peerDeps @bridgebyte/sst-core
 ├── tsconfig.json
 ├── tsconfig.build.json
 ├── tsup.config.ts            # bundles index.ts AND emits style.css to dist
@@ -46,7 +46,7 @@ packages/dom/
     └── style.css             # ships to dist/style.css; semantic classes
 ```
 
-Toolchain matches `@sst/core`: TypeScript 5.6+, tsup for build, vitest for
+Toolchain matches `@bridgebyte/sst-core`: TypeScript 5.6+, tsup for build, vitest for
 tests, ESM-first with CJS fallback, source maps.
 
 `vitest.config.ts` uses `environment: 'happy-dom'` so DOM APIs are available
@@ -74,7 +74,7 @@ in tests. Add `happy-dom` as a devDependency.
 ### `IDomColumn<T>` (extends core's `IColumn`)
 
 ```ts
-import type { IColumn } from '@sst/core';
+import type { IColumn } from '@bridgebyte/sst-core';
 
 export interface IDomColumn<T> extends IColumn {
 	readonly render?: (row: T, column: IDomColumn<T>) => string | HTMLElement;
@@ -105,7 +105,7 @@ export interface IMountOptions<T> {
   and `'.foo .bar'` works for selectors). Plain id strings without `#` are
   not supported — keeps the API single-mode and predictable.
 - `HTMLElement` → used directly.
-- If resolution fails, throw `Error('[@sst/dom] target not found: …')`.
+- If resolution fails, throw `Error('[@bridgebyte/sst-dom] target not found: …')`.
 
 ### `ITableHandle`
 
@@ -188,7 +188,7 @@ app already uses).
 
 ## Styling
 
-A small `style.css` ships with the package, importable via `@sst/dom/style.css`.
+A small `style.css` ships with the package, importable via `@bridgebyte/sst-dom/style.css`.
 It uses CSS custom properties so users can theme without overriding selectors:
 
 ```css
@@ -211,10 +211,10 @@ their own CSS.
 ## Migration: drop `IColumn.render`
 
 Core's `IColumn` currently has a `render?: boolean` field with no consumer.
-Remove it as part of the `@sst/dom` work so `@sst/dom`'s `IDomColumn.render`
+Remove it as part of the `@bridgebyte/sst-dom` work so `@bridgebyte/sst-dom`'s `IDomColumn.render`
 can be a function without colliding.
 
-This is a 0.1.0 → 0.2.0 break. Bump `@sst/core` version, republish to
+This is a 0.1.0 → 0.2.0 break. Bump `@bridgebyte/sst-core` version, republish to
 Verdaccio. Internal change only — nothing else uses the field.
 
 ## Tests
@@ -244,14 +244,14 @@ Each `.test.ts` file lives next to its source file.
 ## Test app updates: `test/core/` → `test/dom/`
 
 1. Rename the directory.
-2. Update `package.json` name to `@sst/test-dom`, add `@sst/dom` to deps.
+2. Update `package.json` name to `@bridgebyte/sst-test-dom`, add `@bridgebyte/sst-dom` to deps.
 3. Update `index.html` title and remove the inline `<table>` markup, replace
    with a single `<div id="my-table"></div>` mount target. Pagination,
-   loading, and totals are now produced by `@sst/dom`, so the surrounding
+   loading, and totals are now produced by `@bridgebyte/sst-dom`, so the surrounding
    page can drop those elements; keep the search/sort/filter inputs (those
    stay app-side per the design choice).
 4. Update `src/main.ts` to:
-   - Import `mountTable` from `@sst/dom` and `import '@sst/dom/style.css'`.
+   - Import `mountTable` from `@bridgebyte/sst-dom` and `import '@bridgebyte/sst-dom/style.css'`.
    - Drop the manual row-rendering, the manual pagination handlers, and
      the sort `<select>` (sort is now triggered by clicking sortable column
      headers in the rendered table).
@@ -261,7 +261,7 @@ Each `.test.ts` file lives next to its source file.
    - Call `mountTable({ target: '#my-table', store, columns })`.
    - Keep the search input and the status filter `<select>` (those wire
      directly to `store.updateSearch` / `store.updateFilter` and exercise
-     core's reactivity outside `@sst/dom`'s scope).
+     core's reactivity outside `@bridgebyte/sst-dom`'s scope).
    - Keep the call-log details panel — it's a useful debugging affordance
      and exercises core directly.
 5. Update `test/dom/README.md` accordingly.
@@ -274,13 +274,13 @@ Each `.test.ts` file lives next to its source file.
 - **Column resizing, drag-reorder, multi-column sort.** Out of v1.
 - **Theming presets / dark-mode toggle.** Custom properties enable theming;
   picking themes is the user's job.
-- **Server-side rendering.** `@sst/dom` is browser-only.
+- **Server-side rendering.** `@bridgebyte/sst-dom` is browser-only.
 
 ## Acceptance Criteria
 
 - `packages/dom/` builds, tests pass, typechecks clean.
 - `npx nx run dom:test` and `npx nx run dom:build` succeed.
-- `@sst/dom` published to local Verdaccio at `0.1.0`.
+- `@bridgebyte/sst-dom` published to local Verdaccio at `0.1.0`.
 - `test/dom/` renders the same data as the previous `test/core/` smoke test,
   via `mountTable(...)` with no manual DOM wiring for the table itself.
-- `@sst/core` republished at `0.2.0` with `IColumn.render` removed.
+- `@bridgebyte/sst-core` republished at `0.2.0` with `IColumn.render` removed.

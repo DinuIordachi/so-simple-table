@@ -1,6 +1,6 @@
-# @sst/ng — browser smoke test
+# @bridgebyte/sst-ng — browser smoke test
 
-Standalone Angular 20 app that imports `@sst/core` and `@sst/ng` from the local Verdaccio registry and renders a real table backed by [dogapi.dog](https://dogapi.dog/api/v2/breeds).
+Standalone Angular 20 app that imports `@bridgebyte/sst-core` and `@bridgebyte/sst-ng` from the local Verdaccio registry and renders a real table backed by [dogapi.dog](https://dogapi.dog/api/v2/breeds).
 
 ## Run
 
@@ -25,7 +25,7 @@ Open http://localhost:5173/.
 
 ## What it covers
 
-- **Import smoke** — `@sst/core` + `@sst/ng` resolve from Verdaccio.
+- **Import smoke** — `@bridgebyte/sst-core` + `@bridgebyte/sst-ng` resolve from Verdaccio.
 - **`<sst-table>`** — renders 283 breeds with pagination.
 - **Custom queryKeys** — JSON:API `page[number]` / `page[size]`.
 - **`responseListMapper`** — flattens `data[].attributes` and reads `totalCount` from `meta.pagination.records`.

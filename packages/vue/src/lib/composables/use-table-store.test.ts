@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { effectScope, nextTick } from 'vue';
-import { ListRepository, type IResponse, type IResponseList } from '@sst/core';
+import { ListRepository, type IResponse, type IResponseList } from '@bridgebyte/sst-core';
 import { useTableStore } from './use-table-store';
 
 interface IItem {

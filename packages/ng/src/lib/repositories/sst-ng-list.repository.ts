@@ -7,7 +7,7 @@ import {
 	type IResponse,
 	type IResponseList,
 	type ResponseListMapper,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { NgHttpClient } from '../http/ng-http-client';
 
 /**

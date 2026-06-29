@@ -1,8 +1,8 @@
 import { DestroyRef, Signal, inject, signal } from '@angular/core';
-import type { IReadonlyObservable } from '@sst/core';
+import type { IReadonlyObservable } from '@bridgebyte/sst-core';
 
 /**
- * Bridges an `@sst/core` {@link IReadonlyObservable} into a read-only Angular
+ * Bridges an `@bridgebyte/sst-core` {@link IReadonlyObservable} into a read-only Angular
  * {@link Signal}, so core's framework-agnostic reactive state can be consumed
  * directly in templates and computed signals.
  *

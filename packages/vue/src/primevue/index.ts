@@ -7,7 +7,7 @@
  * {@link useSstDataTable} composable, the {@link SstDataTable} wrapper, and
  * responsive layout utilities ({@link useBreakpoint}, {@link resolveLayoutSlot}).
  *
- * Import from the `@sst/vue/primevue` subpath. Requires `primevue` (>= 4) and
+ * Import from the `@bridgebyte/sst-vue/primevue` subpath. Requires `primevue` (>= 4) and
  * `vue` as peer dependencies.
  */
 export * from './use-sst-data-table';

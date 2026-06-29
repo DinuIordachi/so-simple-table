@@ -5,7 +5,7 @@ import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
-import { SstDataTable, searchColumn } from '@sst/vue/primevue';
+import { SstDataTable, searchColumn } from '@bridgebyte/sst-vue/primevue';
 import { useProductsTable, type IProduct } from './products-table';
 
 const table = useProductsTable();
@@ -34,7 +34,7 @@ const onSave = async ({ row, newData }: { row: IProduct; newData: IProduct }): P
 
 <template>
 	<main style="max-width: 1040px; margin: 24px auto; font-family: sans-serif">
-		<h1>@sst/vue/primevue — smoke test</h1>
+		<h1>@bridgebyte/sst-vue/primevue — smoke test</h1>
 		<p>
 			PrimeVue DataTable (Aura theme) backed by a So Simple Table store, rendering
 			<a href="https://dummyjson.com/docs/products" target="_blank" rel="noopener">dummyjson.com</a> products with

@@ -1,5 +1,5 @@
 /**
- * Public type surface of `@sst/core`.
+ * Public type surface of `@bridgebyte/sst-core`.
  *
  * @remarks
  * Re-exports the shared interfaces, type aliases, and enums that describe table

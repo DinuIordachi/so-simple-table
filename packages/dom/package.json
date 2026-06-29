@@ -1,7 +1,7 @@
 {
-  "name": "@sst/dom",
+  "name": "@bridgebyte/sst-dom",
   "version": "0.1.0",
-  "description": "So Simple Table — vanilla DOM variant. Renders an @sst/core TableStore as an HTML table.",
+  "description": "So Simple Table — vanilla DOM variant. Renders an @bridgebyte/sst-core TableStore as an HTML table.",
   "keywords": [
     "table",
     "data-table",
@@ -56,10 +56,10 @@
     "clean": "rimraf dist coverage"
   },
   "peerDependencies": {
-    "@sst/core": "^0.2.0"
+    "@bridgebyte/sst-core": "^0.2.0"
   },
   "devDependencies": {
-    "@sst/core": "^0.2.0",
+    "@bridgebyte/sst-core": "^0.2.0",
     "happy-dom": "^15.7.0",
     "tsup": "^8.2.0",
     "vitest": "^2.0.0"

@@ -1,12 +1,12 @@
-# Design: `@sst/vue/primevue` — PrimeVue DataTable integration
+# Design: `@bridgebyte/sst-vue/primevue` — PrimeVue DataTable integration
 
 **Date:** 2026-06-24
 **Status:** Approved (design)
-**Scope:** Add a `@sst/vue/primevue` subpath export that binds a So Simple Table `TableStore` to PrimeVue **v4** `DataTable` in lazy mode, preserving all native DataTable features and the host app's theme. Add a `test/primevue` smoke app and unit tests. No `@sst/core` changes; `@sst/react` untouched.
+**Scope:** Add a `@bridgebyte/sst-vue/primevue` subpath export that binds a So Simple Table `TableStore` to PrimeVue **v4** `DataTable` in lazy mode, preserving all native DataTable features and the host app's theme. Add a `test/primevue` smoke app and unit tests. No `@bridgebyte/sst-core` changes; `@bridgebyte/sst-react` untouched.
 
 ## Motivation
 
-`@sst/vue` ships its own `<SstTable>`. Consumers already invested in **PrimeVue** want So Simple Table's reactive data layer (repository + pagination/sort/filter/search + bulk delete) **inside** PrimeVue's `DataTable`, so the table matches their existing theme (PrimeVue v4 styled-mode presets / `pt` passthrough) and keeps every native DataTable feature (templating, frozen/scrollable columns, row expansion, selection, etc.).
+`@bridgebyte/sst-vue` ships its own `<SstTable>`. Consumers already invested in **PrimeVue** want So Simple Table's reactive data layer (repository + pagination/sort/filter/search + bulk delete) **inside** PrimeVue's `DataTable`, so the table matches their existing theme (PrimeVue v4 styled-mode presets / `pt` passthrough) and keeps every native DataTable feature (templating, frozen/scrollable columns, row expansion, selection, etc.).
 
 PrimeVue's `DataTable` **lazy mode** is the natural seam: set `:lazy`, supply `:value` / `:totalRecords` / `:loading`, and handle `@page` / `@sort` / `@filter`. That maps directly onto `TableStore`.
 
@@ -21,12 +21,12 @@ PrimeVue's `DataTable` **lazy mode** is the natural seam: set `:lazy`, supply `:
 - **Names:** `useSstDataTable`, `SstDataTable`.
 - **Verification:** `test/primevue` smoke app (Vite + Vue + PrimeVue v4 + a theme preset) consumed via local Verdaccio, plus Vitest unit tests.
 
-## Public API (exported only from `@sst/vue/primevue`)
+## Public API (exported only from `@bridgebyte/sst-vue/primevue`)
 
 ```ts
 import type { DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableFilterEvent } from 'primevue/datatable';
-import type { IFilterParams, IResponse } from '@sst/core';
-import type { IUseTableStoreReturn } from '@sst/vue';
+import type { IFilterParams, IResponse } from '@bridgebyte/sst-core';
+import type { IUseTableStoreReturn } from '@bridgebyte/sst-vue';
 
 export interface IUseSstDataTableOptions<T extends { id: string }> {
   /** Call store.refresh() on mount (PrimeVue lazy does not auto-fetch). Default true. */
@@ -78,8 +78,8 @@ The bindings object is a `reactive` with getters over the store refs, so `v-bind
 ## Component usage (target)
 
 ```ts
-// breeds-table.ts  (unchanged @sst/vue surface)
-import { defineTable } from '@sst/vue';
+// breeds-table.ts  (unchanged @bridgebyte/sst-vue surface)
+import { defineTable } from '@bridgebyte/sst-vue';
 export const useBreedsTable = defineTable<IBreed, IApiResponse>({ baseUrl: '...', mapResponse: ... });
 ```
 
@@ -88,7 +88,7 @@ Wrapper:
 ```vue
 <script setup lang="ts">
 import Column from 'primevue/column';
-import { SstDataTable } from '@sst/vue/primevue';
+import { SstDataTable } from '@bridgebyte/sst-vue/primevue';
 import { useBreedsTable } from './breeds-table';
 const table = useBreedsTable();
 </script>
@@ -109,7 +109,7 @@ Headless:
 <script setup lang="ts">
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { useSstDataTable } from '@sst/vue/primevue';
+import { useSstDataTable } from '@bridgebyte/sst-vue/primevue';
 import { useBreedsTable } from './breeds-table';
 const table = useBreedsTable();
 const bindings = useSstDataTable(table);
@@ -130,7 +130,7 @@ const bindings = useSstDataTable(table);
   - `devDependencies`: `primevue ^4` (to compile/typecheck/test the wrapper).
   - `sideEffects` already covers `.vue`/`.css`.
 - **`packages/vue/vite.config.ts`** — switch `lib.entry` to an object `{ index, primevue }`; `fileName: (format, name) => \`${name}.${format === 'es' ? 'js' : 'cjs'}\``; drop UMD `name`; extend `external` to also exclude `primevue`, `primevue/*`, `@primevue/*`.
-- The `primevue` entry imports only `primevue/datatable` (runtime, external) + Vue + **type-only** imports from `@sst/core` / `../composables/use-table-store`, so it shares no runtime chunk with the main entry and `@sst/vue` (plain) pulls zero PrimeVue.
+- The `primevue` entry imports only `primevue/datatable` (runtime, external) + Vue + **type-only** imports from `@bridgebyte/sst-core` / `../composables/use-table-store`, so it shares no runtime chunk with the main entry and `@bridgebyte/sst-vue` (plain) pulls zero PrimeVue.
 
 ## Files
 
@@ -157,13 +157,13 @@ const bindings = useSstDataTable(table);
 
 ## Out of scope
 
-- Multi-column sort (would require extending `@sst/core`).
+- Multi-column sort (would require extending `@bridgebyte/sst-core`).
 - A PrimeVue adapter for non-table widgets.
 - Shipping or bundling any PrimeVue theme/CSS.
-- `@sst/core`, `@sst/ng`, `@sst/dom`, `@sst/react` changes.
+- `@bridgebyte/sst-core`, `@bridgebyte/sst-ng`, `@bridgebyte/sst-dom`, `@bridgebyte/sst-react` changes.
 
 ## Success criteria
 
-- `import { SstDataTable, useSstDataTable } from '@sst/vue/primevue'` works; plain `@sst/vue` imports pull no PrimeVue.
+- `import { SstDataTable, useSstDataTable } from '@bridgebyte/sst-vue/primevue'` works; plain `@bridgebyte/sst-vue` imports pull no PrimeVue.
 - A consumer renders a fully themed PrimeVue DataTable backed by a `TableStore`, with working lazy pagination/sort/filter/search and native columns/slots/selection intact.
 - Unit tests pass; `test/primevue` builds and renders against the published package.

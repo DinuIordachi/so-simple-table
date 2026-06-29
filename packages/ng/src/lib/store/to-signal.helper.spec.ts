@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable } from '@sst/core';
+import { Observable } from '@bridgebyte/sst-core';
 import { observableToSignal } from './to-signal.helper';
 
 describe('observableToSignal', () => {

@@ -2,7 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	resolve: {
-		alias: { '@sst/core': new URL('../core/src/index.ts', import.meta.url).pathname },
+		alias: { '@bridgebyte/sst-core': new URL('../core/src/index.ts', import.meta.url).pathname },
 	},
 	test: {
 		globals: true,

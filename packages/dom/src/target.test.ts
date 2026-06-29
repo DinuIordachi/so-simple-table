@@ -30,6 +30,6 @@ describe('resolveTarget', () => {
 	});
 
 	it('throws with a useful message when the selector matches nothing', () => {
-		expect(() => resolveTarget('#missing')).toThrow(/\[@sst\/dom\] target not found.*#missing/);
+		expect(() => resolveTarget('#missing')).toThrow(/\[@bridgebyte\/sst-dom\] target not found.*#missing/);
 	});
 });

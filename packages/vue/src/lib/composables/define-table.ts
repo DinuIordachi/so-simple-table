@@ -9,7 +9,7 @@ import {
 	type ISortDirections,
 	type PaginationStyle,
 	type SortStyle,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { useTableStore, type IUseTableStoreReturn } from './use-table-store';
 
 export interface IDefineTableConfig<T extends { id: string | number }, TRaw = unknown> {
@@ -59,7 +59,7 @@ export interface IDefineTableConfig<T extends { id: string | number }, TRaw = un
  * @example
  * ```ts
  * // users-table.ts
- * import { defineTable } from '@sst/vue';
+ * import { defineTable } from '@bridgebyte/sst-vue';
  *
  * export const useUsersTable = defineTable<{ id: string; name: string }>({
  * 	baseUrl: 'https://api.example.com/users',

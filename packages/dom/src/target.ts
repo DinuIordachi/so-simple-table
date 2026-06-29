@@ -16,7 +16,7 @@ export function resolveTarget(target: string | HTMLElement): HTMLElement {
 	}
 	const el = document.querySelector(target);
 	if (!el) {
-		throw new Error(`[@sst/dom] target not found: ${target}`);
+		throw new Error(`[@bridgebyte/sst-dom] target not found: ${target}`);
 	}
 	return el as HTMLElement;
 }

@@ -1,19 +1,19 @@
-# @sst/vue
+# @bridgebyte/sst-vue
 
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
-Vue 3 adapter for **So Simple Table**, built on top of [`@sst/core`](../core/README.md). Define a data table declaratively in one object, then render it with a fully typed `<SstTable>` component.
+Vue 3 adapter for **So Simple Table**, built on top of [`@bridgebyte/sst-core`](../core/README.md). Define a data table declaratively in one object, then render it with a fully typed `<SstTable>` component.
 
 ## Installation
 
 ```bash
-npm install @sst/core @sst/vue
+npm install @bridgebyte/sst-core @bridgebyte/sst-vue
 ```
 
-`vue` (>= 3.5) and `@sst/core` are peer dependencies. Import the bundled CSS once at your app entry:
+`vue` (>= 3.5) and `@bridgebyte/sst-core` are peer dependencies. Import the bundled CSS once at your app entry:
 
 ```ts
-import '@sst/vue/style.css';
+import '@bridgebyte/sst-vue/style.css';
 ```
 
 ## Quick start
@@ -22,7 +22,7 @@ Define the table once with [`defineTable`](#definetable). It builds the reposito
 
 ```ts
 // breeds-table.ts
-import { defineTable } from '@sst/vue';
+import { defineTable } from '@bridgebyte/sst-vue';
 
 export interface IBreed {
   id: string;
@@ -56,8 +56,8 @@ Then consume it in a component. The `body-cell` slot receives a typed `row` — 
 
 ```vue
 <script setup lang="ts">
-import { SstTable, type IColumn } from '@sst/vue';
-import '@sst/vue/style.css';
+import { SstTable, type IColumn } from '@bridgebyte/sst-vue';
+import '@bridgebyte/sst-vue/style.css';
 import { useBreedsTable } from './breeds-table';
 
 const table = useBreedsTable();
@@ -103,7 +103,7 @@ defineTable<T extends { id: string }, TRaw = unknown>(config): () => IUseTableSt
 Pass `httpClient` for authentication, interceptors, or logging — anything implementing core's `IHttpClient`:
 
 ```ts
-import { defineTable, FetchHttpClient } from '@sst/vue';
+import { defineTable, FetchHttpClient } from '@bridgebyte/sst-vue';
 
 const useTable = defineTable<IBreed>({
   baseUrl: 'https://api.example.com/breeds',
@@ -130,10 +130,10 @@ const useProducts = defineTable<IProduct>({
 
 ## Lower-level: `useTableStore`
 
-When you already have a `@sst/core` repository (or need to share one), skip `defineTable` and wire the store directly:
+When you already have a `@bridgebyte/sst-core` repository (or need to share one), skip `defineTable` and wire the store directly:
 
 ```ts
-import { HttpRepository, useTableStore, type IColumn } from '@sst/vue';
+import { HttpRepository, useTableStore, type IColumn } from '@bridgebyte/sst-vue';
 
 const repository = new HttpRepository<IBreed>({ baseUrl: 'https://api.example.com/breeds' });
 const table = useTableStore<IBreed>({ repository, sortMap: { name: 'ByName' } });
@@ -168,14 +168,14 @@ const table = useTableStore<IBreed>({ repository, sortMap: { name: 'ByName' } })
 
 When omitted, sensible defaults render automatically. `row` is typed as your row type `T`, so concrete field access needs no casts.
 
-## PrimeVue (`@sst/vue/primevue`)
+## PrimeVue (`@bridgebyte/sst-vue/primevue`)
 
-Render your table with PrimeVue v4's `DataTable` (lazy mode) while keeping every native DataTable feature and your app's theme. Requires `primevue` (>= 4) as a peer dependency; `@sst/vue/primevue` ships no CSS.
+Render your table with PrimeVue v4's `DataTable` (lazy mode) while keeping every native DataTable feature and your app's theme. Requires `primevue` (>= 4) as a peer dependency; `@bridgebyte/sst-vue/primevue` ships no CSS.
 
 ```vue
 <script setup lang="ts">
 import Column from 'primevue/column';
-import { SstDataTable } from '@sst/vue/primevue';
+import { SstDataTable } from '@bridgebyte/sst-vue/primevue';
 import { useBreedsTable } from './breeds-table'; // a defineTable composable
 
 const table = useBreedsTable();
@@ -194,7 +194,7 @@ const table = useBreedsTable();
 Prefer full control? Use the headless composable and render `<DataTable>` yourself:
 
 ```ts
-import { useSstDataTable } from '@sst/vue/primevue';
+import { useSstDataTable } from '@bridgebyte/sst-vue/primevue';
 const bindings = useSstDataTable(table); // spread onto <DataTable v-bind="bindings" dataKey="id">
 ```
 
@@ -238,7 +238,7 @@ The `useBreakpoint()` composable (current Tailwind breakpoint, SSR-safe) is also
 ## Links
 
 - [So Simple Table monorepo](https://github.com/DinuIordachi/so-simple-table)
-- [`@sst/core`](../core/README.md) — the framework-agnostic core
+- [`@bridgebyte/sst-core`](../core/README.md) — the framework-agnostic core
 - [Changelog](./CHANGELOG.md)
 
 ## License

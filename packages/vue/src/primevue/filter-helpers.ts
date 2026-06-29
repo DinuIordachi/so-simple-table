@@ -1,4 +1,4 @@
-import type { IFilterParams } from '@sst/core';
+import type { IFilterParams } from '@bridgebyte/sst-core';
 import type { DataTableFilterMeta } from 'primevue/datatable';
 
 function readFilterValue(meta: unknown): unknown {

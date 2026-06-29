@@ -1,8 +1,8 @@
-# So Simple Table — Vue (`@sst/vue`) Implementation Plan
+# So Simple Table — Vue (`@bridgebyte/sst-vue`) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Provide a Vue 3 adapter on top of `@sst/core` with composables that expose `Ref`/`ComputedRef` views over the headless `TableStore<T>`, plus a default styled `<SstTable>` SFC with full slot-based override hooks.
+**Goal:** Provide a Vue 3 adapter on top of `@bridgebyte/sst-core` with composables that expose `Ref`/`ComputedRef` views over the headless `TableStore<T>`, plus a default styled `<SstTable>` SFC with full slot-based override hooks.
 
 **Architecture:**
 - `useObservable<T>` composable wraps `IReadonlyObservable<T>` in a Vue `Ref<T>` and auto-cleans on `onScopeDispose`.
@@ -10,9 +10,9 @@
 - The default `<SstTable>` SFC uses scoped slots for `header-cell`, `body-cell`, `empty-state`, `bulk-actions`, and `pagination`. No external UI library.
 - HTTP defaults to `FetchHttpClient` from core; users may pass any `IHttpClient`.
 
-**Tech Stack:** Vue 3.5+, Vite library mode + `vite-plugin-dts` for bundling, Vitest + `@vue/test-utils` for tests, `@sst/core` peer dep.
+**Tech Stack:** Vue 3.5+, Vite library mode + `vite-plugin-dts` for bundling, Vitest + `@vue/test-utils` for tests, `@bridgebyte/sst-core` peer dep.
 
-**Prerequisites:** Plan `01-core.md` is fully implemented and `@sst/core` builds clean.
+**Prerequisites:** Plan `01-core.md` is fully implemented and `@bridgebyte/sst-core` builds clean.
 
 ---
 
@@ -20,7 +20,7 @@
 
 ```
 packages/vue/
-├── package.json                  # name: "@sst/vue"
+├── package.json                  # name: "@bridgebyte/sst-vue"
 ├── project.json
 ├── tsconfig.json
 ├── tsconfig.build.json
@@ -42,7 +42,7 @@ packages/vue/
 
 ---
 
-## Task 1: Scaffold `@sst/vue` package
+## Task 1: Scaffold `@bridgebyte/sst-vue` package
 
 **Files:**
 - Create: `packages/vue/package.json`
@@ -59,9 +59,9 @@ packages/vue/
 
 ```json
 {
-  "name": "@sst/vue",
+  "name": "@bridgebyte/sst-vue",
   "version": "0.1.0",
-  "description": "So Simple Table — Vue 3 adapter on top of @sst/core.",
+  "description": "So Simple Table — Vue 3 adapter on top of @bridgebyte/sst-core.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -86,7 +86,7 @@ packages/vue/
     "clean": "rm -rf dist coverage"
   },
   "peerDependencies": {
-    "@sst/core": "workspace:*",
+    "@bridgebyte/sst-core": "workspace:*",
     "vue": "^3.5.0"
   },
   "devDependencies": {
@@ -152,9 +152,9 @@ export default defineConfig({
 			fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
 		},
 		rollupOptions: {
-			external: ['vue', '@sst/core'],
+			external: ['vue', '@bridgebyte/sst-core'],
 			output: {
-				globals: { vue: 'Vue', '@sst/core': 'SstCore' },
+				globals: { vue: 'Vue', '@bridgebyte/sst-core': 'SstCore' },
 				assetFileNames: (assetInfo) => (assetInfo.name === 'style.css' ? 'style.css' : assetInfo.name ?? 'asset'),
 			},
 		},
@@ -173,7 +173,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
 	plugins: [vue()],
 	resolve: {
-		alias: { '@sst/core': new URL('../core/src/index.ts', import.meta.url).pathname },
+		alias: { '@bridgebyte/sst-core': new URL('../core/src/index.ts', import.meta.url).pathname },
 	},
 	test: {
 		globals: true,
@@ -215,37 +215,37 @@ export default defineConfig({
 - [ ] **Step 7: Create `packages/vue/src/index.ts`**
 
 ```ts
-// @sst/vue public API — populated by subsequent tasks.
+// @bridgebyte/sst-vue public API — populated by subsequent tasks.
 export {};
 ```
 
 - [ ] **Step 8: Create `packages/vue/README.md`**
 
 ```markdown
-# @sst/vue
+# @bridgebyte/sst-vue
 
-Vue 3 adapter for **So Simple Table**. Built on top of [`@sst/core`](../core).
+Vue 3 adapter for **So Simple Table**. Built on top of [`@bridgebyte/sst-core`](../core).
 
-- `useObservable` — turns an `@sst/core` Observable into a Vue `Ref`
+- `useObservable` — turns an `@bridgebyte/sst-core` Observable into a Vue `Ref`
 - `useTableStore` — composable wrapping `TableStore<T>` with refs and bound actions
 - `<SstTable>` SFC — default UI with scoped slots for full overrides
 ```
 
-- [ ] **Step 9: Add `@sst/vue` path mapping**
+- [ ] **Step 9: Add `@bridgebyte/sst-vue` path mapping**
 
 Update `<repo-root>/tsconfig.base.json` `paths`:
 ```json
 "paths": {
-  "@sst/core": ["packages/core/src/index.ts"],
-  "@sst/ng": ["packages/ng/src/public-api.ts"],
-  "@sst/vue": ["packages/vue/src/index.ts"]
+  "@bridgebyte/sst-core": ["packages/core/src/index.ts"],
+  "@bridgebyte/sst-ng": ["packages/ng/src/public-api.ts"],
+  "@bridgebyte/sst-vue": ["packages/vue/src/index.ts"]
 }
 ```
 
 - [ ] **Step 10: Install workspace dependencies**
 
 ```bash
-npm install --workspace @sst/vue
+npm install --workspace @bridgebyte/sst-vue
 ```
 
 - [ ] **Step 11: Verify typecheck passes**
@@ -260,7 +260,7 @@ Expected: `0 errors`.
 
 ```bash
 git add packages/vue tsconfig.base.json package.json package-lock.json
-git commit -m "feat(vue): scaffold @sst/vue package"
+git commit -m "feat(vue): scaffold @bridgebyte/sst-vue package"
 ```
 
 ---
@@ -277,7 +277,7 @@ git commit -m "feat(vue): scaffold @sst/vue package"
 ```ts
 import { describe, it, expect } from 'vitest';
 import { effectScope, nextTick } from 'vue';
-import { Observable } from '@sst/core';
+import { Observable } from '@bridgebyte/sst-core';
 import { useObservable } from './use-observable';
 
 describe('useObservable', () => {
@@ -330,7 +330,7 @@ Expected: FAIL — module not found.
 
 ```ts
 import { onScopeDispose, ref, type Ref } from 'vue';
-import type { IReadonlyObservable } from '@sst/core';
+import type { IReadonlyObservable } from '@bridgebyte/sst-core';
 
 export function useObservable<T>(source: IReadonlyObservable<T>): Readonly<Ref<T>> {
 	const r = ref<T>(source.get()) as Ref<T>;
@@ -376,7 +376,7 @@ git commit -m "feat(vue): add useObservable composable"
 ```ts
 import { describe, it, expect, vi } from 'vitest';
 import { effectScope, nextTick } from 'vue';
-import { ListRepository, type IResponse, type IResponseList } from '@sst/core';
+import { ListRepository, type IResponse, type IResponseList } from '@bridgebyte/sst-core';
 import { useTableStore } from './use-table-store';
 
 interface IItem { id: string; name: string; }
@@ -470,7 +470,7 @@ import {
 	type IResponse,
 	type ISortParams,
 	type ITableStoreOptions,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 import { useObservable } from './use-observable';
 
 export interface IUseTableStoreReturn<T> {
@@ -555,7 +555,7 @@ git commit -m "feat(vue): add useTableStore composable"
 import { describe, it, expect, vi } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { defineComponent, h } from 'vue';
-import { ListRepository, type IColumn, type IResponse, type IResponseList } from '@sst/core';
+import { ListRepository, type IColumn, type IResponse, type IResponseList } from '@bridgebyte/sst-core';
 import { useTableStore } from '../composables/use-table-store';
 import SstTable from './SstTable.vue';
 
@@ -665,7 +665,7 @@ Expected: FAIL — component not found.
 ```vue
 <script setup lang="ts" generic="T extends { id: string }">
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
-import { ESortOrder, type IColumn, type ISortParams } from '@sst/core';
+import { ESortOrder, type IColumn, type ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../composables/use-table-store';
 
 interface IProps {
@@ -958,7 +958,7 @@ git commit -m "feat(vue): add <SstTable> default UI with scoped slot overrides"
 
 ---
 
-## Task 5: Re-export `@sst/core` types from `@sst/vue`
+## Task 5: Re-export `@bridgebyte/sst-core` types from `@bridgebyte/sst-vue`
 
 **Files:**
 - Modify: `packages/vue/src/index.ts`
@@ -989,7 +989,7 @@ export type {
 	Listener,
 	ResponseListMapper,
 	Unsubscribe,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 export {
 	DEFAULT_QUERY_KEYS,
 	ESortOrder,
@@ -1006,7 +1006,7 @@ export {
 	deepEqual,
 	mapTableParams,
 	watch,
-} from '@sst/core';
+} from '@bridgebyte/sst-core';
 
 export * from './lib/composables/use-observable';
 export * from './lib/composables/use-table-store';
@@ -1033,12 +1033,12 @@ Expected: PASS.
 
 ```bash
 git add packages/vue/src
-git commit -m "feat(vue): re-export @sst/core types from @sst/vue barrel"
+git commit -m "feat(vue): re-export @bridgebyte/sst-core types from @bridgebyte/sst-vue barrel"
 ```
 
 ---
 
-## Task 6: Build `@sst/vue` and verify artifact
+## Task 6: Build `@bridgebyte/sst-vue` and verify artifact
 
 **Files:** none modified — verification only.
 
@@ -1056,7 +1056,7 @@ Expected: `packages/core/dist/index.js` exists.
 npx nx run vue:build
 ```
 
-Expected: `packages/vue/dist/` contains `index.js`, `index.cjs`, `index.d.ts`, `style.css`. The bundle does NOT include any code from `vue` or `@sst/core` (they should be external).
+Expected: `packages/vue/dist/` contains `index.js`, `index.cjs`, `index.d.ts`, `style.css`. The bundle does NOT include any code from `vue` or `@bridgebyte/sst-core` (they should be external).
 
 - [ ] **Step 3: Inspect produced files**
 
@@ -1069,7 +1069,7 @@ Expected listing includes the files above.
 - [ ] **Step 4: Verify externals**
 
 ```bash
-node -e "const c = require('fs').readFileSync('./packages/vue/dist/index.js', 'utf8'); console.log(c.includes('@sst/core') ? 'OK: core kept external' : 'FAIL: core inlined');"
+node -e "const c = require('fs').readFileSync('./packages/vue/dist/index.js', 'utf8'); console.log(c.includes('@bridgebyte/sst-core') ? 'OK: core kept external' : 'FAIL: core inlined');"
 ```
 
 Expected: `OK: core kept external`.
@@ -1091,7 +1091,7 @@ git add . 2>/dev/null; git commit -m "chore(vue): build verification" 2>/dev/nul
 
 ---
 
-## Task 7: Write `@sst/vue` README usage examples
+## Task 7: Write `@bridgebyte/sst-vue` README usage examples
 
 **Files:**
 - Modify: `packages/vue/README.md`
@@ -1099,26 +1099,26 @@ git add . 2>/dev/null; git commit -m "chore(vue): build verification" 2>/dev/nul
 - [ ] **Step 1: Replace the placeholder README**
 
 ```markdown
-# @sst/vue
+# @bridgebyte/sst-vue
 
-Vue 3 adapter for **So Simple Table**, built on top of [`@sst/core`](https://www.npmjs.com/package/@sst/core).
+Vue 3 adapter for **So Simple Table**, built on top of [`@bridgebyte/sst-core`](https://www.npmjs.com/package/@bridgebyte/sst-core).
 
 ## Installation
 
 ```bash
-npm install @sst/core @sst/vue
+npm install @bridgebyte/sst-core @bridgebyte/sst-vue
 ```
 
 Import the bundled CSS once at app entry:
 
 ```ts
-import '@sst/vue/style.css';
+import '@bridgebyte/sst-vue/style.css';
 ```
 
 ## 1. Define a repository
 
 ```ts
-import { HttpRepository } from '@sst/vue';
+import { HttpRepository } from '@bridgebyte/sst-vue';
 
 interface IStrategy { id: string; name: string; createdAt: string; }
 
@@ -1133,7 +1133,7 @@ export const strategyRepository = new StrategyRepository({
 
 ```vue
 <script setup lang="ts">
-import { SstTable, useTableStore, type IColumn } from '@sst/vue';
+import { SstTable, useTableStore, type IColumn } from '@bridgebyte/sst-vue';
 import { strategyRepository } from './strategies.repository';
 
 interface IStrategy { id: string; name: string; createdAt: string; }
@@ -1186,7 +1186,7 @@ MIT
 
 ```bash
 git add packages/vue/README.md
-git commit -m "docs(vue): add @sst/vue README with usage examples"
+git commit -m "docs(vue): add @bridgebyte/sst-vue README with usage examples"
 ```
 
 ---
@@ -1199,7 +1199,7 @@ git commit -m "docs(vue): add @sst/vue README with usage examples"
 	- ✅ Default UI + slot overrides (`header-cell`, `body-cell`, `empty-state`, `bulk-actions`, `pagination`) — Task 4.
 	- ✅ No translation layer.
 	- ✅ No responsive split.
-	- ✅ Pluggable HTTP client (`@sst/core` `IHttpClient`) re-exported — Task 5.
+	- ✅ Pluggable HTTP client (`@bridgebyte/sst-core` `IHttpClient`) re-exported — Task 5.
 
 2. **Placeholder scan** — none.
 

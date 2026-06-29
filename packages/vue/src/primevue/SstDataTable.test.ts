@@ -3,7 +3,7 @@ import { ref, h, nextTick, type Ref } from 'vue';
 import { mount } from '@vue/test-utils';
 import PrimeVue from 'primevue/config';
 import Column from 'primevue/column';
-import type { IFilterParams, IPaginationParams, ISortParams } from '@sst/core';
+import type { IFilterParams, IPaginationParams, ISortParams } from '@bridgebyte/sst-core';
 import type { IUseTableStoreReturn } from '../lib/composables/use-table-store';
 import SstDataTable from './SstDataTable.vue';
 import type { ISstLayoutSlotProps } from './use-sst-data-table';

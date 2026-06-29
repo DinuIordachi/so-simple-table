@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { effectScope, nextTick } from 'vue';
-import { ESortOrder, type IHttpClient, type IHttpRequestOptions, type IResponseList } from '@sst/core';
+import { ESortOrder, type IHttpClient, type IHttpRequestOptions, type IResponseList } from '@bridgebyte/sst-core';
 import { defineTable } from './define-table';
 
 interface IItem {

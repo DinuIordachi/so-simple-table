@@ -1,8 +1,8 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component, Injectable } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import type { IColumn, IResponse, IResponseList } from '@sst/core';
-import { ListRepository } from '@sst/core';
+import type { IColumn, IResponse, IResponseList } from '@bridgebyte/sst-core';
+import { ListRepository } from '@bridgebyte/sst-core';
 import { SstTableService } from '../store/sst-table.service';
 import { SstTableComponent } from './sst-table.component';
 

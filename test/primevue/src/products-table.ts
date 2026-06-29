@@ -1,4 +1,4 @@
-import { defineTable } from '@sst/vue';
+import { defineTable } from '@bridgebyte/sst-vue';
 
 export interface IProduct {
 	id: string;

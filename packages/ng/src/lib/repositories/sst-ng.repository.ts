@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { IResponse } from '@sst/core';
+import type { IResponse } from '@bridgebyte/sst-core';
 import { SstNgSelectRepository } from './sst-ng-select.repository';
 
 /**

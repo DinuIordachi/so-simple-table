@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import type { HttpQueryParams, IPaginationParams, IResponse, IResponseList } from '@sst/core';
+import type { HttpQueryParams, IPaginationParams, IResponse, IResponseList } from '@bridgebyte/sst-core';
 import { SstNgListRepository } from './sst-ng-list.repository';
 
 /**

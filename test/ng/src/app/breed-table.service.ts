@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { SstTableService } from '@sst/ng';
+import { SstTableService } from '@bridgebyte/sst-ng';
 import { BreedRepository, type IBreed } from './breed.repository';
 
 @Injectable()

@@ -4,7 +4,7 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
 	plugins: [vue()],
 	resolve: {
-		alias: { '@sst/core': new URL('../core/src/index.ts', import.meta.url).pathname },
+		alias: { '@bridgebyte/sst-core': new URL('../core/src/index.ts', import.meta.url).pathname },
 	},
 	test: {
 		globals: true,
